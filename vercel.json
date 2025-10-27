@@ -7,12 +7,6 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    }
-  ],
   "env": {
     "OPENAI_API_KEY": "@openai-api-key",
     "CUSTOMILY_API_KEY": "@customily-api-key",
