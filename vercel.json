@@ -7,12 +7,6 @@
       "use": "@vercel/node"
     }
   ],
-  "env": {
-    "OPENAI_API_KEY": "@openai-api-key",
-    "CUSTOMILY_API_KEY": "@customily-api-key",
-    "SHOPIFY_STOREFRONT_TOKEN": "@shopify-storefront-token",
-    "SHOPIFY_STORE_DOMAIN": "@shopify-store-domain"
-  },
   "headers": [
     {
       "source": "/api/(.*)",
