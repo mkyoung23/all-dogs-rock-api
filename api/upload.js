@@ -13,8 +13,7 @@ export default async function handler(req) {
 
   // Handle GET /upload - show HTML form
   if (req.method === 'GET' && pathname.endsWith('/upload')) {
-    return new Response(
-      `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -164,11 +163,10 @@ export default async function handler(req) {
           
           const urlItem = document.createElement('div');
           urlItem.className = 'url-item';
-          urlItem.innerHTML = `
-            <strong>Photo ${i + 1}:</strong><br>
-            <code>${result.url}</code>
-            <button class="copy-btn" onclick="copyUrl('${result.url}')">Copy</button>
-          `;
+          urlItem.innerHTML = '<strong>Photo ' + (i + 1) + ':</strong><br>' +
+            '<code>' + result.url + '</code>' +
+            '<button class="copy-btn" onclick="copyUrl(\'' + result.url + '\')">' +
+            'Copy</button>';
           urlList.appendChild(urlItem);
         }
 
@@ -190,13 +188,13 @@ export default async function handler(req) {
     }
   </script>
 </body>
-</html>`,
-      {
-        headers: {
-          'Content-Type': 'text/html',
-        },
-      }
-    );
+</html>`;
+    
+    return new Response(html, {
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    });
   }
 
   // Handle POST /upload - process file upload
@@ -223,7 +221,7 @@ export default async function handler(req) {
       });
 
       // Return public URL
-      const publicUrl = `${url.origin}/api/uploads/${id}`;
+      const publicUrl = url.origin + '/api/uploads/' + id;
       
       return new Response(
         JSON.stringify({ 
