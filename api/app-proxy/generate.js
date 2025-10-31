@@ -51,32 +51,33 @@ export default async function handler(req, res) {
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use Stable Diffusion img2img model (proven to work)
-    const model = 'stability-ai/stable-diffusion-img2img';
+    // Use SDXL img2img - proven working model on Replicate
+    const version = 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b';
 
-    console.log('Using Stable Diffusion img2img model:', model);
+    console.log('Using SDXL img2img version:', version);
 
     // Enhance the prompt to emphasize BOTH the scene AND pet identity
     const enhancedPrompt = `A realistic photo of this exact dog ${prompt}, must look identical to the reference image with same breed, fur color, markings, face shape, and all unique features, professional photography, highly detailed`;
 
     console.log('Enhanced prompt:', enhancedPrompt);
 
-    // Create the prediction request
+    // Create the prediction request for SDXL img2img
     const requestBody = {
+      version: version.split(':')[1],
       input: {
         image: image,
         prompt: enhancedPrompt,
         num_outputs: 2,  // Generate 2 variations for user to choose
-        guidance_scale: 7.5,  // SD works best with 7-10
-        num_inference_steps: 50,  // SD typically uses 50 steps
-        prompt_strength: 0.75,  // 0.75 = Good balance between identity and creativity
+        guidance_scale: 7.5,  // SDXL works best with 7-10
+        num_inference_steps: 50,  // SDXL typically uses 30-50 steps
+        prompt_strength: 0.8,  // 0.8 = Good balance between identity and creativity
       }
     };
 
     console.log('📤 Request prepared with prompt_strength:', requestBody.input.prompt_strength);
 
-    // Create the prediction using model-based endpoint (no version needed)
-    const createResponse = await fetch(`https://api.replicate.com/v1/models/${model}/predictions`, {
+    // Use the general predictions endpoint with version
+    const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
