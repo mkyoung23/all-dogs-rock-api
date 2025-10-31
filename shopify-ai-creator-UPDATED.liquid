@@ -239,7 +239,7 @@ let uploadedImage = null;
 let generatedImageUrl = null;
 
 console.log('🐕 All Dogs Rock Shop - AI Creator Initialized');
-console.log('API Endpoint: https://all-dogs-rock-api-v2.vercel.app/app-proxy/generate');
+console.log('API Endpoint: https://all-dogs-rock-api-v2.vercel.app/api/app-proxy/generate');
 
 function showStep(stepName) {
   document.querySelectorAll('.ai-step').forEach(s => s.style.display = 'none');
@@ -363,7 +363,7 @@ async function generateAIImage() {
   try {
     console.log('📡 Calling API...');
 
-    const response = await fetch('https://all-dogs-rock-api-v2.vercel.app/app-proxy/generate', {
+    const response = await fetch('https://all-dogs-rock-api-v2.vercel.app/api/app-proxy/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
