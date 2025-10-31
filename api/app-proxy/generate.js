@@ -1,6 +1,7 @@
-// API route for generating AI images using Replicate IP-Adapter
+// API route for generating AI images using Replicate FLUX img2img
 // This endpoint accepts BOTH a prompt AND a reference image (the customer's pet photo)
 // to create images that preserve the pet's identity
+// FLUX model provides superior pet identity preservation and prompt following
 
 const POLL_INTERVAL_MS = 1500;
 const MAX_POLL_ATTEMPTS = 60; // ~90 seconds max
