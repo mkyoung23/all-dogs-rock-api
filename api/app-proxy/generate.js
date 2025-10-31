@@ -73,7 +73,7 @@ export default async function handler(req, res) {
       }
     };
 
-    console.log('📤 Request prepared with strength:', requestBody.input.strength);
+    console.log('📤 Request prepared with prompt_strength:', requestBody.input.prompt_strength);
 
     // Create the prediction using model-based endpoint (no version needed)
     const createResponse = await fetch(`https://api.replicate.com/v1/models/${model}/predictions`, {
