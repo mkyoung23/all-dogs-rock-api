@@ -51,10 +51,10 @@ export default async function handler(req, res) {
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use FLUX img2img model for superior pet identity preservation
-    const model = 'bxclib2/flux_img2img';
+    // Use Stable Diffusion img2img model (proven to work)
+    const model = 'stability-ai/stable-diffusion-img2img';
 
-    console.log('Using FLUX img2img model:', model);
+    console.log('Using Stable Diffusion img2img model:', model);
 
     // Enhance the prompt to emphasize BOTH the scene AND pet identity
     const enhancedPrompt = `A realistic photo of this exact dog ${prompt}, must look identical to the reference image with same breed, fur color, markings, face shape, and all unique features, professional photography, highly detailed`;
@@ -66,12 +66,10 @@ export default async function handler(req, res) {
       input: {
         image: image,
         prompt: enhancedPrompt,
-        num_outputs: 2,  // Generate 2 FLUX variations for user to choose
-        guidance_scale: 3.5,  // FLUX uses lower guidance scale (3-4 is typical)
-        num_inference_steps: 28,  // FLUX typically uses 20-30 steps
-        strength: 0.75,  // 0.75 = Good balance between identity and creativity
-        output_format: "jpg",
-        output_quality: 90
+        num_outputs: 2,  // Generate 2 variations for user to choose
+        guidance_scale: 7.5,  // SD works best with 7-10
+        num_inference_steps: 50,  // SD typically uses 50 steps
+        prompt_strength: 0.75,  // 0.75 = Good balance between identity and creativity
       }
     };
 
