@@ -1,0 +1,473 @@
+<div id="aiCreatorApp" class="ai-creator-app">
+  <!-- Step 1: Welcome & Explanation -->
+  <div class="ai-step" id="step-welcome" style="display: block;">
+    <div class="ai-container">
+      <div class="ai-hero">
+        <h1 class="ai-title">🐕 All Dogs Rock Shop</h1>
+        <h2 class="ai-subtitle">Create Custom Pet Gifts with AI Magic! ✨</h2>
+        <div class="ai-explanation">
+          <div class="ai-step-preview">
+            <div class="step-card">
+              <span class="step-icon">📸</span>
+              <h3>1. Upload Your Pet's Photo</h3>
+              <p>Choose your favorite picture of your dog or cat</p>
+            </div>
+            <div class="step-card">
+              <span class="step-icon">✍️</span>
+              <h3>2. Describe Your Vision</h3>
+              <p>Tell us how you want your pet to appear</p>
+            </div>
+            <div class="step-card">
+              <span class="step-icon">🎨</span>
+              <h3>3. AI Creates Magic</h3>
+              <p>Our AI generates artwork that looks like YOUR pet!</p>
+            </div>
+            <div class="step-card">
+              <span class="step-icon">🛍️</span>
+              <h3>4. Choose Your Products</h3>
+              <p>See it on mugs, canvases, shirts & more!</p>
+            </div>
+          </div>
+          <button class="ai-btn ai-btn-primary ai-btn-large" onclick="showStepAI('upload')">Start Creating Now! 🚀</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Upload Photo -->
+  <div class="ai-step" id="step-upload" style="display: none;">
+    <div class="ai-container">
+      <div class="ai-progress-header">
+        <span class="progress-step active">1. Upload Photo</span>
+        <span class="progress-step">2. Describe Scene</span>
+        <span class="progress-step">3. AI Generation</span>
+        <span class="progress-step">4. Choose Products</span>
+      </div>
+      <h2>📸 Upload Your Pet's Photo</h2>
+      <p class="subtitle">Upload 1 clear photo of your pet</p>
+
+      <div class="ai-upload-zone" id="uploadZone">
+        <div id="uploadPlaceholder">
+          <span style="font-size: 64px;">📷</span>
+          <h3>Click to Upload Photo</h3>
+          <p>JPG, PNG • Max 10MB</p>
+          <input type="file" id="petPhoto" accept="image/*" style="display: none;">
+        </div>
+        <div id="uploadPreview" style="display: none;"></div>
+      </div>
+
+      <div class="ai-button-group">
+        <button class="ai-btn ai-btn-secondary" onclick="showStepAI('welcome')">← Back</button>
+        <button class="ai-btn ai-btn-primary" id="btnNextToPrompt" style="display: none;" onclick="showStepAI('prompt')">Next: Describe Your Scene →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Describe Scene -->
+  <div class="ai-step" id="step-prompt" style="display: none;">
+    <div class="ai-container">
+      <div class="ai-progress-header">
+        <span class="progress-step complete">✓ Upload Photo</span>
+        <span class="progress-step active">2. Describe Scene</span>
+        <span class="progress-step">3. AI Generation</span>
+        <span class="progress-step">4. Choose Products</span>
+      </div>
+      <h2>✨ Describe Your Vision</h2>
+      <p class="subtitle">Tell us what you want to see</p>
+
+      <textarea id="promptInput" class="ai-prompt-input" placeholder="Example: my dog as a superhero flying over the city"></textarea>
+
+      <div class="ai-prompt-examples">
+        <p><strong>Popular Ideas:</strong></p>
+        <div class="example-chips">
+          <button class="chip" onclick="useExampleAI('my pet as a superhero saving the city')">🦸 Superhero</button>
+          <button class="chip" onclick="useExampleAI('my pet as royalty with crown and royal robes')">👑 Royalty</button>
+          <button class="chip" onclick="useExampleAI('my pet as an astronaut in outer space')">🚀 Astronaut</button>
+          <button class="chip" onclick="useExampleAI('my pet as a pirate captain on a ship')">🏴‍☠️ Pirate</button>
+        </div>
+      </div>
+
+      <div class="ai-button-group">
+        <button class="ai-btn ai-btn-secondary" onclick="showStepAI('upload')">← Back</button>
+        <button class="ai-btn ai-btn-primary" id="promptContinueBtn" onclick="generateAIImageNow()" disabled>Generate My Custom Image! ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Generating/Loading -->
+  <div class="ai-step" id="step-loading" style="display: none;">
+    <div class="ai-container">
+      <div class="ai-progress-header">
+        <span class="progress-step complete">✓ Upload Photo</span>
+        <span class="progress-step complete">✓ Describe Scene</span>
+        <span class="progress-step active">3. AI Generation</span>
+        <span class="progress-step">4. Choose Products</span>
+      </div>
+      <h2>🎨 Creating Your Custom AI Artwork...</h2>
+      <p class="subtitle">This takes 60-90 seconds. Hang tight!</p>
+
+      <div class="ai-loading-animation">
+        <div class="spinner"></div>
+      </div>
+      <p id="loadingStatus" class="loading-status">Analyzing your pet photo...</p>
+      <div class="ai-progress-container">
+        <div id="progressBar" class="ai-progress-bar">0%</div>
+      </div>
+      <div class="ai-timer">
+        <p><strong>Time remaining: <span id="timeRemaining">90</span> seconds</strong></p>
+        <p class="ai-tip">💡 FLUX AI creates ultra-realistic images of YOUR pet!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5: Choose Products -->
+  <div class="ai-step" id="step-products" style="display: none;">
+    <div class="ai-container-wide">
+      <div class="ai-progress-header">
+        <span class="progress-step complete">✓ Upload Photo</span>
+        <span class="progress-step complete">✓ Describe Scene</span>
+        <span class="progress-step complete">✓ AI Generated</span>
+        <span class="progress-step active">4. Choose Your Product</span>
+      </div>
+      <h2>🎉 Choose Your Favorite!</h2>
+      <p class="subtitle">Click on the image you like best</p>
+
+      <div class="generated-images-grid" id="generatedImagesGrid">
+        <!-- FLUX images will be inserted here by JavaScript -->
+      </div>
+
+      <div class="selected-image-preview" id="selectedImagePreview" style="display:none;">
+        <h3>✅ Your Selected Image:</h3>
+        <img id="selectedImage" src="" alt="Your selected artwork" class="preview-image">
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        {%- assign products = collections.all.products -%}
+        {%- for product in products limit: 20 -%}
+        <div class="product-card" data-product-id="{{ product.id }}" data-variant-id="{{ product.variants.first.id }}">
+          <div class="product-image-container">
+            <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" class="product-base-image">
+          </div>
+          <h3 class="product-title">{{ product.title }}</h3>
+          <p class="product-price">{{ product.price | money }}</p>
+          <button class="ai-btn ai-btn-primary" onclick="addToCartAI({{ product.variants.first.id }})">Add to Cart 🛍️</button>
+        </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="ai-button-group">
+        <button class="ai-btn ai-btn-secondary" onclick="showStepAI('prompt')">← Try Different Prompt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.ai-creator-app{width:100%;min-height:100vh;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:20px 0}
+.ai-step{display:none;padding:20px}
+.ai-container{max-width:800px;margin:0 auto;background:white;border-radius:20px;padding:40px;box-shadow:0 10px 40px rgba(0,0,0,0.2)}
+.ai-container-wide{max-width:1400px;margin:0 auto;background:white;border-radius:20px;padding:40px}
+.ai-hero{text-align:center}
+.ai-title{font-size:42px;font-weight:bold;color:#333;margin:0 0 10px 0}
+.ai-subtitle{font-size:24px;color:#666;margin:0 0 30px 0}
+.ai-step-preview{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:40px 0}
+.step-card{background:#f8f9fa;border-radius:15px;padding:25px 15px;text-align:center;transition:all 0.3s}
+.step-card:hover{transform:translateY(-5px);box-shadow:0 5px 20px rgba(0,0,0,0.1)}
+.step-icon{font-size:42px;display:block;margin-bottom:15px}
+.step-card h3{font-size:16px;margin:10px 0;color:#333;font-weight:600}
+.step-card p{font-size:13px;color:#666;margin:0;line-height:1.4}
+.ai-btn{padding:15px 35px;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;transition:all 0.3s}
+.ai-btn-primary{background:#667eea;color:white}
+.ai-btn-primary:hover:not(:disabled){background:#5568d3;transform:scale(1.05)}
+.ai-btn-primary:disabled{background:#ccc;cursor:not-allowed;opacity:0.6}
+.ai-btn-secondary{background:#e0e0e0;color:#333}
+.ai-btn-large{font-size:18px;padding:18px 40px;margin-top:30px}
+.ai-progress-header{display:flex;justify-content:space-between;margin-bottom:30px;flex-wrap:wrap;gap:10px}
+.progress-step{padding:8px 15px;border-radius:20px;background:#f0f0f0;color:#999;font-weight:bold;font-size:13px}
+.progress-step.active{background:#667eea;color:white}
+.progress-step.complete{background:#4caf50;color:white}
+.ai-upload-zone{border:3px dashed #ccc;border-radius:15px;padding:60px;text-align:center;cursor:pointer;transition:all 0.3s;min-height:250px;display:flex;align-items:center;justify-content:center;background:#fafafa}
+.ai-upload-zone:hover{border-color:#667eea;background:#f0f5ff}
+.ai-prompt-input{width:100%;min-height:120px;padding:15px;border:2px solid #e0e0e0;border-radius:10px;font-size:16px;resize:vertical;font-family:inherit}
+.ai-prompt-input:focus{outline:none;border-color:#667eea}
+.example-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px;justify-content:center}
+.chip{padding:10px 20px;border:2px solid #667eea;background:white;color:#667eea;border-radius:25px;cursor:pointer;font-size:14px;transition:all 0.2s}
+.chip:hover{background:#667eea;color:white}
+.ai-button-group{display:flex;justify-content:space-between;margin-top:30px;gap:15px;flex-wrap:wrap}
+.spinner{width:60px;height:60px;border:6px solid #f3f3f3;border-top:6px solid #667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 30px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-progress-container{width:100%;max-width:500px;background:#f0f0f0;border-radius:20px;overflow:hidden;margin:30px auto}
+.ai-progress-bar{height:35px;background:linear-gradient(90deg,#667eea,#764ba2);transition:width 0.5s;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;width:0%;font-size:14px}
+.loading-status{text-align:center;font-size:17px;color:#333;margin:20px 0;font-weight:500}
+.ai-timer{text-align:center;margin-top:30px}
+.ai-tip{color:#999;font-size:14px;margin-top:10px}
+.generated-images-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin:30px auto;max-width:900px}
+.generated-option{cursor:pointer;border:4px solid transparent;border-radius:15px;transition:all 0.3s;position:relative;overflow:hidden}
+.generated-option img{width:100%;border-radius:11px;display:block}
+.generated-option:hover{border-color:#667eea;transform:scale(1.05)}
+.generated-option.selected{border-color:#4caf50;box-shadow:0 0 20px rgba(76,175,80,0.5)}
+.generated-option.selected::after{content:'✓ Selected';position:absolute;top:10px;right:10px;background:#4caf50;color:white;padding:5px 15px;border-radius:20px;font-weight:bold;font-size:14px}
+.selected-image-preview{margin:30px 0;text-align:center}
+.selected-image-preview h3{color:#4caf50;margin-bottom:20px}
+.preview-image{max-width:500px;width:100%;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,0.2)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:25px;margin:40px 0}
+.product-card{background:white;border:2px solid #e0e0e0;border-radius:15px;padding:20px;text-align:center;transition:all 0.3s}
+.product-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,0.15);border-color:#667eea}
+.product-image-container{margin-bottom:15px}
+.product-base-image{width:100%;border-radius:10px}
+.product-title{font-size:15px;font-weight:600;margin:10px 0}
+.product-price{font-size:18px;color:#667eea;font-weight:bold;margin:10px 0}
+.subtitle{text-align:center;color:#666;font-size:16px;margin-bottom:20px}
+h2{text-align:center;font-size:28px;color:#333;margin-bottom:10px}
+.ai-prompt-examples{margin:20px 0;text-align:center}
+.ai-prompt-examples p{font-weight:600;margin-bottom:15px;color:#333}
+@media (max-width:768px){
+.ai-title{font-size:28px}
+.ai-subtitle{font-size:18px}
+.ai-step-preview{grid-template-columns:1fr}
+.ai-container{padding:25px}
+.ai-button-group{flex-direction:column}
+.ai-btn{width:100%}
+.progress-step{font-size:11px;padding:6px 10px}
+}
+</style>
+
+<script>
+(function(){
+let uploadedImage=null;
+let generatedImageUrl=null;
+const API_URL='https://all-dogs-rock-api-v2.vercel.app/api/app-proxy/generate';
+
+console.log('🐕 All Dogs Rock Shop - AI Creator Initialized');
+console.log('API Endpoint:',API_URL);
+
+window.showStepAI=function(stepName){
+document.querySelectorAll('.ai-step').forEach(s=>s.style.display='none');
+document.getElementById('step-'+stepName).style.display='block';
+window.scrollTo({top:0,behavior:'smooth'});
+console.log('📍 Step:',stepName);
+};
+
+const uploadZone=document.getElementById('uploadZone');
+const fileInput=document.getElementById('petPhoto');
+const promptInput=document.getElementById('promptInput');
+const promptContinueBtn=document.getElementById('promptContinueBtn');
+
+if(uploadZone){uploadZone.onclick=()=>fileInput.click();}
+
+if(fileInput){
+fileInput.onchange=(e)=>{
+const file=e.target.files[0];
+if(!file)return;
+console.log('📷 File selected:',file.name,file.size,'bytes');
+if(file.size>10*1024*1024){alert('File too large! Maximum 10MB');return;}
+
+const reader=new FileReader();
+reader.onload=(e)=>{
+const img=new Image();
+img.onload=()=>{
+const MAX_SIZE=1024;
+let width=img.width;
+let height=img.height;
+
+if(width>height&&width>MAX_SIZE){height=(height*MAX_SIZE)/width;width=MAX_SIZE;}
+else if(height>MAX_SIZE){width=(width*MAX_SIZE)/height;height=MAX_SIZE;}
+
+const canvas=document.createElement('canvas');
+canvas.width=width;
+canvas.height=height;
+const ctx=canvas.getContext('2d');
+ctx.drawImage(img,0,0,width,height);
+
+uploadedImage=canvas.toDataURL('image/jpeg',0.8);
+
+console.log('✅ Image resized to:',width,'x',height);
+console.log('✅ Image data size:',uploadedImage.length,'characters');
+
+document.getElementById('uploadPlaceholder').style.display='none';
+document.getElementById('uploadPreview').style.display='block';
+document.getElementById('uploadPreview').innerHTML='<img src="'+uploadedImage+'" style="max-width:100%;border-radius:15px;max-height:400px;object-fit:contain;">';
+document.getElementById('btnNextToPrompt').style.display='block';
+};
+img.src=e.target.result;
+};
+reader.readAsDataURL(file);
+};
+}
+
+if(promptInput){
+promptInput.addEventListener('input',(e)=>{
+const text=e.target.value.trim();
+promptContinueBtn.disabled=text.length<5;
+});
+}
+
+window.useExampleAI=function(text){
+promptInput.value=text;
+promptContinueBtn.disabled=false;
+};
+
+window.generateAIImageNow=async function(){
+if(!uploadedImage){alert('Please upload a photo first!');return showStepAI('upload');}
+
+const prompt=promptInput.value.trim();
+if(!prompt){alert('Please describe your vision!');return;}
+
+showStepAI('loading');
+console.log('🚀 Starting generation...');
+console.log('Prompt:',prompt);
+console.log('Image data length:',uploadedImage.length);
+
+const progressBar=document.getElementById('progressBar');
+const statusText=document.getElementById('loadingStatus');
+const timeText=document.getElementById('timeRemaining');
+
+let progress=0;
+let seconds=90;
+
+const progressInterval=setInterval(()=>{
+if(progress<90){
+progress+=Math.random()*4;
+progressBar.style.width=progress+'%';
+progressBar.textContent=Math.round(progress)+'%';
+seconds-=2;
+timeText.textContent=Math.max(0,seconds);
+
+if(progress<30)statusText.textContent='Analyzing your pet photo...';
+else if(progress<60)statusText.textContent='Creating AI artwork that looks like YOUR pet...';
+else statusText.textContent='Almost done! Adding final touches...';
+}
+},2000);
+
+try{
+console.log('📡 Calling API...');
+
+const response=await fetch(API_URL,{
+method:'POST',
+headers:{'Content-Type':'application/json','Accept':'application/json'},
+body:JSON.stringify({prompt:prompt,image:uploadedImage,premium:false,human_in_photo:false})
+});
+
+clearInterval(progressInterval);
+progressBar.style.width='100%';
+progressBar.textContent='100%';
+
+console.log('📥 Response status:',response.status);
+
+const data=await response.json();
+console.log('📦 Response data:',data);
+
+if(!response.ok){
+console.error('❌ API Error:',data);
+throw new Error(data.error||data.details||'Generation failed');
+}
+
+if(data.success&&data.images&&data.images.length>0){
+const images=data.images;
+console.log('✅ SUCCESS!',images.length,'images generated');
+images.forEach((url,i)=>console.log(`  Image ${i+1}:`,url));
+
+statusText.textContent='Complete! 🎉';
+
+setTimeout(()=>{
+displayImageOptionsAI(images);
+showStepAI('products');
+},1000);
+}else if(data.success&&data.imageUrl){
+generatedImageUrl=data.imageUrl;
+console.log('✅ SUCCESS! Image URL:',generatedImageUrl);
+statusText.textContent='Complete! 🎉';
+
+setTimeout(()=>{
+document.getElementById('selectedImage').src=generatedImageUrl;
+document.getElementById('selectedImagePreview').style.display='block';
+showStepAI('products');
+},1000);
+}else{
+throw new Error('No images generated - unexpected response format');
+}
+
+}catch(error){
+clearInterval(progressInterval);
+console.error('❌ GENERATION ERROR:',error);
+console.error('Error details:',error.message);
+alert('Error generating image: '+error.message+'\n\nPlease check console for details or contact support.');
+showStepAI('prompt');
+}
+};
+
+function displayImageOptionsAI(images){
+const grid=document.getElementById('generatedImagesGrid');
+if(!grid){console.error('❌ generatedImagesGrid element not found');return;}
+
+grid.innerHTML='';
+
+images.forEach((url,index)=>{
+const option=document.createElement('div');
+option.className='generated-option';
+option.innerHTML=`<img src="${url}" alt="Option ${index+1}">`;
+option.onclick=()=>selectImageAI(url,option);
+grid.appendChild(option);
+});
+
+if(images.length>0){
+const firstOption=grid.querySelector('.generated-option');
+selectImageAI(images[0],firstOption);
+}
+}
+
+function selectImageAI(url,optionElement){
+generatedImageUrl=url;
+
+document.querySelectorAll('.generated-option').forEach(el=>el.classList.remove('selected'));
+
+optionElement.classList.add('selected');
+
+document.getElementById('selectedImage').src=url;
+document.getElementById('selectedImagePreview').style.display='block';
+
+console.log('✅ Image selected:',url);
+}
+
+window.addToCartAI=async function(variantId){
+try{
+const response=await fetch('/cart/add.js',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({items:[{id:variantId,quantity:1,properties:{'_custom_ai_image':generatedImageUrl}}]})
+});
+
+if(!response.ok)throw new Error('Failed to add to cart');
+
+alert('✅ Added to cart! Your custom image is included.');
+window.location.href='/cart';
+}catch(error){
+console.error('Cart error:',error);
+alert('Error: '+error.message);
+}
+};
+
+showStepAI('welcome');
+})();
+</script>
+
+{% schema %}
+{
+  "name": "AI Creator Workflow",
+  "tag": "section",
+  "class": "ai-creator-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "All Dogs Rock Shop"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AI Creator Workflow"
+    }
+  ]
+}
+{% endschema %}
