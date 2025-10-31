@@ -50,35 +50,34 @@ export default async function handler(req, res) {
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use public SDXL img2img model (stability-ai/sdxl)
-    // This is a PUBLIC model that definitely works
-    const modelVersion = '39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b';
+    // Use FLUX img2img model for superior pet identity preservation
+    const model = 'bxclib2/flux_img2img';
 
-    console.log('Using SDXL img2img model version:', modelVersion);
+    console.log('Using FLUX img2img model:', model);
 
     // Enhance the prompt to emphasize BOTH the scene AND pet identity
-    const enhancedPrompt = `A photo of this specific ${prompt}, the dog must look exactly like the reference photo with same breed, colors, markings, and facial features, photorealistic, high quality, detailed`;
+    const enhancedPrompt = `A realistic photo of this exact dog ${prompt}, must look identical to the reference image with same breed, fur color, markings, face shape, and all unique features, professional photography, highly detailed`;
 
     console.log('Enhanced prompt:', enhancedPrompt);
 
     // Create the prediction request
     const requestBody = {
-      version: modelVersion,
       input: {
         image: image,
         prompt: enhancedPrompt,
-        num_outputs: 4,  // Generate 4 variations so user can pick best
-        num_inference_steps: premium ? 50 : 40,
-        guidance_scale: 8.0,  // Higher guidance for better prompt following
-        strength: 0.65,  // 0.65 = Good balance between identity preservation and prompt following
-        scheduler: "K_EULER"
+        num_outputs: 2,  // Generate 2 FLUX variations for user to choose
+        guidance_scale: 3.5,  // FLUX uses lower guidance scale (3-4 is typical)
+        num_inference_steps: 28,  // FLUX typically uses 20-30 steps
+        strength: 0.75,  // 0.75 = Good balance between identity and creativity
+        output_format: "jpg",
+        output_quality: 90
       }
     };
 
     console.log('📤 Request prepared with strength:', requestBody.input.strength);
 
-    // Create the prediction
-    const createResponse = await fetch('https://api.replicate.com/v1/predictions', {
+    // Create the prediction using model-based endpoint (no version needed)
+    const createResponse = await fetch(`https://api.replicate.com/v1/models/${model}/predictions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
