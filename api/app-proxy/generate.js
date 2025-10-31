@@ -56,8 +56,8 @@ export default async function handler(req, res) {
 
     console.log('Using SDXL img2img model version:', modelVersion);
 
-    // Enhance the prompt to emphasize pet features
-    const enhancedPrompt = `${prompt}, maintaining the dog's/pet's unique features, breed characteristics, and appearance, high quality, detailed`;
+    // Enhance the prompt to emphasize BOTH the scene AND pet identity
+    const enhancedPrompt = `A photo of this specific ${prompt}, the dog must look exactly like the reference photo with same breed, colors, markings, and facial features, photorealistic, high quality, detailed`;
 
     console.log('Enhanced prompt:', enhancedPrompt);
 
@@ -67,10 +67,10 @@ export default async function handler(req, res) {
       input: {
         image: image,
         prompt: enhancedPrompt,
-        num_outputs: 1,
+        num_outputs: 4,  // Generate 4 variations so user can pick best
         num_inference_steps: premium ? 50 : 40,
-        guidance_scale: 7.5,
-        strength: 0.75,  // 0.75 = preserve 25% of original image features
+        guidance_scale: 8.0,  // Higher guidance for better prompt following
+        strength: 0.65,  // 0.65 = Good balance between identity preservation and prompt following
         scheduler: "K_EULER"
       }
     };
@@ -127,15 +127,17 @@ export default async function handler(req, res) {
       console.log(`Poll attempt ${attempts + 1}: status=${pollData.status}`);
 
       if (pollData.status === 'succeeded') {
-        const generatedUrl = Array.isArray(pollData.output)
-          ? pollData.output[0]
-          : pollData.output;
+        const generatedUrls = Array.isArray(pollData.output)
+          ? pollData.output
+          : [pollData.output];
 
-        console.log('✅ Image generated successfully:', generatedUrl);
+        console.log('✅ Images generated successfully:', generatedUrls.length, 'images');
+        generatedUrls.forEach((url, i) => console.log(`  Image ${i+1}:`, url));
 
         return res.status(200).json({
           success: true,
-          imageUrl: generatedUrl,
+          images: generatedUrls,  // Return array of all images
+          imageUrl: generatedUrls[0],  // Keep for backwards compatibility
           prompt: prompt,
           premium: premium,
         });
