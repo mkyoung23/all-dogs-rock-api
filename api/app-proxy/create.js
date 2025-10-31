@@ -1,11 +1,11 @@
 // Customer creation flow - accessible via /apps/adrs/create
 // This is the main customer-facing page for creating custom pet portraits
 
-export const config = {
-  runtime: 'edge',
-};
+export default async function handler(req, res) {
+  // Set headers for HTML response
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
-export default function handler(req) {
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -876,11 +876,5 @@ console.log('API endpoint:', API_BASE);
 </html>
   `;
 
-  return new Response(html, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/html',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
+  return res.status(200).send(html);
 }

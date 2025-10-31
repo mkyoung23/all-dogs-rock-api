@@ -1,7 +1,11 @@
 // Complete customer flow for All Dogs Rock Shop
 // Access at: https://your-domain.vercel.app/api/customer-flow
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
+  // Set headers for HTML response
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -891,6 +895,5 @@ console.log('API endpoint:', API_BASE);
 </html>
   `;
 
-  res.setHeader('Content-Type', 'text/html');
-  res.status(200).send(html);
+  return res.status(200).send(html);
 }
