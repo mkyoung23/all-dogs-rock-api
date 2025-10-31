@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('🚀 Generating image with Replicate SDXL img2img...');
+    console.log('🚀 Generating images with FLUX img2img...');
     console.log('Prompt:', prompt);
     console.log('Image data starts with:', image.substring(0, 50) + '...');
     console.log('Image data length:', image.length);
