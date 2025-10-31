@@ -44,18 +44,34 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('Generating image with Replicate IP-Adapter...');
+    console.log('🚀 Generating image with Replicate IP-Adapter...');
     console.log('Prompt:', prompt);
-    console.log('Image URL:', image.substring(0, 50) + '...');
+    console.log('Image data starts with:', image.substring(0, 50) + '...');
+    console.log('Image data length:', image.length);
     console.log('Premium:', premium);
     console.log('Human in photo:', human_in_photo);
 
-    // Choose the right model version
-    // For faces (human + pet), use the face-specific model
-    // For pets only, use the generic image model
-    const model = human_in_photo
-      ? 'lucataco/ip_adapter-sdxl-face:226c6bf67a75a129b0f978e518fed33e1fb13956e15761c1ac53c9d2f898c9af'
-      : 'lucataco/ip_adapter-sdxl-image:3a7e0da6ab5ce58e62a8e6494a28daf15ada8178b69217732c90a3daaae1bc75';
+    // Use the standard IP-Adapter SDXL model
+    const modelVersion = human_in_photo
+      ? '226c6bf67a75a129b0f978e518fed33e1fb13956e15761c1ac53c9d2f898c9af'  // Face model
+      : '3a7e0da6ab5ce58e62a8e6494a28daf15ada8178b69217732c90a3daaae1bc75'; // Image model
+
+    console.log('Using model version:', modelVersion);
+
+    // Create the prediction request
+    const requestBody = {
+      version: modelVersion,
+      input: {
+        image: image,
+        prompt: prompt,
+        num_outputs: 1,
+        num_inference_steps: premium ? 50 : 30,
+        guidance_scale: premium ? 7.5 : 5.0,
+        scheduler: "K_EULER"
+      }
+    };
+
+    console.log('📤 Request body prepared, image field length:', requestBody.input.image.length);
 
     // Create the prediction
     const createResponse = await fetch('https://api.replicate.com/v1/predictions', {
@@ -64,25 +80,22 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
         'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
       },
-      body: JSON.stringify({
-        version: model.split(':')[1], // Extract version hash
-        input: {
-          image: image,  // The customer's uploaded pet photo
-          prompt: prompt,
-          num_outputs: 1,
-          num_inference_steps: premium ? 50 : 30,
-          guidance_scale: premium ? 7.5 : 5.0,
-          scheduler: "K_EULER",
-        },
-      }),
+      body: JSON.stringify(requestBody),
     });
+
+    console.log('📥 Create response status:', createResponse.status);
 
     if (!createResponse.ok) {
       const errorData = await createResponse.json();
-      console.error('❌ Replicate API error:', errorData);
+      console.error('❌ Replicate API error response:', JSON.stringify(errorData, null, 2));
+      console.error('Status:', createResponse.status);
+      console.error('Status Text:', createResponse.statusText);
+
       return res.status(createResponse.status).json({
         error: 'Failed to start image generation',
-        details: errorData.detail || 'Unknown error',
+        details: errorData.detail || errorData.error || JSON.stringify(errorData),
+        status: createResponse.status,
+        replicateError: errorData
       });
     }
 
