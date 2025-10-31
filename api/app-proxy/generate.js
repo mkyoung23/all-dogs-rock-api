@@ -2,82 +2,46 @@
 // This endpoint accepts BOTH a prompt AND a reference image (the customer's pet photo)
 // to create images that preserve the pet's identity
 
-export const config = {
-  runtime: 'edge',
-};
-
 const POLL_INTERVAL_MS = 1500;
 const MAX_POLL_ATTEMPTS = 60; // ~90 seconds max
 
-export default async function handler(req) {
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    });
+    return res.status(200).end();
   }
 
   // Only allow POST
   if (req.method !== 'POST') {
-    return new Response(
-      JSON.stringify({ error: 'Method not allowed' }),
-      {
-        status: 405,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { prompt, image, premium = false, human_in_photo = false } = await req.json();
+    const { prompt, image, premium = false, human_in_photo = false } = req.body;
 
     // Validate required fields
     if (!prompt) {
-      return new Response(
-        JSON.stringify({ error: 'Prompt is required' }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      );
+      return res.status(400).json({ error: 'Prompt is required' });
     }
 
     if (!image) {
-      return new Response(
-        JSON.stringify({ error: 'Image is required - customer must upload their pet photo first' }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      );
+      return res.status(400).json({
+        error: 'Image is required - customer must upload their pet photo first'
+      });
     }
 
     // Check for API token
     if (!process.env.REPLICATE_API_TOKEN) {
-      return new Response(
-        JSON.stringify({ error: 'Replicate API token not configured' }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      );
+      console.error('❌ REPLICATE_API_TOKEN is not set in environment variables!');
+      return res.status(500).json({
+        error: 'Replicate API token not configured. Please contact support.'
+      });
     }
 
     console.log('Generating image with Replicate IP-Adapter...');
@@ -115,20 +79,11 @@ export default async function handler(req) {
 
     if (!createResponse.ok) {
       const errorData = await createResponse.json();
-      console.error('Replicate API error:', errorData);
-      return new Response(
-        JSON.stringify({
-          error: 'Failed to start image generation',
-          details: errorData.detail || 'Unknown error',
-        }),
-        {
-          status: createResponse.status,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      );
+      console.error('❌ Replicate API error:', errorData);
+      return res.status(createResponse.status).json({
+        error: 'Failed to start image generation',
+        details: errorData.detail || 'Unknown error',
+      });
     }
 
     const prediction = await createResponse.json();
@@ -159,74 +114,39 @@ export default async function handler(req) {
           ? pollData.output[0]
           : pollData.output;
 
-        console.log('Image generated successfully:', generatedUrl);
+        console.log('✅ Image generated successfully:', generatedUrl);
 
-        return new Response(
-          JSON.stringify({
-            success: true,
-            imageUrl: generatedUrl,
-            prompt: prompt,
-            premium: premium,
-          }),
-          {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-            },
-          }
-        );
+        return res.status(200).json({
+          success: true,
+          imageUrl: generatedUrl,
+          prompt: prompt,
+          premium: premium,
+        });
       }
 
       if (pollData.status === 'failed' || pollData.status === 'canceled') {
-        console.error('Generation failed:', pollData.error);
-        return new Response(
-          JSON.stringify({
-            error: 'Image generation failed',
-            details: pollData.error || 'Generation was canceled or failed',
-          }),
-          {
-            status: 500,
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-            },
-          }
-        );
+        console.error('❌ Generation failed:', pollData.error);
+        return res.status(500).json({
+          error: 'Image generation failed',
+          details: pollData.error || 'Generation was canceled or failed',
+        });
       }
 
       attempts++;
     }
 
     // Timeout
-    return new Response(
-      JSON.stringify({
-        error: 'Image generation timeout',
-        details: 'Generation took too long. Please try again.',
-      }),
-      {
-        status: 504,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
+    console.error('⏱️ Generation timeout after', MAX_POLL_ATTEMPTS, 'attempts');
+    return res.status(504).json({
+      error: 'Image generation timeout',
+      details: 'Generation took too long. Please try again.',
+    });
 
   } catch (error) {
-    console.error('Error in generate endpoint:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'Failed to generate image',
-        details: error.message,
-      }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
+    console.error('❌ Error in generate endpoint:', error);
+    return res.status(500).json({
+      error: 'Failed to generate image',
+      details: error.message,
+    });
   }
 }
