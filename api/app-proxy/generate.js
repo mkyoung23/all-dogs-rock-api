@@ -51,33 +51,37 @@ export default async function handler(req, res) {
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use SDXL img2img - proven working model on Replicate
-    const version = 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b';
+    // Use FLUX dev LoRA - supports img2img with image parameter
+    const model = 'black-forest-labs/flux-dev-lora';
 
-    console.log('Using SDXL img2img version:', version);
+    console.log('Using FLUX dev LoRA for img2img:', model);
 
     // Enhance the prompt to emphasize BOTH the scene AND pet identity
     const enhancedPrompt = `A realistic photo of this exact dog ${prompt}, must look identical to the reference image with same breed, fur color, markings, face shape, and all unique features, professional photography, highly detailed`;
 
     console.log('Enhanced prompt:', enhancedPrompt);
 
-    // Create the prediction request for SDXL img2img
+    // Create the prediction request for FLUX dev LoRA img2img
     const requestBody = {
-      version: version.split(':')[1],
       input: {
-        image: image,
+        image: image,  // Base64 or URL of the uploaded pet photo
         prompt: enhancedPrompt,
-        num_outputs: 2,  // Generate 2 variations for user to choose
-        guidance_scale: 7.5,  // SDXL works best with 7-10
-        num_inference_steps: 50,  // SDXL typically uses 30-50 steps
+        model: "dev",  // Use dev model (higher quality than schnell)
+        num_outputs: 2,  // Generate 2 FLUX variations for user to choose
+        num_inference_steps: 28,  // FLUX typically uses 28 steps
+        guidance_scale: 3.5,  // FLUX dev uses 3.5 guidance
         prompt_strength: 0.8,  // 0.8 = Good balance between identity and creativity
+        lora_scale: 1,  // Full LoRA strength
+        output_format: "jpg",
+        output_quality: 90,
+        go_fast: true  // Use fast optimized version
       }
     };
 
     console.log('📤 Request prepared with prompt_strength:', requestBody.input.prompt_strength);
 
-    // Use the general predictions endpoint with version
-    const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
+    // Use the general predictions endpoint
+    const createResponse = await fetch(`https://api.replicate.com/v1/models/${model}/predictions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
