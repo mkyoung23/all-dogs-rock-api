@@ -44,34 +44,38 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('🚀 Generating image with Replicate IP-Adapter...');
+    console.log('🚀 Generating image with Replicate SDXL img2img...');
     console.log('Prompt:', prompt);
     console.log('Image data starts with:', image.substring(0, 50) + '...');
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
-    console.log('Human in photo:', human_in_photo);
 
-    // Use the standard IP-Adapter SDXL model
-    const modelVersion = human_in_photo
-      ? '226c6bf67a75a129b0f978e518fed33e1fb13956e15761c1ac53c9d2f898c9af'  // Face model
-      : '3a7e0da6ab5ce58e62a8e6494a28daf15ada8178b69217732c90a3daaae1bc75'; // Image model
+    // Use public SDXL img2img model (stability-ai/sdxl)
+    // This is a PUBLIC model that definitely works
+    const modelVersion = '39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b';
 
-    console.log('Using model version:', modelVersion);
+    console.log('Using SDXL img2img model version:', modelVersion);
+
+    // Enhance the prompt to emphasize pet features
+    const enhancedPrompt = `${prompt}, maintaining the dog's/pet's unique features, breed characteristics, and appearance, high quality, detailed`;
+
+    console.log('Enhanced prompt:', enhancedPrompt);
 
     // Create the prediction request
     const requestBody = {
       version: modelVersion,
       input: {
         image: image,
-        prompt: prompt,
+        prompt: enhancedPrompt,
         num_outputs: 1,
-        num_inference_steps: premium ? 50 : 30,
-        guidance_scale: premium ? 7.5 : 5.0,
+        num_inference_steps: premium ? 50 : 40,
+        guidance_scale: 7.5,
+        strength: 0.75,  // 0.75 = preserve 25% of original image features
         scheduler: "K_EULER"
       }
     };
 
-    console.log('📤 Request body prepared, image field length:', requestBody.input.image.length);
+    console.log('📤 Request prepared with strength:', requestBody.input.strength);
 
     // Create the prediction
     const createResponse = await fetch('https://api.replicate.com/v1/predictions', {
