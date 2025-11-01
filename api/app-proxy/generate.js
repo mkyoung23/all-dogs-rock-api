@@ -1,8 +1,9 @@
-// API route for generating AI images using Replicate FLUX Kontext Pro
-// This endpoint accepts BOTH a prompt AND a reference image (the customer's pet photo)
-// to create scene transformations that preserve the pet's identity
-// FLUX Kontext Pro is specifically designed for pet transformations - it transforms
-// entire scenes while maintaining subject identity (NOT just img2img enhancement)
+// API route for generating AI images using Replicate Face Swap
+// This endpoint accepts a customer's pet photo and swaps it onto iconic pose templates
+// Using dog-to-dog face swap for reliable, consistent results
+// Customer selects from pre-made iconic poses (basketball dunk, astronaut, etc.)
+
+import iconicPoses from '../../iconic-poses.json' assert { type: 'json' };
 
 const POLL_INTERVAL_MS = 1500;
 const MAX_POLL_ATTEMPTS = 60; // ~90 seconds max
@@ -25,11 +26,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { prompt, image, premium = false, human_in_photo = false } = req.body;
+    const { poseId, image, premium = false } = req.body;
 
     // Validate required fields
-    if (!prompt) {
-      return res.status(400).json({ error: 'Prompt is required' });
+    if (!poseId) {
+      return res.status(400).json({ error: 'Pose ID is required - customer must select an iconic pose' });
     }
 
     if (!image) {
@@ -37,6 +38,19 @@ export default async function handler(req, res) {
         error: 'Image is required - customer must upload their pet photo first'
       });
     }
+
+    // Look up the selected pose template
+    const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
+
+    if (!selectedPose) {
+      return res.status(400).json({
+        error: `Invalid pose ID: ${poseId}`,
+        availablePoses: iconicPoses.poses.map(p => p.id)
+      });
+    }
+
+    console.log('🎭 Selected pose:', selectedPose.name);
+    console.log('📸 Template URL:', selectedPose.templateUrl);
 
     // Check for API token
     if (!process.env.REPLICATE_API_TOKEN) {
@@ -46,39 +60,31 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('🚀 Generating images with FLUX Kontext Pro...');
-    console.log('Prompt:', prompt);
-    console.log('Image data starts with:', image.substring(0, 50) + '...');
-    console.log('Image data length:', image.length);
+    console.log('🚀 Starting face swap...');
+    console.log('Customer image data starts with:', image.substring(0, 50) + '...');
+    console.log('Customer image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use FLUX Kontext Pro - specifically designed for pet transformations!
-    // This model transforms entire scenes while preserving subject identity
-    const version = '0f1178f5a27e9aa2d2d39c8a43c110f7fa7cbf64062ff04a04cd40899e546065';
+    // Use omniedgeio/face-swap for reliable dog-to-dog face swapping
+    // This model swaps faces from one image to another while preserving pose/background
+    const version = '1251f6b5b8c3ce671f937d1262cc7d542b7729c30ae5e67a4bf0eef61fdb8d82';
 
-    console.log('Using FLUX Kontext Pro (black-forest-labs/flux-kontext-pro) for pet scene transformation');
+    console.log('Using omniedgeio/face-swap for face replacement');
 
-    // Create prompt that describes the DESIRED OUTPUT SCENE
-    // FLUX Kontext Pro will automatically preserve the pet's identity from reference image
-    // Best practices: be specific about what you want in the final image
-    const enhancedPrompt = `A ${prompt}, professional photography, highly detailed, photorealistic`;
-
-    console.log('Enhanced prompt:', enhancedPrompt);
-
-    // Create the prediction request for FLUX Kontext Pro
-    // Note: This is NOT img2img - it's reference-based text-to-image generation
+    // Create the prediction request for face swap
+    // swap_image: customer's dog photo (face source)
+    // target_image: iconic pose template (body/pose/background)
     const requestBody = {
       version: version,
       input: {
-        prompt: enhancedPrompt,
-        input_image: image,  // Reference image for pet identity
-        num_outputs: 2,  // Generate 2 variations
-        steps: 28,  // Default inference steps for quality
-        // FLUX Kontext Pro automatically preserves subject identity - no prompt_strength needed!
+        swap_image: image,  // Customer's pet photo (the face to use)
+        target_image: selectedPose.templateUrl,  // Template pose (the body/scene)
+        det_thresh: 0.1,  // Detection threshold for face detection
+        weight: 0.5,  // Blending weight
       }
     };
 
-    console.log('📤 Request prepared for reference-based scene transformation');
+    console.log('📤 Face swap request prepared - swapping customer dog onto', selectedPose.name);
 
     // Use the version-based predictions endpoint
     const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
@@ -130,18 +136,18 @@ export default async function handler(req, res) {
       console.log(`Poll attempt ${attempts + 1}: status=${pollData.status}`);
 
       if (pollData.status === 'succeeded') {
-        const generatedUrls = Array.isArray(pollData.output)
-          ? pollData.output
-          : [pollData.output];
+        // Face swap returns a single image URL
+        const swappedImageUrl = pollData.output;
 
-        console.log('✅ Images generated successfully:', generatedUrls.length, 'images');
-        generatedUrls.forEach((url, i) => console.log(`  Image ${i+1}:`, url));
+        console.log('✅ Face swap completed successfully!');
+        console.log('📷 Swapped image URL:', swappedImageUrl);
 
         return res.status(200).json({
           success: true,
-          images: generatedUrls,  // Return array of all images
-          imageUrl: generatedUrls[0],  // Keep for backwards compatibility
-          prompt: prompt,
+          imageUrl: swappedImageUrl,
+          images: [swappedImageUrl],  // Return as array for compatibility
+          poseName: selectedPose.name,
+          poseId: selectedPose.id,
           premium: premium,
         });
       }
