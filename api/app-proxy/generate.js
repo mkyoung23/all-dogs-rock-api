@@ -70,7 +70,7 @@ export default async function handler(req, res) {
         num_outputs: 2,  // Generate 2 FLUX variations for user to choose
         num_inference_steps: 28,  // FLUX typically uses 28 steps
         guidance_scale: 3.5,  // FLUX dev uses 3.5 guidance
-        prompt_strength: 0.8,  // 0.8 = Good balance between identity and creativity
+        prompt_strength: 0.55,  // 0.55 = Better balance - allows more prompt transformation while keeping pet identity
         lora_scale: 1,  // Full LoRA strength
         output_format: "jpg",
         output_quality: 90,
