@@ -51,36 +51,36 @@ export default async function handler(req, res) {
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use IP-Adapter + ControlNet Depth - PERFECT for pet identity + scene transformation
-    const model = 'chigozienri/ip_adapter-sdxl-controlnet-depth';
+    // Use stability-ai SDXL with img2img - proven working model
+    const version = '39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b';
 
-    console.log('Using IP-Adapter + ControlNet Depth for pet transformation:', model);
+    console.log('Using SDXL img2img for generation');
 
-    // Enhance the prompt to describe the scene we want
-    const enhancedPrompt = `Professional photo of a dog ${prompt}, high quality, detailed, photorealistic`;
+    // Create descriptive prompt that includes the scene AND encourages keeping the dog's appearance
+    const enhancedPrompt = `${prompt}, keeping the exact same dog breed, fur color, and facial features from the reference image, professional photography, highly detailed`;
 
     console.log('Enhanced prompt:', enhancedPrompt);
 
-    // Create the prediction request for IP-Adapter + ControlNet
+    // Create the prediction request for SDXL img2img
     const requestBody = {
+      version: version,
       input: {
-        input_image: image,  // Pet photo for depth/structure
-        ip_image: image,  // Pet photo for identity preservation
+        image: image,
         prompt: enhancedPrompt,
-        negative_prompt: "blurry, low quality, distorted, deformed, ugly, cartoon, illustration",
-        ip_adapter_scale: 0.75,  // Strong identity preservation (0.75 = 75% pet's appearance)
-        controlnet_scale: 0.5,  // Moderate depth control (allows scene transformation)
-        num_inference_steps: 30,  // Quality steps
-        guidance_scale: 7.5,  // Strong prompt following
+        negative_prompt: "blurry, low quality, distorted, deformed, different dog, wrong breed, cartoon",
         num_outputs: 2,  // Generate 2 variations
-        seed: -1  // Random seed each time
+        guidance_scale: 9,  // Very high guidance to follow prompt
+        num_inference_steps: 40,  // More steps for better quality
+        prompt_strength: 0.35,  // Low enough to allow transformation, high enough to preserve some identity
+        refine: "expert_ensemble_refiner",  // Use refiner for better quality
+        refine_steps: 10
       }
     };
 
-    console.log('📤 Request prepared with ip_adapter_scale:', requestBody.input.ip_adapter_scale);
+    console.log('📤 Request prepared with prompt_strength:', requestBody.input.prompt_strength);
 
-    // Use the model-based predictions endpoint
-    const createResponse = await fetch(`https://api.replicate.com/v1/models/${model}/predictions`, {
+    // Use the version-based predictions endpoint
+    const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
