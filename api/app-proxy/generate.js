@@ -1,7 +1,8 @@
-// API route for generating AI images using Replicate FLUX img2img
+// API route for generating AI images using Replicate FLUX Kontext Pro
 // This endpoint accepts BOTH a prompt AND a reference image (the customer's pet photo)
-// to create images that preserve the pet's identity
-// FLUX model provides superior pet identity preservation and prompt following
+// to create scene transformations that preserve the pet's identity
+// FLUX Kontext Pro is specifically designed for pet transformations - it transforms
+// entire scenes while maintaining subject identity (NOT just img2img enhancement)
 
 const POLL_INTERVAL_MS = 1500;
 const MAX_POLL_ATTEMPTS = 60; // ~90 seconds max
@@ -45,39 +46,39 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('🚀 Generating images with FLUX img2img...');
+    console.log('🚀 Generating images with FLUX Kontext Pro...');
     console.log('Prompt:', prompt);
     console.log('Image data starts with:', image.substring(0, 50) + '...');
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use stability-ai SDXL with img2img - proven working model
-    const version = '39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b';
+    // Use FLUX Kontext Pro - specifically designed for pet transformations!
+    // This model transforms entire scenes while preserving subject identity
+    const version = '0f1178f5a27e9aa2d2d39c8a43c110f7fa7cbf64062ff04a04cd40899e546065';
 
-    console.log('Using SDXL img2img for generation');
+    console.log('Using FLUX Kontext Pro (black-forest-labs/flux-kontext-pro) for pet scene transformation');
 
-    // Create descriptive prompt that includes the scene AND encourages keeping the dog's appearance
-    const enhancedPrompt = `${prompt}, keeping the exact same dog breed, fur color, and facial features from the reference image, professional photography, highly detailed`;
+    // Create prompt that describes the DESIRED OUTPUT SCENE
+    // FLUX Kontext Pro will automatically preserve the pet's identity from reference image
+    // Best practices: be specific about what you want in the final image
+    const enhancedPrompt = `A ${prompt}, professional photography, highly detailed, photorealistic`;
 
     console.log('Enhanced prompt:', enhancedPrompt);
 
-    // Create the prediction request for SDXL img2img
+    // Create the prediction request for FLUX Kontext Pro
+    // Note: This is NOT img2img - it's reference-based text-to-image generation
     const requestBody = {
       version: version,
       input: {
-        image: image,
         prompt: enhancedPrompt,
-        negative_prompt: "blurry, low quality, distorted, deformed, different dog, wrong breed, cartoon",
+        input_image: image,  // Reference image for pet identity
         num_outputs: 2,  // Generate 2 variations
-        guidance_scale: 9,  // Very high guidance to follow prompt
-        num_inference_steps: 40,  // More steps for better quality
-        prompt_strength: 0.35,  // Low enough to allow transformation, high enough to preserve some identity
-        refine: "expert_ensemble_refiner",  // Use refiner for better quality
-        refine_steps: 10
+        steps: 28,  // Default inference steps for quality
+        // FLUX Kontext Pro automatically preserves subject identity - no prompt_strength needed!
       }
     };
 
-    console.log('📤 Request prepared with prompt_strength:', requestBody.input.prompt_strength);
+    console.log('📤 Request prepared for reference-based scene transformation');
 
     // Use the version-based predictions endpoint
     const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
