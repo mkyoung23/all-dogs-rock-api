@@ -1,0 +1,184 @@
+{
+  "poses": [
+    {
+      "id": "basketball-dunk",
+      "name": "Basketball Slam Dunk",
+      "description": "Epic basketball dunk pose inspired by legendary athletes",
+      "category": "Sports",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-basketball-dunk.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-basketball-dunk-thumb.jpg",
+      "prompt": "Golden retriever in mid-air slam dunking a basketball, professional sports photography, NBA arena background"
+    },
+    {
+      "id": "baseball-swing",
+      "name": "Baseball Home Run Swing",
+      "description": "Classic baseball power swing pose",
+      "category": "Sports",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-baseball.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-baseball-thumb.jpg",
+      "prompt": "Dog hitting a home run, baseball uniform, stadium lights"
+    },
+    {
+      "id": "superhero-flying",
+      "name": "Superhero Flight",
+      "description": "Flying superhero pose with cape",
+      "category": "Superhero",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-superhero.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-superhero-thumb.jpg",
+      "prompt": "Dog in superhero costume flying through the sky with cape flowing, cityscape background"
+    },
+    {
+      "id": "astronaut-space",
+      "name": "Astronaut in Space",
+      "description": "Astronaut floating in space",
+      "category": "Adventure",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-astronaut.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-astronaut-thumb.jpg",
+      "prompt": "Dog astronaut in NASA spacesuit floating in space, Earth in background, stars"
+    },
+    {
+      "id": "royal-portrait",
+      "name": "Royal Portrait",
+      "description": "Regal royal portrait with crown and robes",
+      "category": "Royalty",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-royal.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-royal-thumb.jpg",
+      "prompt": "Dog wearing royal crown and red velvet robes, castle throne room, renaissance portrait style"
+    },
+    {
+      "id": "medieval-knight",
+      "name": "Medieval Knight",
+      "description": "Knight in shining armor",
+      "category": "Medieval",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-knight.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-knight-thumb.jpg",
+      "prompt": "Dog as medieval knight in silver armor holding sword, castle background"
+    },
+    {
+      "id": "pilot-aviator",
+      "name": "Fighter Pilot",
+      "description": "Top Gun style fighter pilot",
+      "category": "Military",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-pilot.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-pilot-thumb.jpg",
+      "prompt": "Dog as fighter pilot wearing aviator sunglasses and helmet, F-16 cockpit"
+    },
+    {
+      "id": "chef-cooking",
+      "name": "Master Chef",
+      "description": "Professional chef cooking",
+      "category": "Culinary",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-chef.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-chef-thumb.jpg",
+      "prompt": "Dog wearing chef hat and apron, cooking in professional kitchen"
+    },
+    {
+      "id": "graduate-cap",
+      "name": "Graduate",
+      "description": "Graduation ceremony with cap and gown",
+      "category": "Academic",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-graduate.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-graduate-thumb.jpg",
+      "prompt": "Dog wearing graduation cap and gown, university campus background"
+    },
+    {
+      "id": "wedding-suit",
+      "name": "Wedding Formal",
+      "description": "Elegant wedding attire",
+      "category": "Formal",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-wedding.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-wedding-thumb.jpg",
+      "prompt": "Dog in tuxedo or wedding dress, elegant wedding venue background"
+    },
+    {
+      "id": "rockstar-concert",
+      "name": "Rock Star",
+      "description": "Rock concert performance",
+      "category": "Music",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-rockstar.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-rockstar-thumb.jpg",
+      "prompt": "Dog playing electric guitar on stage, concert lights, crowd cheering"
+    },
+    {
+      "id": "surfer-wave",
+      "name": "Pro Surfer",
+      "description": "Surfing a massive wave",
+      "category": "Sports",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-surfer.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-surfer-thumb.jpg",
+      "prompt": "Dog surfing on a huge ocean wave, tropical beach background"
+    },
+    {
+      "id": "cowboy-western",
+      "name": "Western Cowboy",
+      "description": "Classic Wild West cowboy",
+      "category": "Western",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-cowboy.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-cowboy-thumb.jpg",
+      "prompt": "Dog as cowboy wearing hat and boots, desert western town background"
+    },
+    {
+      "id": "spy-agent",
+      "name": "Secret Agent",
+      "description": "James Bond style spy",
+      "category": "Action",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-spy.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-spy-thumb.jpg",
+      "prompt": "Dog in tuxedo as secret agent, casino or spy mission background"
+    },
+    {
+      "id": "pirate-ship",
+      "name": "Pirate Captain",
+      "description": "Pirate captain on ship",
+      "category": "Adventure",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-pirate.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-pirate-thumb.jpg",
+      "prompt": "Dog as pirate captain with eye patch and hat, pirate ship deck, ocean background"
+    },
+    {
+      "id": "scientist-lab",
+      "name": "Mad Scientist",
+      "description": "Scientist in laboratory",
+      "category": "Science",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-scientist.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-scientist-thumb.jpg",
+      "prompt": "Dog as scientist wearing lab coat and goggles, chemistry lab with beakers"
+    },
+    {
+      "id": "firefighter-hero",
+      "name": "Firefighter Hero",
+      "description": "Brave firefighter in action",
+      "category": "Hero",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-firefighter.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-firefighter-thumb.jpg",
+      "prompt": "Dog as firefighter in uniform and helmet, fire truck background"
+    },
+    {
+      "id": "renaissance-art",
+      "name": "Renaissance Portrait",
+      "description": "Classical Renaissance painting style",
+      "category": "Art",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-renaissance.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-renaissance-thumb.jpg",
+      "prompt": "Dog in Renaissance era clothing, classical portrait painting style, museum quality"
+    },
+    {
+      "id": "disco-dancer",
+      "name": "70s Disco",
+      "description": "Disco era dancer",
+      "category": "Retro",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-disco.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-disco-thumb.jpg",
+      "prompt": "Dog in 1970s disco outfit with afro, disco ball, colorful lights"
+    },
+    {
+      "id": "santa-christmas",
+      "name": "Santa Claus",
+      "description": "Santa delivering presents",
+      "category": "Holiday",
+      "templateUrl": "https://replicate.delivery/pbxt/placeholder-santa.jpg",
+      "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-santa-thumb.jpg",
+      "prompt": "Dog as Santa Claus with red suit and white beard, Christmas background with presents"
+    }
+  ]
+}
