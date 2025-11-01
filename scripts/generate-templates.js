@@ -2,7 +2,6 @@
 // Run with: node scripts/generate-templates.js
 
 import fs from 'fs';
-import fetch from 'node-fetch';
 
 // Load iconic poses
 const iconicPoses = JSON.parse(fs.readFileSync('./iconic-poses.json', 'utf8'));

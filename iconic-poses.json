@@ -7,7 +7,7 @@
       "category": "Sports",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-basketball-dunk.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-basketball-dunk-thumb.jpg",
-      "prompt": "Golden retriever in mid-air slam dunking a basketball, professional sports photography, NBA arena background"
+      "prompt": "Professional photo of a golden retriever dog in mid-air slam dunking a basketball, wearing basketball jersey, NBA arena with crowd, dramatic lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "baseball-swing",
@@ -16,7 +16,7 @@
       "category": "Sports",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-baseball.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-baseball-thumb.jpg",
-      "prompt": "Dog hitting a home run, baseball uniform, stadium lights"
+      "prompt": "Professional photo of a german shepherd dog swinging a baseball bat hitting a home run, wearing baseball uniform, stadium with bright lights, action shot, photorealistic, 8k, highly detailed"
     },
     {
       "id": "superhero-flying",
@@ -25,7 +25,7 @@
       "category": "Superhero",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-superhero.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-superhero-thumb.jpg",
-      "prompt": "Dog in superhero costume flying through the sky with cape flowing, cityscape background"
+      "prompt": "Professional photo of a husky dog in superhero costume flying through the sky with red cape flowing dramatically, cityscape background, cinematic lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "astronaut-space",
@@ -34,7 +34,7 @@
       "category": "Adventure",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-astronaut.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-astronaut-thumb.jpg",
-      "prompt": "Dog astronaut in NASA spacesuit floating in space, Earth in background, stars"
+      "prompt": "Professional photo of a beagle dog astronaut in white NASA spacesuit floating in space, Earth visible in background, stars and galaxies, epic space scene, photorealistic, 8k, highly detailed"
     },
     {
       "id": "royal-portrait",
@@ -43,7 +43,7 @@
       "category": "Royalty",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-royal.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-royal-thumb.jpg",
-      "prompt": "Dog wearing royal crown and red velvet robes, castle throne room, renaissance portrait style"
+      "prompt": "Professional photo of a corgi dog wearing ornate golden crown and luxurious red velvet robes with ermine trim, sitting on throne in castle throne room, renaissance portrait style, regal lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "medieval-knight",
@@ -52,7 +52,7 @@
       "category": "Medieval",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-knight.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-knight-thumb.jpg",
-      "prompt": "Dog as medieval knight in silver armor holding sword, castle background"
+      "prompt": "Professional photo of a rottweiler dog as medieval knight in polished silver armor holding steel sword, castle courtyard background, dramatic lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "pilot-aviator",
@@ -61,7 +61,7 @@
       "category": "Military",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-pilot.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-pilot-thumb.jpg",
-      "prompt": "Dog as fighter pilot wearing aviator sunglasses and helmet, F-16 cockpit"
+      "prompt": "Professional photo of a boxer dog as fighter pilot wearing mirrored aviator sunglasses and flight helmet, sitting in F-16 fighter jet cockpit, Top Gun style, cinematic lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "chef-cooking",
@@ -70,7 +70,7 @@
       "category": "Culinary",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-chef.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-chef-thumb.jpg",
-      "prompt": "Dog wearing chef hat and apron, cooking in professional kitchen"
+      "prompt": "Professional photo of a french bulldog dog wearing white chef hat and apron, cooking in modern professional kitchen with stainless steel equipment, holding cooking utensils, warm kitchen lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "graduate-cap",
@@ -79,7 +79,7 @@
       "category": "Academic",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-graduate.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-graduate-thumb.jpg",
-      "prompt": "Dog wearing graduation cap and gown, university campus background"
+      "prompt": "Professional photo of a labrador retriever dog wearing black graduation cap and gown with diploma, university campus with historic buildings in background, proud graduation portrait, photorealistic, 8k, highly detailed"
     },
     {
       "id": "wedding-suit",
@@ -88,7 +88,7 @@
       "category": "Formal",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-wedding.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-wedding-thumb.jpg",
-      "prompt": "Dog in tuxedo or wedding dress, elegant wedding venue background"
+      "prompt": "Professional photo of a poodle dog in elegant black tuxedo with bow tie, elegant wedding venue with flowers and decorations, soft romantic lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "rockstar-concert",
@@ -97,7 +97,7 @@
       "category": "Music",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-rockstar.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-rockstar-thumb.jpg",
-      "prompt": "Dog playing electric guitar on stage, concert lights, crowd cheering"
+      "prompt": "Professional photo of a dalmatian dog playing red electric guitar on stage, dramatic concert lights and spotlights, crowd visible in background, rock concert atmosphere, photorealistic, 8k, highly detailed"
     },
     {
       "id": "surfer-wave",
@@ -106,7 +106,7 @@
       "category": "Sports",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-surfer.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-surfer-thumb.jpg",
-      "prompt": "Dog surfing on a huge ocean wave, tropical beach background"
+      "prompt": "Professional photo of an australian shepherd dog surfing on a surfboard riding a huge turquoise ocean wave, tropical beach and palm trees in background, action shot, photorealistic, 8k, highly detailed"
     },
     {
       "id": "cowboy-western",
@@ -115,7 +115,7 @@
       "category": "Western",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-cowboy.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-cowboy-thumb.jpg",
-      "prompt": "Dog as cowboy wearing hat and boots, desert western town background"
+      "prompt": "Professional photo of a border collie dog as western cowboy wearing brown leather cowboy hat and boots, old west desert town with saloon in background, sunset lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "spy-agent",
@@ -124,7 +124,7 @@
       "category": "Action",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-spy.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-spy-thumb.jpg",
-      "prompt": "Dog in tuxedo as secret agent, casino or spy mission background"
+      "prompt": "Professional photo of a doberman dog in sleek black tuxedo as secret agent spy, luxury casino with poker tables and chandeliers in background, dramatic cinematic lighting, James Bond style, photorealistic, 8k, highly detailed"
     },
     {
       "id": "pirate-ship",
@@ -133,7 +133,7 @@
       "category": "Adventure",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-pirate.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-pirate-thumb.jpg",
-      "prompt": "Dog as pirate captain with eye patch and hat, pirate ship deck, ocean background"
+      "prompt": "Professional photo of a shiba inu dog as pirate captain wearing black pirate hat with skull, red coat and eye patch, standing on wooden pirate ship deck, ocean and sunset in background, photorealistic, 8k, highly detailed"
     },
     {
       "id": "scientist-lab",
@@ -142,7 +142,7 @@
       "category": "Science",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-scientist.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-scientist-thumb.jpg",
-      "prompt": "Dog as scientist wearing lab coat and goggles, chemistry lab with beakers"
+      "prompt": "Professional photo of a jack russell terrier dog as scientist wearing white lab coat and safety goggles, chemistry laboratory with colorful beakers and test tubes, dramatic science lab lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "firefighter-hero",
@@ -151,7 +151,7 @@
       "category": "Hero",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-firefighter.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-firefighter-thumb.jpg",
-      "prompt": "Dog as firefighter in uniform and helmet, fire truck background"
+      "prompt": "Professional photo of a saint bernard dog as firefighter wearing yellow firefighter uniform and red helmet, red fire truck in background, heroic pose, dramatic lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "renaissance-art",
@@ -160,7 +160,7 @@
       "category": "Art",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-renaissance.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-renaissance-thumb.jpg",
-      "prompt": "Dog in Renaissance era clothing, classical portrait painting style, museum quality"
+      "prompt": "Professional photo of a cavalier king charles spaniel dog in Renaissance era noble clothing with ruffled collar, classical portrait painting style, ornate background, museum quality lighting, photorealistic, 8k, highly detailed"
     },
     {
       "id": "disco-dancer",
@@ -169,7 +169,7 @@
       "category": "Retro",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-disco.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-disco-thumb.jpg",
-      "prompt": "Dog in 1970s disco outfit with afro, disco ball, colorful lights"
+      "prompt": "Professional photo of a pug dog in 1970s disco outfit with sparkly shirt and afro wig, disco ball and colorful lights in background, retro disco atmosphere, photorealistic, 8k, highly detailed"
     },
     {
       "id": "santa-christmas",
@@ -178,7 +178,7 @@
       "category": "Holiday",
       "templateUrl": "https://replicate.delivery/pbxt/placeholder-santa.jpg",
       "thumbnailUrl": "https://replicate.delivery/pbxt/placeholder-santa-thumb.jpg",
-      "prompt": "Dog as Santa Claus with red suit and white beard, Christmas background with presents"
+      "prompt": "Professional photo of a samoyed dog as Santa Claus wearing classic red suit with white fur trim and white beard, Christmas background with decorated tree and wrapped presents, festive holiday lighting, photorealistic, 8k, highly detailed"
     }
   ]
 }
