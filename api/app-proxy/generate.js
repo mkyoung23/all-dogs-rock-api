@@ -51,36 +51,35 @@ export default async function handler(req, res) {
     console.log('Image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use FLUX dev LoRA - supports img2img with image parameter
-    const model = 'black-forest-labs/flux-dev-lora';
+    // Use IP-Adapter + ControlNet Depth - PERFECT for pet identity + scene transformation
+    const model = 'chigozienri/ip_adapter-sdxl-controlnet-depth';
 
-    console.log('Using FLUX dev LoRA for img2img:', model);
+    console.log('Using IP-Adapter + ControlNet Depth for pet transformation:', model);
 
-    // Enhance the prompt to emphasize BOTH the scene AND pet identity
-    const enhancedPrompt = `A realistic photo of this exact dog ${prompt}, must look identical to the reference image with same breed, fur color, markings, face shape, and all unique features, professional photography, highly detailed`;
+    // Enhance the prompt to describe the scene we want
+    const enhancedPrompt = `Professional photo of a dog ${prompt}, high quality, detailed, photorealistic`;
 
     console.log('Enhanced prompt:', enhancedPrompt);
 
-    // Create the prediction request for FLUX dev LoRA img2img
+    // Create the prediction request for IP-Adapter + ControlNet
     const requestBody = {
       input: {
-        image: image,  // Base64 or URL of the uploaded pet photo
+        input_image: image,  // Pet photo for depth/structure
+        ip_image: image,  // Pet photo for identity preservation
         prompt: enhancedPrompt,
-        model: "dev",  // Use dev model (higher quality than schnell)
-        num_outputs: 2,  // Generate 2 FLUX variations for user to choose
-        num_inference_steps: 28,  // FLUX typically uses 28 steps
-        guidance_scale: 7.5,  // Higher guidance to follow prompt more
-        prompt_strength: 0.25,  // 0.25 = Much lower - allows major prompt transformation while preserving pet features
-        lora_scale: 1,  // Full LoRA strength
-        output_format: "jpg",
-        output_quality: 90,
-        go_fast: true  // Use fast optimized version
+        negative_prompt: "blurry, low quality, distorted, deformed, ugly, cartoon, illustration",
+        ip_adapter_scale: 0.75,  // Strong identity preservation (0.75 = 75% pet's appearance)
+        controlnet_scale: 0.5,  // Moderate depth control (allows scene transformation)
+        num_inference_steps: 30,  // Quality steps
+        guidance_scale: 7.5,  // Strong prompt following
+        num_outputs: 2,  // Generate 2 variations
+        seed: -1  // Random seed each time
       }
     };
 
-    console.log('📤 Request prepared with prompt_strength:', requestBody.input.prompt_strength);
+    console.log('📤 Request prepared with ip_adapter_scale:', requestBody.input.ip_adapter_scale);
 
-    // Use the general predictions endpoint
+    // Use the model-based predictions endpoint
     const createResponse = await fetch(`https://api.replicate.com/v1/models/${model}/predictions`, {
       method: 'POST',
       headers: {
