@@ -66,16 +66,11 @@ export default async function handler(req, res) {
     console.log('Premium:', premium);
 
     // Use yan-ops/face_swap for reliable face swapping
-    // This model swaps faces from one image to another while preserving pose/background
-    const version = 'd5900f9ebed33e7ae08a07f17e0d98b4ebc68ab9528a70462afc3899cfe23bab';
-
     console.log('Using yan-ops/face_swap for face replacement');
 
-    // Create the prediction request for face swap
-    // source_image: customer's dog photo (face source)
-    // target_image: iconic pose template (body/pose/background)
+    // Use latest version by specifying model name instead of version ID
     const requestBody = {
-      version: version,
+      version: 'yan-ops/face_swap:d5900f9ebed33e7ae08a07f17e0d98b4ebc68ab9528a70462afc3899cfe23bab',
       input: {
         source_image: image,  // Customer's pet photo (the face to use)
         target_image: selectedPose.templateUrl,  // Template pose (the body/scene)
