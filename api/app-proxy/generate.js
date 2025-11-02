@@ -1,5 +1,6 @@
 // API route for generating iconic dog images using FLUX 1.1 Pro
-// Customer uploads dog photo, we generate their dog breed in iconic poses
+// Customer provides dog breed, we generate their dog in iconic poses
+// Deployed: 2025-11-02
 
 import iconicPoses from '../../iconic-poses.json' assert { type: 'json' };
 
