@@ -9,8 +9,9 @@ import json
 import time
 from pathlib import Path
 
-# Your OpenAI API key
-OPENAI_API_KEY = "your_openai_api_key_here"
+# Your OpenAI API key - set this as an environment variable or replace with your key
+import os
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your_openai_api_key_here')
 
 def generate_template(pose, index, total):
     """Generate a single template image"""
