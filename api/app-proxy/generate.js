@@ -65,19 +65,19 @@ export default async function handler(req, res) {
     console.log('Customer image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use omniedgeio/face-swap for reliable dog-to-dog face swapping
+    // Use yan-ops/face_swap for reliable face swapping
     // This model swaps faces from one image to another while preserving pose/background
-    const version = '1251f6b5b8c3ce671f937d1262cc7d542b7729c30ae5e67a4bf0eef61fdb8d82';
+    const version = 'd5900f9ebed33e7ae08a07f17e0d98b4ebc68ab9528a70462afc3899cfe23bab';
 
-    console.log('Using omniedgeio/face-swap for face replacement');
+    console.log('Using yan-ops/face_swap for face replacement');
 
     // Create the prediction request for face swap
-    // swap_image: customer's dog photo (face source)
+    // source_image: customer's dog photo (face source)
     // target_image: iconic pose template (body/pose/background)
     const requestBody = {
       version: version,
       input: {
-        swap_image: image,  // Customer's pet photo (the face to use)
+        source_image: image,  // Customer's pet photo (the face to use)
         target_image: selectedPose.templateUrl,  // Template pose (the body/scene)
         det_thresh: 0.1,  // Detection threshold for face detection
         weight: 0.5,  // Blending weight
