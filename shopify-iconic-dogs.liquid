@@ -1,0 +1,446 @@
+{% comment %}
+  ICONIC DOG GENERATOR - SHOPIFY GALLERY PAGE
+
+  Installation:
+  1. Go to Shopify Admin → Online Store → Pages
+  2. Create new page: "Create Your Iconic Dog"
+  3. Click "</> Show HTML"
+  4. Paste this entire file
+  5. Save and publish
+
+  Or add to theme:
+  1. Go to Shopify Admin → Online Store → Themes → Customize
+  2. Add new section
+  3. Paste this code
+{% endcomment %}
+
+<style>
+  .iconic-dogs-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  .hero-section {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+
+  .hero-section h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    font-weight: 800;
+  }
+
+  .hero-section p {
+    font-size: 1.3em;
+    opacity: 0.95;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .breed-input-section {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .breed-input-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .breed-input {
+    font-size: 1.2em;
+    padding: 15px 25px;
+    border: 3px solid #667eea;
+    border-radius: 50px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .breed-input:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  }
+
+  .poses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+
+  .pose-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .pose-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  }
+
+  .pose-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3em;
+    font-weight: 800;
+  }
+
+  .pose-info {
+    padding: 20px;
+  }
+
+  .pose-name {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .pose-description {
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+
+  .pose-category {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+
+  .generate-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 15px;
+  }
+
+  .generate-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  .generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+  }
+
+  .modal-content h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  .loading {
+    font-size: 1.2em;
+    color: #667eea;
+    margin: 20px 0;
+  }
+
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .result-image {
+    max-width: 100%;
+    border-radius: 15px;
+    margin: 20px 0;
+  }
+
+  .close-btn {
+    background: #666;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  .add-to-cart-btn {
+    background: #28a745;
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 20px 10px;
+  }
+
+  @media (max-width: 768px) {
+    .hero-section h1 {
+      font-size: 2em;
+    }
+
+    .poses-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="iconic-dogs-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1>🐕 Create Your Iconic Dog 🎨</h1>
+    <p>Transform your dog into legendary moments! Choose from 20 instantly recognizable iconic poses - from Michael Jordan's legendary dunk to the Mona Lisa!</p>
+  </div>
+
+  <!-- Breed Input -->
+  <div class="breed-input-section">
+    <h2>What breed is your dog?</h2>
+    <input
+      type="text"
+      id="dogBreed"
+      class="breed-input"
+      placeholder="e.g., Golden Retriever, Husky, Beagle..."
+      value="Golden Retriever"
+    />
+  </div>
+
+  <!-- Poses Grid -->
+  <div id="posesGrid" class="poses-grid">
+    <!-- Will be populated by JavaScript -->
+  </div>
+</div>
+
+<!-- Generation Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h2 id="modalTitle">Generating Your Iconic Dog...</h2>
+    <div id="loadingSection">
+      <div class="spinner"></div>
+      <p class="loading">This takes 6-8 seconds. Creating your masterpiece! 🎨</p>
+    </div>
+    <div id="resultSection" style="display: none;">
+      <img id="resultImage" class="result-image" alt="Your iconic dog" />
+      <br/>
+      <button class="add-to-cart-btn" onclick="addToCart()">Add to Cart & Customize Product</button>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_BASE = 'https://all-dogs-rock-api-v2.vercel.app';
+  let currentImageUrl = '';
+  let currentPoseName = '';
+
+  // Fetch and display poses
+  async function loadPoses() {
+    try {
+      const response = await fetch(`${API_BASE}/api/poses/list`);
+      const data = await response.json();
+
+      if (data.success) {
+        displayPoses(data.poses);
+      }
+    } catch (error) {
+      console.error('Error loading poses:', error);
+    }
+  }
+
+  // Display poses in grid
+  function displayPoses(poses) {
+    const grid = document.getElementById('posesGrid');
+    grid.innerHTML = '';
+
+    poses.forEach(pose => {
+      const card = document.createElement('div');
+      card.className = 'pose-card';
+      card.innerHTML = `
+        <div class="pose-image">${getCategoryEmoji(pose.category)}</div>
+        <div class="pose-info">
+          <div class="pose-name">${pose.name}</div>
+          <div class="pose-description">${pose.description}</div>
+          <div class="pose-category">${pose.category}</div>
+          <button class="generate-btn" onclick="generateImage('${pose.id}', '${pose.name}')">
+            Create My ${pose.name}
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // Get emoji for category
+  function getCategoryEmoji(category) {
+    const emojis = {
+      'Sports': '🏀',
+      'Art': '🎨',
+      'Movies': '🎬',
+      'History': '🏛️',
+      'Science': '🔬',
+      'Music': '🎸'
+    };
+    return emojis[category] || '⭐';
+  }
+
+  // Generate iconic dog image
+  async function generateImage(poseId, poseName) {
+    const breed = document.getElementById('dogBreed').value.trim() || 'golden retriever';
+    currentPoseName = poseName;
+
+    // Show modal
+    const modal = document.getElementById('modal');
+    modal.classList.add('active');
+    document.getElementById('loadingSection').style.display = 'block';
+    document.getElementById('resultSection').style.display = 'none';
+    document.getElementById('modalTitle').textContent = `Creating Your ${breed} as ${poseName}...`;
+
+    try {
+      const response = await fetch(`${API_BASE}/api/app-proxy/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          poseId: poseId,
+          dogBreed: breed
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        currentImageUrl = data.imageUrl;
+        showResult(data.imageUrl, poseName);
+      } else {
+        alert('Error generating image: ' + (data.error || 'Unknown error'));
+        closeModal();
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to generate image. Please try again!');
+      closeModal();
+    }
+  }
+
+  // Show result
+  function showResult(imageUrl, poseName) {
+    document.getElementById('loadingSection').style.display = 'none';
+    document.getElementById('resultSection').style.display = 'block';
+    document.getElementById('resultImage').src = imageUrl;
+    document.getElementById('modalTitle').textContent = `Your ${poseName} is Ready! 🎉`;
+  }
+
+  // Close modal
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+  }
+
+  // Add to cart (customize based on your Shopify setup)
+  function addToCart() {
+    // This is a placeholder - customize based on your product setup
+    // You'll need to create products in Shopify and handle variants
+
+    // Option 1: Open product page with image URL in query param
+    window.location.href = `/products/custom-iconic-dog?image=${encodeURIComponent(currentImageUrl)}&pose=${encodeURIComponent(currentPoseName)}`;
+
+    // Option 2: Direct add to cart with product variant
+    // fetch('/cart/add.js', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     id: YOUR_PRODUCT_VARIANT_ID,
+    //     quantity: 1,
+    //     properties: {
+    //       'Custom Image': currentImageUrl,
+    //       'Pose': currentPoseName
+    //     }
+    //   })
+    // }).then(() => window.location.href = '/cart');
+  }
+
+  // Load poses on page load
+  loadPoses();
+
+  // Allow Enter key in breed input
+  document.getElementById('dogBreed').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  });
+
+  // Close modal on background click
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
+</script>
