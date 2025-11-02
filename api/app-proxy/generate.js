@@ -1,45 +1,33 @@
-// API route for generating AI images using Replicate Face Swap
-// This endpoint accepts a customer's pet photo and swaps it onto iconic pose templates
-// Using dog-to-dog face swap for reliable, consistent results
-// Customer selects from pre-made iconic poses (basketball dunk, astronaut, etc.)
+// API route for generating iconic dog images using FLUX 1.1 Pro
+// Customer uploads dog photo, we generate their dog breed in iconic poses
 
 import iconicPoses from '../../iconic-poses.json' assert { type: 'json' };
 
-const POLL_INTERVAL_MS = 1500;
-const MAX_POLL_ATTEMPTS = 60; // ~90 seconds max
+const POLL_INTERVAL_MS = 2000;
+const MAX_POLL_ATTEMPTS = 60;
 
 export default async function handler(req, res) {
-  // Set CORS headers
+  // CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { poseId, image, premium = false } = req.body;
+    const { poseId, dogBreed = 'golden retriever', premium = false } = req.body;
 
-    // Validate required fields
     if (!poseId) {
-      return res.status(400).json({ error: 'Pose ID is required - customer must select an iconic pose' });
+      return res.status(400).json({ error: 'Pose ID is required' });
     }
 
-    if (!image) {
-      return res.status(400).json({
-        error: 'Image is required - customer must upload their pet photo first'
-      });
-    }
-
-    // Look up the selected pose template
     const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
 
     if (!selectedPose) {
@@ -49,39 +37,31 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('🎭 Selected pose:', selectedPose.name);
-    console.log('📸 Template URL:', selectedPose.templateUrl);
-
-    // Check for API token
     if (!process.env.REPLICATE_API_TOKEN) {
-      console.error('❌ REPLICATE_API_TOKEN is not set in environment variables!');
       return res.status(500).json({
-        error: 'Replicate API token not configured. Please contact support.'
+        error: 'Replicate API token not configured'
       });
     }
 
-    console.log('🚀 Starting face swap...');
-    console.log('Customer image data starts with:', image.substring(0, 50) + '...');
-    console.log('Customer image data length:', image.length);
-    console.log('Premium:', premium);
+    console.log('🎨 Generating:', selectedPose.name, 'with', dogBreed);
 
-    // Use FLUX Kontext Pro for image editing
-    // Replace the dog in the template with the customer's dog
-    console.log('Using black-forest-labs/flux-kontext-pro for image compositing');
+    // Use FLUX 1.1 Pro to generate the image
+    const prompt = selectedPose.prompt.replace(/golden retriever|german shepherd|husky|beagle|corgi|rottweiler|boxer|french bulldog|labrador retriever|poodle|dalmatian|australian shepherd|border collie|doberman|shiba inu|jack russell terrier|saint bernard|cavalier king charles spaniel|pug|samoyed|spaniel|bulldog|poodle|greyhound/gi, dogBreed);
 
     const requestBody = {
-      version: 'black-forest-labs/flux-kontext-pro:2dfe45debca13e5ecfad755ef6ca9943fc56a6effb306f4c6e2ea4762df6e53e',
+      version: 'black-forest-labs/flux-1.1-pro',
       input: {
-        prompt: `Replace the dog in this image with the dog from the uploaded photo, keeping the exact same pose, lighting, and scene. Make it look seamless and natural.`,
-        input_image: selectedPose.templateUrl,  // The iconic pose template with a dog
+        prompt: prompt,
+        aspect_ratio: '1:1',
         output_format: 'jpg',
-        safety_tolerance: 2
+        output_quality: 90,
+        safety_tolerance: 2,
+        prompt_upsampling: true
       }
     };
 
-    console.log('📤 Face swap request prepared - swapping customer dog onto', selectedPose.name);
+    console.log('📤 Sending request to FLUX 1.1 Pro...');
 
-    // Use the version-based predictions endpoint
     const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
       method: 'POST',
       headers: {
@@ -91,24 +71,17 @@ export default async function handler(req, res) {
       body: JSON.stringify(requestBody),
     });
 
-    console.log('📥 Create response status:', createResponse.status);
-
     if (!createResponse.ok) {
       const errorData = await createResponse.json();
-      console.error('❌ Replicate API error response:', JSON.stringify(errorData, null, 2));
-      console.error('Status:', createResponse.status);
-      console.error('Status Text:', createResponse.statusText);
-
+      console.error('❌ Error:', JSON.stringify(errorData, null, 2));
       return res.status(createResponse.status).json({
-        error: 'Failed to start image generation',
-        details: errorData.detail || errorData.error || JSON.stringify(errorData),
-        status: createResponse.status,
-        replicateError: errorData
+        error: 'Failed to start generation',
+        details: errorData.detail || JSON.stringify(errorData),
       });
     }
 
     const prediction = await createResponse.json();
-    console.log('Prediction created:', prediction.id);
+    console.log('✅ Prediction created:', prediction.id);
 
     // Poll for completion
     const pollUrl = prediction.urls.get;
@@ -124,51 +97,44 @@ export default async function handler(req, res) {
       });
 
       if (!pollResponse.ok) {
-        throw new Error('Failed to poll prediction status');
+        throw new Error('Failed to poll prediction');
       }
 
       const pollData = await pollResponse.json();
-      console.log(`Poll attempt ${attempts + 1}: status=${pollData.status}`);
+      console.log(`Poll ${attempts + 1}: ${pollData.status}`);
 
       if (pollData.status === 'succeeded') {
-        // Face swap returns a single image URL
-        const swappedImageUrl = pollData.output;
-
-        console.log('✅ Face swap completed successfully!');
-        console.log('📷 Swapped image URL:', swappedImageUrl);
+        const imageUrl = pollData.output;
+        console.log('🎉 Success! Image:', imageUrl);
 
         return res.status(200).json({
           success: true,
-          imageUrl: swappedImageUrl,
-          images: [swappedImageUrl],  // Return as array for compatibility
+          imageUrl: imageUrl,
           poseName: selectedPose.name,
           poseId: selectedPose.id,
-          premium: premium,
         });
       }
 
       if (pollData.status === 'failed' || pollData.status === 'canceled') {
-        console.error('❌ Generation failed:', pollData.error);
+        console.error('❌ Failed:', pollData.error);
         return res.status(500).json({
-          error: 'Image generation failed',
-          details: pollData.error || 'Generation was canceled or failed',
+          error: 'Generation failed',
+          details: pollData.error || 'Canceled',
         });
       }
 
       attempts++;
     }
 
-    // Timeout
-    console.error('⏱️ Generation timeout after', MAX_POLL_ATTEMPTS, 'attempts');
     return res.status(504).json({
-      error: 'Image generation timeout',
-      details: 'Generation took too long. Please try again.',
+      error: 'Generation timeout',
+      details: 'Took too long',
     });
 
   } catch (error) {
-    console.error('❌ Error in generate endpoint:', error);
+    console.error('❌ Error:', error);
     return res.status(500).json({
-      error: 'Failed to generate image',
+      error: 'Failed to generate',
       details: error.message,
     });
   }
