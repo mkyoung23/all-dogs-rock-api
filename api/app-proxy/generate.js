@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     const prompt = selectedPose.prompt.replace(/golden retriever|german shepherd|husky|beagle|corgi|rottweiler|boxer|french bulldog|labrador retriever|poodle|dalmatian|australian shepherd|border collie|doberman|shiba inu|jack russell terrier|saint bernard|cavalier king charles spaniel|pug|samoyed|spaniel|bulldog|poodle|greyhound/gi, dogBreed);
 
     const requestBody = {
-      model: 'black-forest-labs/flux-1.1-pro',
+      version: '80a09d66baa990429c2f5ae8a4306bf778a1b3775afd01cc2cc8bdbe9033769c',
       input: {
         prompt: prompt,
         aspect_ratio: '1:1',
