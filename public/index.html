@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iconic Dog Generator - All Dogs Rock</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .header {
+      text-align: center;
+      color: white;
+      padding: 60px 20px;
+      margin-bottom: 40px;
+    }
+    .header h1 { font-size: 3.5em; margin-bottom: 20px; font-weight: 800; }
+    .header p { font-size: 1.3em; opacity: 0.95; }
+    .breed-input {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .breed-input input {
+      font-size: 1.2em;
+      padding: 15px 25px;
+      border: 3px solid #667eea;
+      border-radius: 50px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .poses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    .pose-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .pose-card:hover { transform: translateY(-10px); }
+    .pose-emoji {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5em;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .pose-info { padding: 20px; }
+    .pose-name { font-size: 1.3em; font-weight: 700; margin-bottom: 10px; }
+    .pose-desc { color: #666; margin-bottom: 15px; font-size: 0.9em; }
+    .pose-category {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85em;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .btn:hover { opacity: 0.9; }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .result-img {
+      max-width: 100%;
+      border-radius: 15px;
+      margin: 20px 0;
+    }
+    .close-btn {
+      background: #666;
+      color: white;
+      padding: 10px 30px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🐕 Create Your Iconic Dog 🎨</h1>
+      <p>Transform your dog into legendary moments! 20 instantly recognizable iconic poses!</p>
+    </div>
+
+    <div class="breed-input">
+      <h2 style="margin-bottom: 15px;">What breed is your dog?</h2>
+      <input type="text" id="dogBreed" placeholder="e.g., Golden Retriever" value="Golden Retriever">
+    </div>
+
+    <div id="posesGrid" class="poses-grid"></div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Generating...</h2>
+      <div id="loadingSection">
+        <div class="spinner"></div>
+        <p>Creating your masterpiece! This takes 6-8 seconds... 🎨</p>
+      </div>
+      <div id="resultSection" style="display: none;">
+        <img id="resultImage" class="result-img" alt="Generated">
+        <br>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const poses = [
+      {id: "mj-free-throw-dunk", name: "Michael Jordan Dunk", emoji: "🏀", category: "Sports", desc: "MJ's legendary 1988 free throw line dunk"},
+      {id: "mona-lisa", name: "Mona Lisa", emoji: "🎨", category: "Art", desc: "Leonardo da Vinci's masterpiece"},
+      {id: "rocky-statue", name: "Rocky at the Steps", emoji: "🥊", category: "Movies", desc: "Rocky's triumphant moment"},
+      {id: "einstein-tongue", name: "Einstein Tongue Out", emoji: "👅", category: "Science", desc: "Einstein's playful photo"},
+      {id: "superman-flying", name: "Superman Flying", emoji: "🦸", category: "Movies", desc: "Classic superhero pose"},
+      {id: "ali-over-liston", name: "Ali Over Liston", emoji: "🥊", category: "Sports", desc: "Muhammad Ali's knockout"},
+      {id: "jeter-jump-throw", name: "Derek Jeter Jump", emoji: "⚾", category: "Sports", desc: "Jeter's signature throw"},
+      {id: "babe-ruth-called-shot", name: "Babe Ruth", emoji: "⚾", category: "Sports", desc: "The called shot"},
+      {id: "abbey-road", name: "Abbey Road", emoji: "🎸", category: "Music", desc: "Beatles crossing"},
+      {id: "american-gothic", name: "American Gothic", emoji: "🌾", category: "Art", desc: "Grant Wood painting"},
+      {id: "girl-pearl-earring", name: "Girl with Pearl", emoji: "💎", category: "Art", desc: "Vermeer masterpiece"},
+      {id: "the-scream", name: "The Scream", emoji: "😱", category: "Art", desc: "Edvard Munch"},
+      {id: "creation-of-adam", name: "Creation of Adam", emoji: "👆", category: "Art", desc: "Michelangelo's ceiling"},
+      {id: "the-thinker", name: "The Thinker", emoji: "🗿", category: "Art", desc: "Rodin sculpture"},
+      {id: "washington-crossing", name: "Washington Crossing", emoji: "🚣", category: "History", desc: "Revolutionary War"},
+      {id: "iwo-jima-flag", name: "Iwo Jima Flag", emoji: "🇺🇸", category: "History", desc: "WWII triumph"},
+      {id: "marilyn-subway", name: "Marilyn Subway", emoji: "👗", category: "Movies", desc: "Seven Year Itch"},
+      {id: "james-dean-rebel", name: "James Dean", emoji: "😎", category: "Movies", desc: "Rebel Without a Cause"},
+      {id: "bruce-lee-ready", name: "Bruce Lee", emoji: "🥋", category: "Movies", desc: "Fighting stance"},
+      {id: "usain-bolt-lightning", name: "Usain Bolt", emoji: "⚡", category: "Sports", desc: "Lightning pose"}
+    ];
+
+    const grid = document.getElementById('posesGrid');
+    poses.forEach(pose => {
+      const card = document.createElement('div');
+      card.className = 'pose-card';
+      card.innerHTML = `
+        <div class="pose-emoji">${pose.emoji}</div>
+        <div class="pose-info">
+          <div class="pose-name">${pose.name}</div>
+          <div class="pose-desc">${pose.desc}</div>
+          <div class="pose-category">${pose.category}</div>
+          <button class="btn" onclick="generate('${pose.id}', '${pose.name}')">Create This!</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    async function generate(poseId, poseName) {
+      const breed = document.getElementById('dogBreed').value || 'golden retriever';
+      const modal = document.getElementById('modal');
+      modal.classList.add('active');
+      document.getElementById('loadingSection').style.display = 'block';
+      document.getElementById('resultSection').style.display = 'none';
+      document.getElementById('modalTitle').textContent = `Creating ${breed} as ${poseName}...`;
+
+      try {
+        const response = await fetch('https://all-dogs-rock-api-v2.vercel.app/api/app-proxy/generate', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({poseId, dogBreed: breed})
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('loadingSection').style.display = 'none';
+          document.getElementById('resultSection').style.display = 'block';
+          document.getElementById('resultImage').src = data.imageUrl;
+          document.getElementById('modalTitle').textContent = 'Your Iconic Dog! 🎉';
+        } else {
+          alert('Error: ' + (data.error || 'Unknown error'));
+          closeModal();
+        }
+      } catch (error) {
+        alert('Failed to generate: ' + error.message);
+        closeModal();
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
+</body>
+</html>
