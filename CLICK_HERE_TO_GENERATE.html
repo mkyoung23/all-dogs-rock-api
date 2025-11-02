@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Templates - All Dogs Rock</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #333; text-align: center; }
+        .big-button {
+            display: block;
+            width: 100%;
+            padding: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 30px 0;
+            text-decoration: none;
+            text-align: center;
+        }
+        .big-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .step {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        .step strong {
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Generate 20 Dog Template Images</h1>
+
+        <div class="info">
+            <strong>📋 Simple 3-Step Process:</strong><br><br>
+            Your Vercel deployment has all the API keys configured and ready.<br>
+            This will use DALL-E 3 to generate 20 professional dog template images.
+        </div>
+
+        <a href="https://all-dogs-rock-api-v2.vercel.app/generate-all-templates.html"
+           class="big-button"
+           target="_blank">
+            🚀 CLICK HERE TO GENERATE ALL 20 TEMPLATES
+        </a>
+
+        <div class="step">
+            <strong>Step 1:</strong> Click the button above (opens in new tab)
+        </div>
+
+        <div class="step">
+            <strong>Step 2:</strong> On the page that opens, click "Start Generating All 20 Templates"
+        </div>
+
+        <div class="step">
+            <strong>Step 3:</strong> Wait ~60 seconds, then copy the JSON output
+        </div>
+
+        <hr style="margin: 40px 0;">
+
+        <h2 style="text-align: center;">Alternative: Use Python Script</h2>
+
+        <div class="info">
+            If the web interface doesn't work, you can run this locally:
+        </div>
+
+        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto;">cd /path/to/all-dogs-rock-api
+python3 generate-templates-NOW.py</pre>
+
+        <div class="step">
+            <strong>Note:</strong> Make sure you have Python 3 and the 'requests' library installed:
+            <br><code>pip3 install requests</code>
+        </div>
+
+        <hr style="margin: 40px 0;">
+
+        <h2 style="text-align: center;">After Generation:</h2>
+
+        <div class="step">
+            <strong>1.</strong> The JSON output will have URLs for all 20 templates
+        </div>
+
+        <div class="step">
+            <strong>2.</strong> Save it as <code>template-urls.json</code>
+        </div>
+
+        <div class="step">
+            <strong>3.</strong> Run: <code>node scripts/update-template-urls.js template-urls.json</code>
+        </div>
+
+        <div class="step">
+            <strong>4.</strong> Commit and push:<br>
+            <code>git add iconic-poses.json template-urls.json</code><br>
+            <code>git commit -m "feat: Add real DALL-E 3 templates"</code><br>
+            <code>git push</code>
+        </div>
+
+        <div style="background: #c8e6c9; padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center;">
+            <strong style="color: #2e7d32; font-size: 18px;">
+                ✨ Your face swap system will be ready to use!
+            </strong>
+        </div>
+    </div>
+</body>
+</html>
