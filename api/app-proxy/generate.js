@@ -65,17 +65,18 @@ export default async function handler(req, res) {
     console.log('Customer image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use yan-ops/face_swap for reliable face swapping
-    console.log('Using yan-ops/face_swap for face replacement');
+    // Use FLUX Kontext Pro for multi-image compositing
+    // This combines the customer's dog with the iconic pose template
+    console.log('Using flux-kontext-apps/multi-image-kontext-pro for image compositing');
 
-    // Use latest version by specifying model name instead of version ID
     const requestBody = {
-      version: 'yan-ops/face_swap:d5900f9ebed33e7ae08a07f17e0d98b4ebc68ab9528a70462afc3899cfe23bab',
+      version: 'flux-kontext-apps/multi-image-kontext-pro',
       input: {
-        source_image: image,  // Customer's pet photo (the face to use)
-        target_image: selectedPose.templateUrl,  // Template pose (the body/scene)
-        det_thresh: 0.1,  // Detection threshold for face detection
-        weight: 0.5,  // Blending weight
+        prompt: `Seamlessly composite this dog's face onto the subject in the template image, preserving the iconic pose and scene. Make it look natural and professional.`,
+        image_1: selectedPose.templateUrl,  // The iconic pose template
+        image_2: image,  // Customer's dog photo
+        output_format: 'jpg',
+        safety_tolerance: 2
       }
     };
 
