@@ -2,7 +2,12 @@
 // Customer provides dog breed, we generate their dog in iconic poses
 // Deployed: 2025-11-02
 
-import iconicPoses from '../../iconic-poses.json' assert { type: 'json' };
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+const iconicPoses = JSON.parse(
+  readFileSync(join(process.cwd(), 'iconic-poses.json'), 'utf-8')
+);
 
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60;

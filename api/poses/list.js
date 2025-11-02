@@ -1,5 +1,10 @@
 // API route to serve the list of iconic poses for the gallery
-import iconicPoses from '../../iconic-poses.json' assert { type: 'json' };
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+const iconicPoses = JSON.parse(
+  readFileSync(join(process.cwd(), 'iconic-poses.json'), 'utf-8')
+);
 
 export default function handler(req, res) {
   // Set CORS headers
