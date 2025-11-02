@@ -65,16 +65,15 @@ export default async function handler(req, res) {
     console.log('Customer image data length:', image.length);
     console.log('Premium:', premium);
 
-    // Use FLUX Kontext Pro for multi-image compositing
-    // This combines the customer's dog with the iconic pose template
-    console.log('Using flux-kontext-apps/multi-image-kontext-pro for image compositing');
+    // Use FLUX Kontext Pro for image editing
+    // Replace the dog in the template with the customer's dog
+    console.log('Using black-forest-labs/flux-kontext-pro for image compositing');
 
     const requestBody = {
-      version: 'flux-kontext-apps/multi-image-kontext-pro',
+      version: 'black-forest-labs/flux-kontext-pro:2dfe45debca13e5ecfad755ef6ca9943fc56a6effb306f4c6e2ea4762df6e53e',
       input: {
-        prompt: `Seamlessly composite this dog's face onto the subject in the template image, preserving the iconic pose and scene. Make it look natural and professional.`,
-        image_1: selectedPose.templateUrl,  // The iconic pose template
-        image_2: image,  // Customer's dog photo
+        prompt: `Replace the dog in this image with the dog from the uploaded photo, keeping the exact same pose, lighting, and scene. Make it look seamless and natural.`,
+        input_image: selectedPose.templateUrl,  // The iconic pose template with a dog
         output_format: 'jpg',
         safety_tolerance: 2
       }
