@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test All Dogs Rock API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        button {
+            background: #0070f3;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0051cc;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.show {
+            display: block;
+        }
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .result-image {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .result-image.show {
+            display: block;
+        }
+        .log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐕 All Dogs Rock API Test</h1>
+        <p>Click the button below to test if the Replicate integration is working!</p>
+
+        <button id="testBtn" onclick="testAPI()">🧪 Test API Now</button>
+
+        <div id="status" class="status"></div>
+
+        <img id="resultImage" class="result-image" alt="Generated Image">
+
+        <div class="log" id="log">Logs will appear here...</div>
+    </div>
+
+    <script>
+        const log = document.getElementById('log');
+        const status = document.getElementById('status');
+        const testBtn = document.getElementById('testBtn');
+        const resultImage = document.getElementById('resultImage');
+
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            log.textContent += `[${timestamp}] ${message}\n`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function showStatus(message, type) {
+            status.textContent = message;
+            status.className = `status show ${type}`;
+        }
+
+        async function testAPI() {
+            addLog('Starting API test...');
+            testBtn.disabled = true;
+            resultImage.classList.remove('show');
+
+            showStatus('⏳ Generating image... This takes 30-60 seconds. Please wait!', 'loading');
+
+            const testData = {
+                prompt: 'cute golden retriever puppy as a superhero flying over a city',
+                image: 'https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=400',
+                premium: false,
+                human_in_photo: false
+            };
+
+            addLog('Sending request to API...');
+            addLog('Prompt: ' + testData.prompt);
+            addLog('Reference image: ' + testData.image);
+
+            try {
+                const startTime = Date.now();
+
+                const response = await fetch('https://all-dogs-rock-api-v2.vercel.app/app-proxy/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                addLog(`Response received in ${elapsed} seconds`);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    addLog('❌ HTTP Error: ' + response.status);
+                    addLog('Error details: ' + errorText);
+                    showStatus('❌ API Error: ' + response.status + ' - ' + errorText, 'error');
+                    testBtn.disabled = false;
+                    return;
+                }
+
+                const data = await response.json();
+                addLog('Response data: ' + JSON.stringify(data, null, 2));
+
+                if (data.success && data.imageUrl) {
+                    addLog('✅ SUCCESS! Image generated!');
+                    addLog('Image URL: ' + data.imageUrl);
+                    showStatus('✅ SUCCESS! The Replicate integration is working! Generated image appears below.', 'success');
+
+                    resultImage.src = data.imageUrl;
+                    resultImage.classList.add('show');
+
+                    addLog('');
+                    addLog('🎉 WHAT THIS MEANS:');
+                    addLog('- Your API is correctly calling Replicate');
+                    addLog('- The image generation is using the reference photo');
+                    addLog('- Customer uploads will now preserve pet identity!');
+                } else {
+                    addLog('❌ Unexpected response format');
+                    showStatus('❌ Error: ' + (data.error || 'Unknown error'), 'error');
+                }
+
+            } catch (error) {
+                addLog('❌ Request failed: ' + error.message);
+                showStatus('❌ Request Failed: ' + error.message, 'error');
+            }
+
+            testBtn.disabled = false;
+        }
+
+        addLog('Test page loaded and ready!');
+        addLog('Click the button above to test the API.');
+        addLog('');
+        addLog('What this test does:');
+        addLog('1. Sends a dog photo + prompt to your API');
+        addLog('2. Your API calls Replicate IP-Adapter');
+        addLog('3. Replicate generates an image that looks like the reference dog');
+        addLog('4. The result is displayed below');
+    </script>
+</body>
+</html>

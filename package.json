@@ -1,0 +1,15 @@
+{
+  "name": "all-dogs-rock-api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "API for All Dogs Rock Shop - AI-powered custom pet image generation",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": "20.x"
+  }
+}

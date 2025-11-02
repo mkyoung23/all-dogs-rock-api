@@ -1,122 +1,180 @@
-export const config = {
-  runtime: 'edge',
-};
+// API route for generating AI images using Replicate Face Swap
+// This endpoint accepts a customer's pet photo and swaps it onto iconic pose templates
+// Using dog-to-dog face swap for reliable, consistent results
+// Customer selects from pre-made iconic poses (basketball dunk, astronaut, etc.)
 
-export default async function handler(req) {
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return new Response(
-      JSON.stringify({ error: 'Method not allowed' }),
-      {
-        status: 405,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
-      }
-    );
+import iconicPoses from '../../iconic-poses.json' assert { type: 'json' };
+
+const POLL_INTERVAL_MS = 1500;
+const MAX_POLL_ATTEMPTS = 60; // ~90 seconds max
+
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  // Handle OPTIONS for CORS
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    });
+  // Only allow POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { prompt } = await req.json();
+    const { poseId, image, premium = false } = req.body;
 
-    if (!prompt) {
-      return new Response(
-        JSON.stringify({ error: 'Prompt is required' }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      );
+    // Validate required fields
+    if (!poseId) {
+      return res.status(400).json({ error: 'Pose ID is required - customer must select an iconic pose' });
     }
 
-    console.log('Generating image with prompt:', prompt);
+    if (!image) {
+      return res.status(400).json({
+        error: 'Image is required - customer must upload their pet photo first'
+      });
+    }
 
-    // Call OpenAI DALL-E 3 API using fetch
-    const openaiResponse = await fetch('https://api.openai.com/v1/images/generations', {
+    // Look up the selected pose template
+    const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
+
+    if (!selectedPose) {
+      return res.status(400).json({
+        error: `Invalid pose ID: ${poseId}`,
+        availablePoses: iconicPoses.poses.map(p => p.id)
+      });
+    }
+
+    console.log('🎭 Selected pose:', selectedPose.name);
+    console.log('📸 Template URL:', selectedPose.templateUrl);
+
+    // Check for API token
+    if (!process.env.REPLICATE_API_TOKEN) {
+      console.error('❌ REPLICATE_API_TOKEN is not set in environment variables!');
+      return res.status(500).json({
+        error: 'Replicate API token not configured. Please contact support.'
+      });
+    }
+
+    console.log('🚀 Starting face swap...');
+    console.log('Customer image data starts with:', image.substring(0, 50) + '...');
+    console.log('Customer image data length:', image.length);
+    console.log('Premium:', premium);
+
+    // Use omniedgeio/face-swap for reliable dog-to-dog face swapping
+    // This model swaps faces from one image to another while preserving pose/background
+    const version = '1251f6b5b8c3ce671f937d1262cc7d542b7729c30ae5e67a4bf0eef61fdb8d82';
+
+    console.log('Using omniedgeio/face-swap for face replacement');
+
+    // Create the prediction request for face swap
+    // swap_image: customer's dog photo (face source)
+    // target_image: iconic pose template (body/pose/background)
+    const requestBody = {
+      version: version,
+      input: {
+        swap_image: image,  // Customer's pet photo (the face to use)
+        target_image: selectedPose.templateUrl,  // Template pose (the body/scene)
+        det_thresh: 0.1,  // Detection threshold for face detection
+        weight: 0.5,  // Blending weight
+      }
+    };
+
+    console.log('📤 Face swap request prepared - swapping customer dog onto', selectedPose.name);
+
+    // Use the version-based predictions endpoint
+    const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
       },
-      body: JSON.stringify({
-        model: 'dall-e-3',
-        prompt: prompt,
-        n: 1,
-        size: '1024x1024',
-        quality: 'standard',
-        response_format: 'url',
-      }),
+      body: JSON.stringify(requestBody),
     });
 
-    if (!openaiResponse.ok) {
-      const errorData = await openaiResponse.json();
-      console.error('OpenAI API error:', errorData);
-      return new Response(
-        JSON.stringify({
-          error: 'Failed to generate image',
-          details: errorData.error?.message || 'Unknown error',
-        }),
-        {
-          status: openaiResponse.status,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      );
+    console.log('📥 Create response status:', createResponse.status);
+
+    if (!createResponse.ok) {
+      const errorData = await createResponse.json();
+      console.error('❌ Replicate API error response:', JSON.stringify(errorData, null, 2));
+      console.error('Status:', createResponse.status);
+      console.error('Status Text:', createResponse.statusText);
+
+      return res.status(createResponse.status).json({
+        error: 'Failed to start image generation',
+        details: errorData.detail || errorData.error || JSON.stringify(errorData),
+        status: createResponse.status,
+        replicateError: errorData
+      });
     }
 
-    const data = await openaiResponse.json();
-    const imageUrl = data.data[0].url;
+    const prediction = await createResponse.json();
+    console.log('Prediction created:', prediction.id);
 
-    console.log('Image generated successfully:', imageUrl);
+    // Poll for completion
+    const pollUrl = prediction.urls.get;
+    let attempts = 0;
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        imageUrl: imageUrl,
-        prompt: prompt,
-      }),
-      {
-        status: 200,
+    while (attempts < MAX_POLL_ATTEMPTS) {
+      await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL_MS));
+
+      const pollResponse = await fetch(pollUrl, {
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
         },
+      });
+
+      if (!pollResponse.ok) {
+        throw new Error('Failed to poll prediction status');
       }
-    );
+
+      const pollData = await pollResponse.json();
+      console.log(`Poll attempt ${attempts + 1}: status=${pollData.status}`);
+
+      if (pollData.status === 'succeeded') {
+        // Face swap returns a single image URL
+        const swappedImageUrl = pollData.output;
+
+        console.log('✅ Face swap completed successfully!');
+        console.log('📷 Swapped image URL:', swappedImageUrl);
+
+        return res.status(200).json({
+          success: true,
+          imageUrl: swappedImageUrl,
+          images: [swappedImageUrl],  // Return as array for compatibility
+          poseName: selectedPose.name,
+          poseId: selectedPose.id,
+          premium: premium,
+        });
+      }
+
+      if (pollData.status === 'failed' || pollData.status === 'canceled') {
+        console.error('❌ Generation failed:', pollData.error);
+        return res.status(500).json({
+          error: 'Image generation failed',
+          details: pollData.error || 'Generation was canceled or failed',
+        });
+      }
+
+      attempts++;
+    }
+
+    // Timeout
+    console.error('⏱️ Generation timeout after', MAX_POLL_ATTEMPTS, 'attempts');
+    return res.status(504).json({
+      error: 'Image generation timeout',
+      details: 'Generation took too long. Please try again.',
+    });
+
   } catch (error) {
-    console.error('Error generating image:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'Failed to generate image',
-        details: error.message,
-      }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
+    console.error('❌ Error in generate endpoint:', error);
+    return res.status(500).json({
+      error: 'Failed to generate image',
+      details: error.message,
+    });
   }
 }
