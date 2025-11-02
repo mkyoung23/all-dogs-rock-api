@@ -29,18 +29,12 @@ export default async function handler(req, res) {
     }
 
     const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
-
     if (!selectedPose) {
-      return res.status(400).json({
-        error: `Invalid pose ID: ${poseId}`,
-        availablePoses: iconicPoses.poses.map(p => p.id)
-      });
+      return res.status(400).json({ error: `Invalid pose ID: ${poseId}` });
     }
 
     if (!process.env.REPLICATE_API_TOKEN) {
-      return res.status(500).json({
-        error: 'Replicate API token not configured'
-      });
+      return res.status(500).json({ error: 'Replicate API token not configured' });
     }
 
     console.log('🎨 Generating:', selectedPose.name, 'with', dogBreed);
