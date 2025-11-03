@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Your Iconic Dog - All Dogs Rock</title>
 <style>
   .iconic-dogs-container {
     max-width: 1400px;
@@ -55,6 +58,7 @@
     border-radius: 50px;
     cursor: pointer;
     font-weight: 700;
+    transition: all 0.3s;
   }
 
   .upload-btn:hover {
@@ -230,6 +234,23 @@
     margin: 20px 10px;
   }
 
+  .preview-products-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 20px 10px;
+  }
+
+  .preview-products-btn:hover, .download-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+
   @media (max-width: 768px) {
     .hero-section h1 {
       font-size: 2em;
@@ -245,13 +266,13 @@
 <div class="iconic-dogs-container">
   <!-- Hero Section -->
   <div class="hero-section">
-    <h1>🐕 Create Your Iconic Dog 🎨</h1>
-    <p>Transform your dog into legendary moments! Upload your dog's photo and swap it into 20 iconic poses!</p>
+    <h1>Create Your Iconic Dog</h1>
+    <p>Transform your dog into legendary moments! Upload your dog's photo and swap it into iconic poses!</p>
   </div>
 
   <!-- Photo Upload Section -->
   <div class="upload-section">
-    <h2>📸 Upload Your Dog's Photo</h2>
+    <h2>Upload Your Dog's Photo</h2>
     <p style="color: #666; margin-bottom: 20px;">We'll swap your dog's face into the iconic pose you choose!</p>
     <input type="file" id="dogPhoto" accept="image/*" style="display: none;">
     <button class="upload-btn" onclick="document.getElementById('dogPhoto').click()">
@@ -259,7 +280,7 @@
     </button>
     <div id="previewSection" style="display: none;">
       <img id="preview" alt="Your dog">
-      <p class="success-text">✅ Photo uploaded! Now choose a pose below.</p>
+      <p class="success-text">Photo uploaded! Now choose a pose below.</p>
     </div>
     <p id="uploadPrompt" style="margin-top: 15px; color: #999; font-size: 0.9em;">No photo selected</p>
   </div>
@@ -276,12 +297,13 @@
     <h2 id="modalTitle">Generating Your Iconic Dog...</h2>
     <div id="loadingSection">
       <div class="spinner"></div>
-      <p style="font-size: 1.2em; color: #667eea; margin: 20px 0;">This takes 10-15 seconds. Creating your masterpiece! 🎨</p>
+      <p style="font-size: 1.2em; color: #667eea; margin: 20px 0;">This takes 10-15 seconds. Creating your masterpiece!</p>
       <p style="font-size: 0.9em; color: #999;">Step 1: Generating iconic pose... Step 2: Swapping your dog's face...</p>
     </div>
     <div id="resultSection" style="display: none;">
       <img id="resultImage" class="result-image" alt="Your iconic dog">
       <br>
+      <button class="preview-products-btn" onclick="previewOnProducts()">Preview on Products →</button>
       <button class="download-btn" onclick="downloadImage()">Download Image</button>
       <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
@@ -289,7 +311,7 @@
 </div>
 
 <script>
-  const API_BASE = 'https://all-dogs-rock-api-v2.vercel.app';
+  const API_BASE = 'https://all-dogs-rock-api.vercel.app';
   let uploadedDogPhoto = null;
   let currentImageUrl = '';
   let currentPoseName = '';
@@ -351,7 +373,7 @@
   // Generate image with face swap
   async function generateImage(poseId, poseName) {
     if (!uploadedDogPhoto) {
-      alert('⚠️ Please upload a photo of your dog first!');
+      alert('Please upload a photo of your dog first!');
       return;
     }
 
@@ -395,7 +417,7 @@
     document.getElementById('loadingSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
     document.getElementById('resultImage').src = imageUrl;
-    document.getElementById('modalTitle').textContent = 'Your ' + poseName + ' is Ready! 🎉';
+    document.getElementById('modalTitle').textContent = 'Your ' + poseName + ' is Ready!';
   }
 
   // Close modal
@@ -411,6 +433,11 @@
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  // Preview on products
+  function previewOnProducts() {
+    window.location.href = API_BASE + '/product-preview.html?image=' + encodeURIComponent(currentImageUrl) + '&pose=' + encodeURIComponent(currentPoseName);
   }
 
   // Close modal on background click
