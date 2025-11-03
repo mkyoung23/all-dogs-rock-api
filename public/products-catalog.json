@@ -1,0 +1,40 @@
+{
+  "products": [
+    {
+      "id": "blanket",
+      "name": "Custom Pet Portrait Velveteen Plush Blanket",
+      "shopifyProductId": 15579600257105,
+      "handle": "custom-pet-portrait-velveteen-plush-blanket",
+      "price": "$26.48+",
+      "mockupUrl": "https://cdn.shopify.com/s/files/1/0690/6763/6817/files/4716419034030618402_2048.jpg",
+      "description": "Super-soft velveteen plush blanket"
+    },
+    {
+      "id": "phone-case",
+      "name": "Custom Pet Portrait Tough Phone Case",
+      "shopifyProductId": 15579599929425,
+      "handle": "custom-pet-portrait-tough-phone-case",
+      "price": "$25.24",
+      "mockupUrl": "https://cdn.shopify.com/s/files/1/0690/6763/6817/files/f9a726aa-8118-4a9d-be8c-528d867d3cee.webp",
+      "description": "Durable dual-layer phone case"
+    },
+    {
+      "id": "canvas",
+      "name": "Custom Funny Pet Portrait Canvas Print",
+      "shopifyProductId": 15579598913617,
+      "handle": "custom-funny-pet-portrait-canvas-print",
+      "price": "$27.50+",
+      "mockupUrl": "https://cdn.shopify.com/s/files/1/0690/6763/6817/files/no-make-him-actually-look-like-hes-jumping-form-the-3-point-line-in-the-air-towards-the-basketball-and-going-to-dunk-it.png",
+      "description": "Personalized canvas print"
+    },
+    {
+      "id": "tshirt",
+      "name": "Custom Pet Portrait T-Shirt",
+      "shopifyProductId": 7855615672401,
+      "handle": "custom-pet-portrait-t-shirt-personalized-all-dogs-rock-tee",
+      "price": "$29.99",
+      "mockupUrl": "https://cdn.shopify.com/s/files/1/0690/6763/6817/files/michael_jackson_570b2a09-58dd-4ece-8cdf-a7fd883c72c4.jpg",
+      "description": "Unisex jersey t-shirt"
+    }
+  ]
+}

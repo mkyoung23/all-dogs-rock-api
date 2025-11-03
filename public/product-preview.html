@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview Your Iconic Dog on Products</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .your-image-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+  }
+
+  #yourImage {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 15px;
+    margin: 20px auto;
+    display: block;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+
+  .product-card {
+    background: white;
+    border: 3px solid #eee;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .product-card:hover {
+    border-color: #667eea;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  }
+
+  .product-card.selected {
+    border-color: #667eea;
+    background: #f8f9ff;
+  }
+
+  .product-mockup {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 15px;
+  }
+
+  .product-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .product-price {
+    font-size: 1.3em;
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .select-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .select-btn:hover {
+    opacity: 0.9;
+  }
+
+  .customization-section {
+    display: none;
+    background: #f8f9ff;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+  }
+
+  .customization-section.active {
+    display: block;
+  }
+
+  .preview-canvas {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    margin: 0 auto 30px;
+    border: 2px solid #667eea;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  #previewProductImg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  #customDogImage {
+    position: absolute;
+    cursor: move;
+    border: 2px dashed #667eea;
+  }
+
+  .controls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  .control-group {
+    text-align: center;
+  }
+
+  .control-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .control-group input[type="range"] {
+    width: 200px;
+  }
+
+  .control-group input[type="number"] {
+    width: 80px;
+    padding: 5px;
+    border: 2px solid #667eea;
+    border-radius: 5px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-secondary {
+    padding: 15px 40px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .preview-canvas {
+      width: 100%;
+      height: 400px;
+    }
+    .controls {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🎨 Preview Your Iconic Dog on Products</h1>
+    <p>Choose a product and customize how your image looks!</p>
+  </div>
+
+  <!-- Your Generated Image -->
+  <div class="your-image-section">
+    <h2>Your Generated Iconic Dog:</h2>
+    <img id="yourImage" alt="Your iconic dog">
+  </div>
+
+  <!-- Product Selection -->
+  <h2 style="margin-bottom: 20px; text-align: center;">Choose a Product:</h2>
+  <div class="products-grid" id="productsGrid">
+    <!-- Will be populated by JavaScript -->
+  </div>
+
+  <!-- Customization Section -->
+  <div class="customization-section" id="customizationSection">
+    <h2 style="margin-bottom: 20px; text-align: center;">Customize Your Product:</h2>
+
+    <div class="preview-canvas" id="previewCanvas">
+      <img id="previewProductImg" alt="Product mockup">
+      <img id="customDogImage" alt="Your dog" draggable="true">
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label>Size:</label>
+        <input type="range" id="sizeSlider" min="50" max="300" value="150">
+        <input type="number" id="sizeInput" min="50" max="300" value="150">px
+      </div>
+      <div class="control-group">
+        <label>Rotation:</label>
+        <input type="range" id="rotationSlider" min="0" max="360" value="0">
+        <input type="number" id="rotationInput" min="0" max="360" value="0">°
+      </div>
+      <div class="control-group">
+        <label>Opacity:</label>
+        <input type="range" id="opacitySlider" min="0" max="100" value="100">
+        <input type="number" id="opacityInput" min="0" max="100" value="100">%
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn-secondary" onclick="resetPosition()">Reset Position</button>
+      <button class="btn-primary" onclick="addToCart()">Add to Cart - <span id="selectedPrice"></span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Get generated image from URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const generatedImageUrl = urlParams.get('image');
+  const poseName = urlParams.get('pose') || 'Iconic Dog';
+
+  let products = [];
+  let selectedProduct = null;
+  let dragOffset = { x: 0, y: 0 };
+
+  // Set the generated image
+  if (generatedImageUrl) {
+    document.getElementById('yourImage').src = generatedImageUrl;
+    document.getElementById('customDogImage').src = generatedImageUrl;
+  } else {
+    alert('No image found! Please generate an image first.');
+    window.location.href = '/shopify-test.html';
+  }
+
+  // Load products
+  async function loadProducts() {
+    try {
+      const response = await fetch('/products-catalog.json');
+      const data = await response.json();
+      products = data.products;
+      displayProducts();
+    } catch (error) {
+      console.error('Error loading products:', error);
+    }
+  }
+
+  // Display products
+  function displayProducts() {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = '';
+
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.onclick = () => selectProduct(product);
+      card.innerHTML = `
+        <img src="${product.mockupUrl}" class="product-mockup" alt="${product.name}">
+        <div class="product-name">${product.name}</div>
+        <div class="product-price">${product.price}</div>
+        <button class="select-btn">Select This Product</button>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // Select product
+  function selectProduct(product) {
+    selectedProduct = product;
+
+    // Update UI
+    document.querySelectorAll('.product-card').forEach(card => card.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+
+    // Show customization
+    document.getElementById('customizationSection').classList.add('active');
+    document.getElementById('previewProductImg').src = product.mockupUrl;
+    document.getElementById('selectedPrice').textContent = product.price;
+
+    // Scroll to customization
+    document.getElementById('customizationSection').scrollIntoView({ behavior: 'smooth' });
+
+    // Reset image position
+    resetPosition();
+  }
+
+  // Drag functionality
+  const customImg = document.getElementById('customDogImage');
+
+  customImg.addEventListener('dragstart', (e) => {
+    const rect = customImg.getBoundingClientRect();
+    dragOffset.x = e.clientX - rect.left;
+    dragOffset.y = e.clientY - rect.top;
+  });
+
+  document.getElementById('previewCanvas').addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+
+  document.getElementById('previewCanvas').addEventListener('drop', (e) => {
+    e.preventDefault();
+    const canvas = document.getElementById('previewCanvas');
+    const canvasRect = canvas.getBoundingClientRect();
+    const x = e.clientX - canvasRect.left - dragOffset.x;
+    const y = e.clientY - canvasRect.top - dragOffset.y;
+
+    customImg.style.left = x + 'px';
+    customImg.style.top = y + 'px';
+  });
+
+  // Size control
+  document.getElementById('sizeSlider').addEventListener('input', (e) => {
+    const size = e.target.value;
+    document.getElementById('sizeInput').value = size;
+    customImg.style.width = size + 'px';
+    customImg.style.height = size + 'px';
+  });
+
+  document.getElementById('sizeInput').addEventListener('input', (e) => {
+    const size = e.target.value;
+    document.getElementById('sizeSlider').value = size;
+    customImg.style.width = size + 'px';
+    customImg.style.height = size + 'px';
+  });
+
+  // Rotation control
+  document.getElementById('rotationSlider').addEventListener('input', (e) => {
+    const rotation = e.target.value;
+    document.getElementById('rotationInput').value = rotation;
+    customImg.style.transform = `rotate(${rotation}deg)`;
+  });
+
+  document.getElementById('rotationInput').addEventListener('input', (e) => {
+    const rotation = e.target.value;
+    document.getElementById('rotationSlider').value = rotation;
+    customImg.style.transform = `rotate(${rotation}deg)`;
+  });
+
+  // Opacity control
+  document.getElementById('opacitySlider').addEventListener('input', (e) => {
+    const opacity = e.target.value / 100;
+    document.getElementById('opacityInput').value = e.target.value;
+    customImg.style.opacity = opacity;
+  });
+
+  document.getElementById('opacityInput').addEventListener('input', (e) => {
+    const opacity = e.target.value / 100;
+    document.getElementById('opacitySlider').value = e.target.value;
+    customImg.style.opacity = opacity;
+  });
+
+  // Reset position
+  function resetPosition() {
+    customImg.style.width = '150px';
+    customImg.style.height = '150px';
+    customImg.style.left = '50%';
+    customImg.style.top = '50%';
+    customImg.style.transform = 'translate(-50%, -50%)';
+    customImg.style.opacity = '1';
+
+    document.getElementById('sizeSlider').value = 150;
+    document.getElementById('sizeInput').value = 150;
+    document.getElementById('rotationSlider').value = 0;
+    document.getElementById('rotationInput').value = 0;
+    document.getElementById('opacitySlider').value = 100;
+    document.getElementById('opacityInput').value = 100;
+  }
+
+  // Add to cart
+  function addToCart() {
+    if (!selectedProduct) {
+      alert('Please select a product first!');
+      return;
+    }
+
+    // Redirect to Shopify product page with custom image
+    const productUrl = `https://alldogsrockshop.com/products/${selectedProduct.handle}?image=${encodeURIComponent(generatedImageUrl)}&pose=${encodeURIComponent(poseName)}`;
+
+    alert('🎉 Taking you to checkout!\n\nYour custom image will be added to the product.');
+    window.location.href = productUrl;
+  }
+
+  // Load products on page load
+  loadProducts();
+</script>
+
+</body>
+</html>

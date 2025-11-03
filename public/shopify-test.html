@@ -230,6 +230,23 @@
     margin: 20px 10px;
   }
 
+  .preview-products-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 20px 10px;
+  }
+
+  .preview-products-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+
   @media (max-width: 768px) {
     .hero-section h1 {
       font-size: 2em;
@@ -282,6 +299,7 @@
     <div id="resultSection" style="display: none;">
       <img id="resultImage" class="result-image" alt="Your iconic dog">
       <br>
+      <button class="preview-products-btn" onclick="previewOnProducts()">Preview on Products →</button>
       <button class="download-btn" onclick="downloadImage()">Download Image</button>
       <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
@@ -411,6 +429,11 @@
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  // Preview on products
+  function previewOnProducts() {
+    window.location.href = '/product-preview.html?image=' + encodeURIComponent(currentImageUrl) + '&pose=' + encodeURIComponent(currentPoseName);
   }
 
   // Close modal on background click
