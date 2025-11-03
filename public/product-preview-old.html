@@ -78,6 +78,13 @@
     background: #f8f9ff;
   }
 
+  .product-mockup {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 15px;
+  }
+
   .product-name {
     font-size: 1.1em;
     font-weight: 700;
@@ -104,7 +111,11 @@
     cursor: pointer;
   }
 
-  .preview-section {
+  .select-btn:hover {
+    opacity: 0.9;
+  }
+
+  .customization-section {
     display: none;
     background: #f8f9ff;
     padding: 30px;
@@ -112,42 +123,71 @@
     margin-bottom: 30px;
   }
 
-  .preview-section.active {
+  .customization-section.active {
     display: block;
   }
 
-  .mockup-preview {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-
-  #mockupCanvas {
+  /* Product Mockup Container - Shows realistic preview */
+  .mockup-container {
+    position: relative;
+    width: 600px;
     max-width: 100%;
-    height: auto;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    margin: 0 auto 30px;
+    aspect-ratio: 1;
   }
 
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: #667eea;
-    font-size: 1.2em;
+  .mockup-background {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
-  .spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #667eea;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin: 20px auto;
+  /* Print area overlays for each product type */
+  .print-area {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
 
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  /* Blanket - center area */
+  .print-area-blanket {
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: 60%;
+  }
+
+  /* Phone Case - center area */
+  .print-area-phone {
+    top: 15%;
+    left: 30%;
+    width: 40%;
+    height: 70%;
+  }
+
+  /* Canvas - full area with margin */
+  .print-area-canvas {
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+  }
+
+  /* T-Shirt - chest area */
+  .print-area-tshirt {
+    top: 30%;
+    left: 30%;
+    width: 40%;
+    height: 40%;
+  }
+
+  .custom-image-preview {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
   }
 
   .controls {
@@ -214,7 +254,18 @@
     opacity: 0.9;
   }
 
+  .preview-note {
+    text-align: center;
+    color: #667eea;
+    font-size: 0.9em;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
   @media (max-width: 768px) {
+    .mockup-container {
+      width: 100%;
+    }
     .controls {
       flex-direction: column;
     }
@@ -228,14 +279,14 @@
 
 <div class="container">
   <div class="header">
-    <h1>Preview Your Iconic Dog on Products</h1>
-    <p>Choose a product and see a realistic preview!</p>
+    <h1>🎨 Preview Your Iconic Dog on Products</h1>
+    <p>Choose a product and see how your custom image will look!</p>
   </div>
 
   <!-- Your Generated Image -->
   <div class="your-image-section">
     <h2>Your Generated Iconic Dog:</h2>
-    <img id="yourImage" alt="Your iconic dog" crossorigin="anonymous">
+    <img id="yourImage" alt="Your iconic dog">
     <p id="poseName" style="margin-top: 10px; font-size: 1.2em;"></p>
   </div>
 
@@ -245,60 +296,61 @@
     <!-- Will be populated by JavaScript -->
   </div>
 
-  <!-- Product Preview -->
-  <div class="preview-section" id="previewSection">
+  <!-- Customization Section -->
+  <div class="customization-section" id="customizationSection">
     <h2 style="margin-bottom: 20px; text-align: center;">Your Product Preview:</h2>
 
-    <div id="loadingMockup" class="loading" style="display: none;">
-      <div class="spinner"></div>
-      <p>Generating your product mockup...</p>
+    <!-- Realistic Product Mockup -->
+    <div class="mockup-container">
+      <img id="mockupBackground" class="mockup-background" alt="Product">
+      <div id="printArea" class="print-area">
+        <img id="customImagePreview" class="custom-image-preview" alt="Your custom image">
+      </div>
     </div>
-
-    <div class="mockup-preview" id="mockupPreview">
-      <canvas id="mockupCanvas" width="800" height="800"></canvas>
-      <p style="color: #667eea; margin-top: 15px; font-style: italic;">This is how your product will look!</p>
-    </div>
+    <p class="preview-note">This is how your image will appear on the product!</p>
 
     <!-- Size Control -->
     <div class="controls">
       <div class="control-group">
         <label>Image Size on Product:</label>
-        <input type="range" id="sizeSlider" min="50" max="100" value="80" onchange="updateMockup()">
-        <input type="number" id="sizeInput" min="50" max="100" value="80" onchange="syncSize()">%
+        <input type="range" id="sizeSlider" min="50" max="100" value="80">
+        <input type="number" id="sizeInput" min="50" max="100" value="80">%
       </div>
     </div>
 
     <div class="action-buttons">
-      <button class="btn-secondary" onclick="resetSize()">Reset</button>
+      <button class="btn-secondary" onclick="resetSize()">Reset Size</button>
       <button class="btn-primary" onclick="addToCart()">Add to Cart - <span id="selectedPrice"></span></button>
     </div>
   </div>
 </div>
 
 <script>
-  // Get URL parameters
+  // Get generated image from URL parameter
   const urlParams = new URLSearchParams(window.location.search);
   const generatedImageUrl = urlParams.get('image');
   const poseName = urlParams.get('pose') || 'Iconic Dog';
 
   let products = [];
   let selectedProduct = null;
-  let dogImage = new Image();
-  let canvas = document.getElementById('mockupCanvas');
-  let ctx = canvas.getContext('2d');
 
   // Set the generated image
   if (generatedImageUrl) {
     document.getElementById('yourImage').src = generatedImageUrl;
+    document.getElementById('customImagePreview').src = generatedImageUrl;
     document.getElementById('poseName').textContent = poseName;
-
-    // Load dog image for canvas
-    dogImage.crossOrigin = 'anonymous';
-    dogImage.src = generatedImageUrl;
   } else {
     alert('No image found! Please generate an image first.');
     window.location.href = '/shopify-test.html';
   }
+
+  // Product print area configurations
+  const printAreaConfigs = {
+    'blanket': 'print-area-blanket',
+    'phone-case': 'print-area-phone',
+    'canvas': 'print-area-canvas',
+    'tshirt': 'print-area-tshirt'
+  };
 
   // Load products
   async function loadProducts() {
@@ -323,134 +375,62 @@
       card.className = 'product-card';
       card.onclick = () => selectProduct(product);
       card.innerHTML = `
+        <img src="${product.mockupUrl}" class="product-mockup" alt="${product.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22>Product Image</text></svg>'">
         <div class="product-name">${product.name}</div>
         <div class="product-price">${product.price}</div>
-        <button class="select-btn">Preview on This Product</button>
+        <button class="select-btn">Select This Product</button>
       `;
       grid.appendChild(card);
     });
   }
 
-  // Select product and generate mockup
-  async function selectProduct(product) {
+  // Select product
+  function selectProduct(product) {
     selectedProduct = product;
 
     // Update UI
     document.querySelectorAll('.product-card').forEach(card => card.classList.remove('selected'));
     event.currentTarget.classList.add('selected');
 
-    // Show preview section
-    document.getElementById('previewSection').classList.add('active');
+    // Show customization
+    document.getElementById('customizationSection').classList.add('active');
+    document.getElementById('mockupBackground').src = product.mockupUrl;
     document.getElementById('selectedPrice').textContent = product.price;
 
-    // Scroll to preview
-    document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
+    // Set print area class based on product type
+    const printArea = document.getElementById('printArea');
+    printArea.className = 'print-area ' + (printAreaConfigs[product.id] || 'print-area-canvas');
 
-    // Generate mockup
-    await generateMockup(product);
+    // Scroll to customization
+    document.getElementById('customizationSection').scrollIntoView({ behavior: 'smooth' });
+
+    // Reset size
+    resetSize();
   }
 
-  // Generate realistic product mockup using Canvas
-  async function generateMockup(product) {
-    document.getElementById('loadingMockup').style.display = 'block';
-    document.getElementById('mockupPreview').style.display = 'none';
-
-    try {
-      // Wait for dog image to load
-      await new Promise((resolve, reject) => {
-        if (dogImage.complete) {
-          resolve();
-        } else {
-          dogImage.onload = resolve;
-          dogImage.onerror = reject;
-        }
-      });
-
-      // Draw mockup
-      await updateMockup();
-
-      document.getElementById('loadingMockup').style.display = 'none';
-      document.getElementById('mockupPreview').style.display = 'block';
-
-    } catch (error) {
-      console.error('Error generating mockup:', error);
-      alert('Error generating mockup. Please try again.');
-      document.getElementById('loadingMockup').style.display = 'none';
-    }
-  }
-
-  // Update mockup based on size
-  async function updateMockup() {
-    if (!selectedProduct || !dogImage.complete) return;
-
-    const size = parseInt(document.getElementById('sizeInput').value) / 100;
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Set canvas background
-    ctx.fillStyle = '#f5f5f5';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Calculate image dimensions
-    const maxWidth = canvas.width * size;
-    const maxHeight = canvas.height * size;
-
-    let drawWidth, drawHeight;
-    const imgAspect = dogImage.width / dogImage.height;
-
-    if (imgAspect > 1) {
-      drawWidth = maxWidth;
-      drawHeight = maxWidth / imgAspect;
-    } else {
-      drawHeight = maxHeight;
-      drawWidth = maxHeight * imgAspect;
-    }
-
-    // Center the image
-    const x = (canvas.width - drawWidth) / 2;
-    const y = (canvas.height - drawHeight) / 2;
-
-    // Draw the dog image
-    ctx.drawImage(dogImage, x, y, drawWidth, drawHeight);
-
-    // Add product-specific overlay effects
-    if (selectedProduct.id === 'blanket') {
-      // Add soft texture overlay for blanket
-      ctx.globalAlpha = 0.1;
-      ctx.fillStyle = '#fff';
-      for (let i = 0; i < 50; i++) {
-        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
-      }
-      ctx.globalAlpha = 1.0;
-    }
-
-    // Add product label
-    ctx.fillStyle = 'rgba(102, 126, 234, 0.9)';
-    ctx.fillRect(20, canvas.height - 60, canvas.width - 40, 40);
-    ctx.fillStyle = 'white';
-    ctx.font = 'bold 20px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(selectedProduct.name, canvas.width / 2, canvas.height - 30);
-  }
-
-  // Sync size between slider and input
-  function syncSize() {
-    const value = document.getElementById('sizeInput').value;
-    document.getElementById('sizeSlider').value = value;
-    updateMockup();
-  }
+  // Size control
+  const customPreview = document.getElementById('customImagePreview');
 
   document.getElementById('sizeSlider').addEventListener('input', (e) => {
-    document.getElementById('sizeInput').value = e.target.value;
-    updateMockup();
+    const size = e.target.value;
+    document.getElementById('sizeInput').value = size;
+    customPreview.style.width = size + '%';
+    customPreview.style.height = size + '%';
+  });
+
+  document.getElementById('sizeInput').addEventListener('input', (e) => {
+    const size = e.target.value;
+    document.getElementById('sizeSlider').value = size;
+    customPreview.style.width = size + '%';
+    customPreview.style.height = size + '%';
   });
 
   // Reset size
   function resetSize() {
+    customPreview.style.width = '80%';
+    customPreview.style.height = '80%';
     document.getElementById('sizeSlider').value = 80;
     document.getElementById('sizeInput').value = 80;
-    updateMockup();
   }
 
   // Add to cart
@@ -460,10 +440,13 @@
       return;
     }
 
+    // Get current size setting
     const size = document.getElementById('sizeInput').value;
+
+    // Redirect to Shopify product page with custom image and settings
     const productUrl = `https://alldogsrockshop.com/products/${selectedProduct.handle}?image=${encodeURIComponent(generatedImageUrl)}&pose=${encodeURIComponent(poseName)}&size=${size}`;
 
-    alert(`🎉 Taking you to checkout!\n\nYour custom ${poseName} image will be added to the ${selectedProduct.name}.`);
+    alert('🎉 Taking you to checkout!\n\nYour custom ' + poseName + ' image will be added to the ' + selectedProduct.name + '.');
     window.location.href = productUrl;
   }
 
