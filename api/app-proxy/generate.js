@@ -108,9 +108,8 @@ export default async function handler(req, res) {
     const swapRequest = {
       version: FACE_SWAP_VERSION,
       input: {
-        swap_image: dogPhoto,        // Customer's dog photo (source face)
-        target_image: baseImageUrl,  // Generated base image (destination)
-        cache_days: 0                // Don't cache results
+        source_image: dogPhoto,      // Customer's dog photo (source face)
+        target_image: baseImageUrl   // Generated base image (destination)
       }
     };
 
