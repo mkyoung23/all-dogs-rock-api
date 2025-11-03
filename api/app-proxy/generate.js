@@ -60,56 +60,67 @@ export default async function handler(req, res) {
     console.log('🎨 Starting face swap for:', selectedPose.name);
     console.log('📸 Customer dog photo received');
 
-    // STEP 1: Generate base iconic pose image with FLUX (using generic dog)
-    console.log('📤 Step 1: Generating base image with FLUX...');
+    // NEW APPROACH: Skip FLUX, use pre-generated iconic pose templates
+    // Then swap customer's dog face directly onto the template
+    console.log('📤 Using pre-generated template for:', selectedPose.name);
 
-    const fluxPrompt = selectedPose.prompt.replace(/golden retriever|german shepherd|husky|beagle|corgi|rottweiler|boxer|french bulldog|labrador retriever|poodle|dalmatian|australian shepherd|border collie|doberman|shiba inu|jack russell terrier|saint bernard|cavalier king charles spaniel|pug|samoyed|spaniel|bulldog|greyhound/gi, 'golden retriever');
+    // Use the templateUrl from iconic-poses.json as the base
+    // If it's broken/404, we'll generate it on the fly
+    let baseImageUrl = selectedPose.templateUrl;
 
-    const fluxRequest = {
-      version: FLUX_VERSION,
-      input: {
-        prompt: fluxPrompt,
-        aspect_ratio: '1:1',
-        output_format: 'jpg',
-        output_quality: 90,
-        safety_tolerance: 2,
-        prompt_upsampling: true
-      }
-    };
+    // Check if we need to generate fresh base image
+    const needsGeneration = !baseImageUrl || baseImageUrl.includes('replicate.delivery');
 
-    const fluxResponse = await fetch('https://api.replicate.com/v1/predictions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
-      },
-      body: JSON.stringify(fluxRequest),
-    });
+    if (needsGeneration) {
+      console.log('📤 Generating fresh base image with FLUX...');
 
-    if (!fluxResponse.ok) {
-      const errorData = await fluxResponse.json();
-      console.error('❌ FLUX Error:', JSON.stringify(errorData, null, 2));
-      return res.status(fluxResponse.status).json({
-        error: 'Failed to generate base image',
-        details: errorData.detail || JSON.stringify(errorData),
+      // Use original prompt without breed replacement
+      const fluxRequest = {
+        version: FLUX_VERSION,
+        input: {
+          prompt: selectedPose.prompt,
+          aspect_ratio: '1:1',
+          output_format: 'jpg',
+          output_quality: 90,
+          safety_tolerance: 2,
+          prompt_upsampling: true
+        }
+      };
+
+      const fluxResponse = await fetch('https://api.replicate.com/v1/predictions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
+        },
+        body: JSON.stringify(fluxRequest),
       });
+
+      if (!fluxResponse.ok) {
+        const errorData = await fluxResponse.json();
+        console.error('❌ FLUX Error:', JSON.stringify(errorData, null, 2));
+        return res.status(fluxResponse.status).json({
+          error: 'Failed to generate base image',
+          details: errorData.detail || JSON.stringify(errorData),
+        });
+      }
+
+      const fluxPrediction = await fluxResponse.json();
+      console.log('✅ Base image generation started:', fluxPrediction.id);
+
+      // Poll FLUX for completion
+      baseImageUrl = await pollPrediction(fluxPrediction.urls.get, 'FLUX base image');
+      console.log('🎉 Base image ready:', baseImageUrl);
     }
 
-    const fluxPrediction = await fluxResponse.json();
-    console.log('✅ Base image generation started:', fluxPrediction.id);
-
-    // Poll FLUX for completion
-    const baseImageUrl = await pollPrediction(fluxPrediction.urls.get, 'FLUX base image');
-    console.log('🎉 Base image ready:', baseImageUrl);
-
-    // STEP 2: Face swap - replace generic dog with customer's dog
-    console.log('📤 Step 2: Swapping customer\'s dog face...');
+    // STEP 2: Face swap - replace dog in template with customer's dog
+    console.log('📤 Swapping customer\'s dog face onto template...');
 
     const swapRequest = {
       version: FACE_SWAP_VERSION,
       input: {
-        source_image: dogPhoto,      // Customer's dog photo (source face)
-        target_image: baseImageUrl   // Generated base image (destination)
+        source_image: dogPhoto,      // Customer's dog photo (source - face to extract)
+        target_image: baseImageUrl   // Template image (destination - where to place face)
       }
     };
 
