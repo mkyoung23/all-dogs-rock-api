@@ -175,7 +175,16 @@ export default async function handler(req, res) {
       console.log(`${description} poll ${attempts + 1}: ${pollData.status}`);
 
       if (pollData.status === 'succeeded') {
-        return pollData.output;
+        // Handle different output formats
+        const output = pollData.output;
+
+        // If output is an object with 'image' property (face swap), return the image URL
+        if (output && typeof output === 'object' && output.image) {
+          return output.image;
+        }
+
+        // Otherwise return output directly (FLUX returns direct URL)
+        return output;
       }
 
       if (pollData.status === 'failed' || pollData.status === 'canceled') {
