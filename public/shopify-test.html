@@ -269,16 +269,26 @@
   <!-- Photo Upload Section -->
   <div class="upload-section">
     <h2>📸 Upload Your Dog's Photo</h2>
-    <p style="color: #666; margin-bottom: 20px;">We'll swap your dog's face into the iconic pose you choose!</p>
+    <p style="color: #666; margin-bottom: 20px;">We'll use YOUR dog in the iconic pose!</p>
     <input type="file" id="dogPhoto" accept="image/*" style="display: none;">
     <button class="upload-btn" onclick="document.getElementById('dogPhoto').click()">
       Choose Photo
     </button>
     <div id="previewSection" style="display: none;">
       <img id="preview" alt="Your dog">
-      <p class="success-text">✅ Photo uploaded! Now choose a pose below.</p>
+      <p class="success-text">✅ Photo uploaded!</p>
     </div>
     <p id="uploadPrompt" style="margin-top: 15px; color: #999; font-size: 0.9em;">No photo selected</p>
+
+    <!-- Dog Name Input -->
+    <div style="margin-top: 30px;">
+      <label for="dogName" style="display: block; font-size: 1.2em; font-weight: 600; color: #333; margin-bottom: 10px;">
+        🐾 Your Dog's Name (Optional)
+      </label>
+      <input type="text" id="dogName" placeholder="Enter your dog's name"
+        style="font-size: 1.1em; padding: 12px 20px; border: 3px solid #667eea; border-radius: 50px; width: 300px; max-width: 100%; text-align: center;">
+      <p style="color: #999; font-size: 0.9em; margin-top: 10px;">This will appear on your product!</p>
+    </div>
   </div>
 
   <!-- Poses Grid -->
@@ -433,7 +443,8 @@
 
   // Preview on products
   function previewOnProducts() {
-    window.location.href = '/product-preview.html?image=' + encodeURIComponent(currentImageUrl) + '&pose=' + encodeURIComponent(currentPoseName);
+    const dogName = document.getElementById('dogName').value || '';
+    window.location.href = '/product-preview.html?image=' + encodeURIComponent(currentImageUrl) + '&pose=' + encodeURIComponent(currentPoseName) + '&name=' + encodeURIComponent(dogName);
   }
 
   // Close modal on background click

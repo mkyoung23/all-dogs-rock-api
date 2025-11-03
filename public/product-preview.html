@@ -259,12 +259,17 @@
       <p style="color: #667eea; margin-top: 15px; font-style: italic;">This is how your product will look!</p>
     </div>
 
-    <!-- Size Control -->
+    <!-- Controls -->
     <div class="controls">
       <div class="control-group">
         <label>Image Size on Product:</label>
         <input type="range" id="sizeSlider" min="50" max="100" value="80" onchange="updateMockup()">
         <input type="number" id="sizeInput" min="50" max="100" value="80" onchange="syncSize()">%
+      </div>
+      <div class="control-group">
+        <label>Text on Product:</label>
+        <input type="text" id="customText" placeholder="Enter text (optional)" onchange="updateMockup()"
+          style="width: 250px; padding: 8px; font-size: 1em; border: 2px solid #667eea; border-radius: 5px; text-align: center;">
       </div>
     </div>
 
@@ -280,6 +285,7 @@
   const urlParams = new URLSearchParams(window.location.search);
   const generatedImageUrl = urlParams.get('image');
   const poseName = urlParams.get('pose') || 'Iconic Dog';
+  const dogName = urlParams.get('name') || '';
 
   let products = [];
   let selectedProduct = null;
@@ -295,6 +301,11 @@
     // Load dog image for canvas
     dogImage.crossOrigin = 'anonymous';
     dogImage.src = generatedImageUrl;
+
+    // Set initial custom text value
+    if (dogName) {
+      document.getElementById('customText').value = dogName;
+    }
   } else {
     alert('No image found! Please generate an image first.');
     window.location.href = '/shopify-test.html';
@@ -425,7 +436,24 @@
       ctx.globalAlpha = 1.0;
     }
 
-    // Add product label
+    // Add custom text below image (dog name)
+    const customText = document.getElementById('customText').value;
+    if (customText) {
+      // Position text below the dog image
+      const textY = y + drawHeight + 60;
+
+      // Add background for text
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.fillRect(0, textY - 50, canvas.width, 80);
+
+      // Draw text
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 48px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(customText, canvas.width / 2, textY);
+    }
+
+    // Add product label at bottom
     ctx.fillStyle = 'rgba(102, 126, 234, 0.9)';
     ctx.fillRect(20, canvas.height - 60, canvas.width - 40, 40);
     ctx.fillStyle = 'white';
@@ -461,9 +489,10 @@
     }
 
     const size = document.getElementById('sizeInput').value;
-    const productUrl = `https://alldogsrockshop.com/products/${selectedProduct.handle}?image=${encodeURIComponent(generatedImageUrl)}&pose=${encodeURIComponent(poseName)}&size=${size}`;
+    const customText = document.getElementById('customText').value;
+    const productUrl = `https://alldogsrockshop.com/products/${selectedProduct.handle}?image=${encodeURIComponent(generatedImageUrl)}&pose=${encodeURIComponent(poseName)}&size=${size}&text=${encodeURIComponent(customText)}`;
 
-    alert(`🎉 Taking you to checkout!\n\nYour custom ${poseName} image will be added to the ${selectedProduct.name}.`);
+    alert(`🎉 Taking you to checkout!\n\nYour custom ${poseName} image${customText ? ' with "' + customText + '"' : ''} will be added to the ${selectedProduct.name}.`);
     window.location.href = productUrl;
   }
 

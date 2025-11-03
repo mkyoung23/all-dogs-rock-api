@@ -1,7 +1,5 @@
-// API route for generating iconic dog images with FACE SWAP
-// Customer uploads their dog photo, we swap it into iconic poses
-// Two-step process: 1) Generate base image with FLUX, 2) Face swap customer's dog
-// Deployed: 2025-11-03
+// COMPLETELY NEW APPROACH: Use customer's dog photo to generate iconic pose
+// Instead of face swap, use image-to-image generation with dog photo as reference
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -13,13 +11,10 @@ const iconicPoses = JSON.parse(
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60;
 
-// Face swap model version (yan-ops/face_swap with face enhancer)
-const FACE_SWAP_VERSION = 'd5900f9ebed33e7ae08a07f17e0d98b4ebc68ab9528a70462afc3899cfe23bab';
-// FLUX 1.1 Pro version
-const FLUX_VERSION = '80a09d66baa990429c2f5ae8a4306bf778a1b3775afd01cc2cc8bdbe9033769c';
+// Use FLUX img2img to recreate pose with customer's actual dog
+const FLUX_IMG2IMG_VERSION = '61d59b0fc94f31638c17fa4c4dc45ea864f87dd00e39f86e0f464e97fd4d5c3e';
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -36,7 +31,6 @@ export default async function handler(req, res) {
   try {
     const { poseId, dogPhoto } = req.body;
 
-    // Validate inputs
     if (!poseId) {
       return res.status(400).json({ error: 'Pose ID is required' });
     }
@@ -44,7 +38,7 @@ export default async function handler(req, res) {
     if (!dogPhoto) {
       return res.status(400).json({
         error: 'Dog photo is required',
-        message: 'Please upload a photo of your dog (URL or base64)'
+        message: 'Please upload a photo of your dog'
       });
     }
 
@@ -57,102 +51,57 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Replicate API token not configured' });
     }
 
-    console.log('🎨 Starting face swap for:', selectedPose.name);
-    console.log('📸 Customer dog photo received');
+    console.log('🎨 Generating iconic dog for:', selectedPose.name);
+    console.log('📸 Using customer dog photo');
 
-    // NEW APPROACH: Skip FLUX, use pre-generated iconic pose templates
-    // Then swap customer's dog face directly onto the template
-    console.log('📤 Using pre-generated template for:', selectedPose.name);
+    // NEW APPROACH: Use customer's dog photo as the IMAGE INPUT
+    // Tell AI to recreate the iconic pose using THIS SPECIFIC DOG
+    const enhancedPrompt = `${selectedPose.prompt}. Use the exact dog from the reference image. Match the dog's breed, fur color, face, and all characteristics exactly. Keep the dog's appearance identical to the reference photo while placing it in this iconic scene.`;
 
-    // Use the templateUrl from iconic-poses.json as the base
-    // If it's broken/404, we'll generate it on the fly
-    let baseImageUrl = selectedPose.templateUrl;
-
-    // Check if we need to generate fresh base image
-    const needsGeneration = !baseImageUrl || baseImageUrl.includes('replicate.delivery');
-
-    if (needsGeneration) {
-      console.log('📤 Generating fresh base image with FLUX...');
-
-      // Use original prompt without breed replacement
-      const fluxRequest = {
-        version: FLUX_VERSION,
-        input: {
-          prompt: selectedPose.prompt,
-          aspect_ratio: '1:1',
-          output_format: 'jpg',
-          output_quality: 90,
-          safety_tolerance: 2,
-          prompt_upsampling: true
-        }
-      };
-
-      const fluxResponse = await fetch('https://api.replicate.com/v1/predictions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
-        },
-        body: JSON.stringify(fluxRequest),
-      });
-
-      if (!fluxResponse.ok) {
-        const errorData = await fluxResponse.json();
-        console.error('❌ FLUX Error:', JSON.stringify(errorData, null, 2));
-        return res.status(fluxResponse.status).json({
-          error: 'Failed to generate base image',
-          details: errorData.detail || JSON.stringify(errorData),
-        });
-      }
-
-      const fluxPrediction = await fluxResponse.json();
-      console.log('✅ Base image generation started:', fluxPrediction.id);
-
-      // Poll FLUX for completion
-      baseImageUrl = await pollPrediction(fluxPrediction.urls.get, 'FLUX base image');
-      console.log('🎉 Base image ready:', baseImageUrl);
-    }
-
-    // STEP 2: Face swap - replace dog in template with customer's dog
-    console.log('📤 Swapping customer\'s dog face onto template...');
-
-    const swapRequest = {
-      version: FACE_SWAP_VERSION,
+    const request = {
+      version: FLUX_IMG2IMG_VERSION,
       input: {
-        source_image: dogPhoto,      // Customer's dog photo (source - face to extract)
-        target_image: baseImageUrl   // Template image (destination - where to place face)
+        prompt: enhancedPrompt,
+        image: dogPhoto,  // Customer's dog photo as reference
+        prompt_strength: 0.8,  // Strong adherence to prompt (pose)
+        guidance: 3.5,
+        num_inference_steps: 28,
+        aspect_ratio: '1:1',
+        output_format: 'jpg',
+        output_quality: 90
       }
     };
 
-    const swapResponse = await fetch('https://api.replicate.com/v1/predictions', {
+    console.log('📤 Sending to FLUX img2img...');
+
+    const response = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
       },
-      body: JSON.stringify(swapRequest),
+      body: JSON.stringify(request),
     });
 
-    if (!swapResponse.ok) {
-      const errorData = await swapResponse.json();
-      console.error('❌ Face Swap Error:', JSON.stringify(errorData, null, 2));
-      return res.status(swapResponse.status).json({
-        error: 'Failed to swap faces',
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('❌ FLUX Error:', JSON.stringify(errorData, null, 2));
+      return res.status(response.status).json({
+        error: 'Failed to generate image',
         details: errorData.detail || JSON.stringify(errorData),
       });
     }
 
-    const swapPrediction = await swapResponse.json();
-    console.log('✅ Face swap started:', swapPrediction.id);
+    const prediction = await response.json();
+    console.log('✅ Generation started:', prediction.id);
 
-    // Poll face swap for completion
-    const finalImageUrl = await pollPrediction(swapPrediction.urls.get, 'Face swap');
-    console.log('🎉 SUCCESS! Final image with customer\'s dog:', finalImageUrl);
+    // Poll for completion
+    const imageUrl = await pollPrediction(prediction.urls.get, 'Image generation');
+    console.log('🎉 SUCCESS! Image with customer\'s dog:', imageUrl);
 
     return res.status(200).json({
       success: true,
-      imageUrl: finalImageUrl,
-      baseImageUrl: baseImageUrl,  // Include base image for debugging
+      imageUrl: imageUrl,
       poseName: selectedPose.name,
       poseId: selectedPose.id,
     });
@@ -165,7 +114,6 @@ export default async function handler(req, res) {
     });
   }
 
-  // Helper function to poll a prediction until completion
   async function pollPrediction(pollUrl, description) {
     let attempts = 0;
 
@@ -186,16 +134,7 @@ export default async function handler(req, res) {
       console.log(`${description} poll ${attempts + 1}: ${pollData.status}`);
 
       if (pollData.status === 'succeeded') {
-        // Handle different output formats
-        const output = pollData.output;
-
-        // If output is an object with 'image' property (face swap), return the image URL
-        if (output && typeof output === 'object' && output.image) {
-          return output.image;
-        }
-
-        // Otherwise return output directly (FLUX returns direct URL)
-        return output;
+        return pollData.output;
       }
 
       if (pollData.status === 'failed' || pollData.status === 'canceled') {
