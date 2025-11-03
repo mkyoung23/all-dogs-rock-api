@@ -1,5 +1,8 @@
 // API route to serve the list of iconic poses for the gallery
-import iconicPoses from '../../iconic-poses.json' assert { type: 'json' };
+// Updated to read file at runtime to avoid build-time caching
+
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export default function handler(req, res) {
   // Set CORS headers
@@ -17,6 +20,11 @@ export default function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Read poses from file at RUNTIME (not build time) to avoid caching
+  const iconicPoses = JSON.parse(
+    readFileSync(join(process.cwd(), 'iconic-poses.json'), 'utf-8')
+  );
 
   // Return the full poses list
   return res.status(200).json({
