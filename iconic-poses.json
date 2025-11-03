@@ -1,184 +1,74 @@
 {
   "poses": [
     {
-      "id": "mj-free-throw-dunk",
-      "name": "Michael Jordan Free Throw Dunk",
-      "description": "The iconic 1988 MJ slam dunk contest free throw line dunk",
-      "category": "Sports",
-      "templateUrl": "https://i.imgur.com/2YHlL9N.jpg",
-      "thumbnailUrl": "https://i.imgur.com/2YHlL9N.jpg",
-      "prompt": "Recreation of the iconic Michael Jordan 1988 slam dunk contest photo - golden retriever dog in mid-air flying from the free throw line toward the basket with basketball in paw, wearing red Chicago Bulls #23 jersey, NBA arena background with packed crowd, legs spread in iconic MJ pose, tongue out, professional sports photography, 8k, highly detailed"
-    },
-    {
       "id": "mona-lisa",
       "name": "Mona Lisa",
       "description": "The famous Leonardo da Vinci painting with a dog",
       "category": "Art",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/800px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/800px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
-      "prompt": "Recreation of the Mona Lisa painting by Leonardo da Vinci - elegant golden retriever dog in the exact pose and composition, sitting with paws folded, subtle smile, dark Renaissance clothing, misty landscape background with winding paths and bridge, museum quality Renaissance oil painting style, warm earth tones, highly detailed, masterpiece quality"
-    },
-    {
-      "id": "jeter-jump-throw",
-      "name": "Derek Jeter Jump Throw",
-      "description": "The iconic Derek Jeter off-balance jump throw to first",
-      "category": "Sports",
-      "templateUrl": "https://i.imgur.com/h8NBnJN.jpg",
-      "thumbnailUrl": "https://i.imgur.com/h8NBnJN.jpg",
-      "prompt": "Recreation of the iconic Derek Jeter jump throw from shortstop - german shepherd dog leaping in mid-air throwing baseball to first base, wearing New York Yankees pinstripe uniform #2, full extension off-balance throw, Yankee Stadium infield background, dirt flying, action sports photography, dramatic lighting, 8k, highly detailed"
-    },
-    {
-      "id": "rocky-statue",
-      "name": "Rocky at the Steps",
-      "description": "Rocky Balboa with arms raised at Philadelphia Museum steps",
-      "category": "Movies",
-      "templateUrl": "https://static01.nyt.com/images/2015/11/29/sports/29ROCKY/29ROCKY-superJumbo.jpg",
-      "thumbnailUrl": "https://static01.nyt.com/images/2015/11/29/sports/29ROCKY/29ROCKY-superJumbo.jpg",
-      "prompt": "Recreation of the iconic Rocky Balboa victory pose - boxer dog standing at top of Philadelphia Museum of Art steps with both arms raised triumphantly overhead, wearing grey sweatsuit and sweatband, sunrise lighting, view of Philadelphia city in background, inspiring movie scene, cinematic photography, 8k, highly detailed"
+      "templateUrl": "https://replicate.delivery/xezq/ZS3FLAVG87ZYNF5pez156QeHyuOwLRJUXcYP7XDktW89lolVA/tmpzjbj9txn.jpg",
+      "thumbnailUrl": "https://replicate.delivery/xezq/ZS3FLAVG87ZYNF5pez156QeHyuOwLRJUXcYP7XDktW89lolVA/tmpzjbj9txn.jpg",
+      "prompt": "Recreation of the Mona Lisa painting by Leonardo da Vinci - elegant golden retriever dog in the exact pose and composition, sitting with paws folded, subtle smile, dark Renaissance clothing, misty landscape background with winding paths and bridge, museum quality Renaissance oil painting style, warm earth tones, highly detailed, masterpiece quality",
+      "exampleImageUrl": "https://replicate.delivery/xezq/ZS3FLAVG87ZYNF5pez156QeHyuOwLRJUXcYP7XDktW89lolVA/tmpzjbj9txn.jpg"
     },
     {
       "id": "american-gothic",
       "name": "American Gothic",
       "description": "The famous Grant Wood painting",
       "category": "Art",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg",
-      "prompt": "Recreation of the American Gothic painting by Grant Wood - two dogs (beagle and retriever) standing in front of white farmhouse with Gothic window, one holding a pitchfork, wearing 1930s farm clothing, stern expressions, Midwest American Gothic architectural background, oil painting style, museum quality, highly detailed"
+      "templateUrl": "https://replicate.delivery/xezq/FPxTexiw412wLiRGItrWtzGYCIYtEDpogZ0g10RwKpLBT0yKA/tmpqvh0nrql.jpg",
+      "thumbnailUrl": "https://replicate.delivery/xezq/FPxTexiw412wLiRGItrWtzGYCIYtEDpogZ0g10RwKpLBT0yKA/tmpqvh0nrql.jpg",
+      "prompt": "Recreation of the American Gothic painting by Grant Wood - two dogs (beagle and retriever) standing in front of white farmhouse with Gothic window, one holding a pitchfork, wearing 1930s farm clothing, stern expressions, Midwest American Gothic architectural background, oil painting style, museum quality, highly detailed",
+      "exampleImageUrl": "https://replicate.delivery/xezq/FPxTexiw412wLiRGItrWtzGYCIYtEDpogZ0g10RwKpLBT0yKA/tmpqvh0nrql.jpg"
     },
     {
       "id": "abbey-road",
       "name": "Abbey Road Crossing",
       "description": "The Beatles Abbey Road album cover crosswalk",
       "category": "Music",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg",
-      "prompt": "Recreation of the iconic Beatles Abbey Road album cover - golden retriever dog walking across the white striped crosswalk on Abbey Road, trees lining the street, vintage 1960s London street scene, sunny day, professional album cover photography, exact composition of the original, 8k, highly detailed"
-    },
-    {
-      "id": "iwo-jima-flag",
-      "name": "Raising the Flag at Iwo Jima",
-      "description": "The famous WWII photograph",
-      "category": "History",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/en/a/a1/WW2_Iwo_Jima_flag_raising.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/en/a/a1/WW2_Iwo_Jima_flag_raising.jpg",
-      "prompt": "Recreation of the iconic Raising the Flag at Iwo Jima photograph - german shepherd dog in Marine uniform helping raise the American flag on rocky mountain peak, heroic pose, black and white photography style, dramatic wartime scene, historically accurate composition, powerful imagery, 8k, highly detailed"
+      "templateUrl": "https://replicate.delivery/xezq/dSZbRcKPvzYKBBqQkKTtke8MK0IA4o3aJfgnYXokMq6LmolVA/tmp6akjx3wi.jpg",
+      "thumbnailUrl": "https://replicate.delivery/xezq/dSZbRcKPvzYKBBqQkKTtke8MK0IA4o3aJfgnYXokMq6LmolVA/tmp6akjx3wi.jpg",
+      "prompt": "Recreation of the iconic Beatles Abbey Road album cover - golden retriever dog walking across the white striped crosswalk on Abbey Road, trees lining the street, vintage 1960s London street scene, sunny day, professional album cover photography, exact composition of the original, 8k, highly detailed",
+      "exampleImageUrl": "https://replicate.delivery/xezq/dSZbRcKPvzYKBBqQkKTtke8MK0IA4o3aJfgnYXokMq6LmolVA/tmp6akjx3wi.jpg"
     },
     {
       "id": "creation-of-adam",
       "name": "Creation of Adam",
       "description": "Michelangelo's Sistine Chapel ceiling masterpiece",
       "category": "Art",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/1920px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/1920px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg",
-      "prompt": "Recreation of Michelangelo's Creation of Adam from Sistine Chapel - golden retriever dog as Adam reaching out paw to touch finger of God, reclining on green earth, flowing robes, Renaissance fresco painting style, divine light, classical art composition, museum masterpiece quality, highly detailed"
+      "templateUrl": "https://replicate.delivery/xezq/y9TfAee1M5N5XogWW7clC2DnwXBxZbAeJb73MwfbDDRCyEtsC/tmpl68lr2d_.jpg",
+      "thumbnailUrl": "https://replicate.delivery/xezq/y9TfAee1M5N5XogWW7clC2DnwXBxZbAeJb73MwfbDDRCyEtsC/tmpl68lr2d_.jpg",
+      "prompt": "Recreation of Michelangelo's Creation of Adam from Sistine Chapel - golden retriever dog as Adam reaching out paw to touch finger of God, reclining on green earth, flowing robes, Renaissance fresco painting style, divine light, classical art composition, museum masterpiece quality, highly detailed",
+      "exampleImageUrl": "https://replicate.delivery/xezq/y9TfAee1M5N5XogWW7clC2DnwXBxZbAeJb73MwfbDDRCyEtsC/tmpl68lr2d_.jpg"
     },
     {
       "id": "girl-pearl-earring",
       "name": "Girl with a Pearl Earring",
       "description": "Johannes Vermeer's masterpiece portrait",
       "category": "Art",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0f/1665_Girl_with_a_Pearl_Earring.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0f/1665_Girl_with_a_Pearl_Earring.jpg",
-      "prompt": "Recreation of Girl with a Pearl Earring by Vermeer - elegant spaniel dog looking over shoulder, wearing exotic turban and large pearl earring, dark background, soft lighting from left side, Dutch Golden Age oil painting style, museum quality, exquisite detail, 8k"
+      "templateUrl": "https://replicate.delivery/xezq/GZBFRAmuhtpRBdNVeoubWc89xFu0fhihncu9aVSfLiRoMRLrA/tmp_svwi3yn.jpg",
+      "thumbnailUrl": "https://replicate.delivery/xezq/GZBFRAmuhtpRBdNVeoubWc89xFu0fhihncu9aVSfLiRoMRLrA/tmp_svwi3yn.jpg",
+      "prompt": "Recreation of Girl with a Pearl Earring by Vermeer - elegant spaniel dog looking over shoulder, wearing exotic turban and large pearl earring, dark background, soft lighting from left side, Dutch Golden Age oil painting style, museum quality, exquisite detail, 8k",
+      "exampleImageUrl": "https://replicate.delivery/xezq/GZBFRAmuhtpRBdNVeoubWc89xFu0fhihncu9aVSfLiRoMRLrA/tmp_svwi3yn.jpg"
     },
     {
       "id": "the-scream",
       "name": "The Scream",
       "description": "Edvard Munch's iconic expressionist painting",
       "category": "Art",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/800px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/800px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
-      "prompt": "Recreation of The Scream by Edvard Munch - husky dog with paws on face in anguished expression on wooden bridge, swirling orange and red sky background, two figures in distance, expressionist painting style, dramatic emotional scene, bold brushstrokes, museum masterpiece quality, 8k"
+      "templateUrl": "https://replicate.delivery/xezq/GYXzFdxbfy38Y6cZxODkjrxv4lXeaLT82exrlC2AtxO3MRLrA/tmpe8y2apzt.jpg",
+      "thumbnailUrl": "https://replicate.delivery/xezq/GYXzFdxbfy38Y6cZxODkjrxv4lXeaLT82exrlC2AtxO3MRLrA/tmpe8y2apzt.jpg",
+      "prompt": "Recreation of The Scream by Edvard Munch - husky dog with paws on face in anguished expression on wooden bridge, swirling orange and red sky background, two figures in distance, expressionist painting style, dramatic emotional scene, bold brushstrokes, museum masterpiece quality, 8k",
+      "exampleImageUrl": "https://replicate.delivery/xezq/GYXzFdxbfy38Y6cZxODkjrxv4lXeaLT82exrlC2AtxO3MRLrA/tmpe8y2apzt.jpg"
     },
     {
       "id": "washington-crossing",
       "name": "Washington Crossing the Delaware",
       "description": "The famous Revolutionary War painting",
       "category": "History",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg/1920px-Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg/1920px-Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg",
-      "prompt": "Recreation of Washington Crossing the Delaware painting - golden retriever dog as General Washington standing heroically in boat crossing icy river, Revolutionary War uniform with cape flowing, soldiers rowing boat, American flag, chunks of ice in water, dramatic historical oil painting style, 8k, highly detailed"
-    },
-    {
-      "id": "einstein-tongue",
-      "name": "Einstein Tongue Out",
-      "description": "The famous Einstein sticking his tongue out photo",
-      "category": "Science",
-      "templateUrl": "https://i.imgur.com/McD2NKg.jpg",
-      "thumbnailUrl": "https://i.imgur.com/McD2NKg.jpg",
-      "prompt": "Recreation of the iconic Albert Einstein tongue out photograph - poodle dog with wild white fluffy fur resembling Einstein's hair, sticking tongue out playfully, black and white photography, sitting in back of car, 1950s style, mischievous expression, famous portrait, 8k, highly detailed"
-    },
-    {
-      "id": "marilyn-subway",
-      "name": "Marilyn Monroe Subway Grate",
-      "description": "The Seven Year Itch iconic scene",
-      "category": "Movies",
-      "templateUrl": "https://i.imgur.com/s5ZyQJ6.jpg",
-      "thumbnailUrl": "https://i.imgur.com/s5ZyQJ6.jpg",
-      "prompt": "Recreation of Marilyn Monroe Seven Year Itch subway grate scene - elegant poodle dog in iconic white dress blowing up from subway grate below, standing over NYC subway grate, classic 1950s Hollywood glamour, blonde fur, city street background at night, cinematic photography, 8k, highly detailed"
-    },
-    {
-      "id": "james-dean-rebel",
-      "name": "James Dean Rebel",
-      "description": "James Dean leaning against car in Rebel Without a Cause",
-      "category": "Movies",
-      "templateUrl": "https://i.imgur.com/X7fN8Bh.jpg",
-      "thumbnailUrl": "https://i.imgur.com/X7fN8Bh.jpg",
-      "prompt": "Recreation of James Dean Rebel Without a Cause pose - cool greyhound dog leaning against vintage 1950s red car, wearing red jacket and white t-shirt, hands in pockets, moody expression, black and white photography, classic Hollywood rebel style, 8k, highly detailed"
-    },
-    {
-      "id": "the-thinker",
-      "name": "The Thinker",
-      "description": "Rodin's famous bronze sculpture",
-      "category": "Art",
-      "templateUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Rodin_-_The_Thinker.jpg/800px-Rodin_-_The_Thinker.jpg",
-      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Rodin_-_The_Thinker.jpg/800px-Rodin_-_The_Thinker.jpg",
-      "prompt": "Recreation of The Thinker sculpture by Rodin - muscular bulldog sitting on rock in contemplative pose, chin resting on paw, bronze statue appearance, classical sculpture composition, museum pedestal, dramatic lighting, 8k, highly detailed"
-    },
-    {
-      "id": "superman-flying",
-      "name": "Superman Flying",
-      "description": "Christopher Reeve Superman flying pose",
-      "category": "Movies",
-      "templateUrl": "https://i.imgur.com/Th8zQXR.jpg",
-      "thumbnailUrl": "https://i.imgur.com/Th8zQXR.jpg",
-      "prompt": "Recreation of Christopher Reeve Superman flying pose - golden retriever dog in iconic blue and red Superman costume with red cape flowing, one paw forward in classic flying pose, soaring above city skyline, heroic expression, cinematic superhero photography, 8k, highly detailed"
-    },
-    {
-      "id": "ali-over-liston",
-      "name": "Ali Over Liston",
-      "description": "Muhammad Ali standing over Sonny Liston knockout",
-      "category": "Sports",
-      "templateUrl": "https://npr.brightspotcdn.com/dims4/default/8fc3f90/2147483647/strip/true/crop/3000x1997+0+0/resize/880x586!/quality/90/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Flegacy%2Fsites%2Fkazu%2Ffiles%2F201505%2Fali-liston.jpg",
-      "thumbnailUrl": "https://npr.brightspotcdn.com/dims4/default/8fc3f90/2147483647/strip/true/crop/3000x1997+0+0/resize/880x586!/quality/90/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Flegacy%2Fsites%2Fkazu%2Ffiles%2F201505%2Fali-liston.jpg",
-      "prompt": "Recreation of the iconic Muhammad Ali vs Sonny Liston knockout photo - boxer dog standing over knocked down opponent, wearing white boxing shorts and red gloves, pointing down in victorious pose, boxing ring with crowd in background, black and white photography with dramatic lighting, legendary sports moment, 8k"
-    },
-    {
-      "id": "babe-ruth-called-shot",
-      "name": "Babe Ruth Called Shot",
-      "description": "Babe Ruth pointing to outfield calling his shot",
-      "category": "Sports",
-      "templateUrl": "https://i.imgur.com/TkP8l1P.jpg",
-      "thumbnailUrl": "https://i.imgur.com/TkP8l1P.jpg",
-      "prompt": "Recreation of Babe Ruth called shot moment - labrador retriever dog in Yankees pinstripe uniform pointing dramatically to outfield with bat in other paw, 1930s baseball stadium background, vintage black and white photography style, legendary baseball moment, 8k, highly detailed"
-    },
-    {
-      "id": "bruce-lee-ready",
-      "name": "Bruce Lee Ready Stance",
-      "description": "Bruce Lee's iconic martial arts ready pose",
-      "category": "Movies",
-      "templateUrl": "https://i.imgur.com/B1KpjXR.jpg",
-      "thumbnailUrl": "https://i.imgur.com/B1KpjXR.jpg",
-      "prompt": "Recreation of Bruce Lee iconic ready stance - lean muscular shiba inu dog shirtless in martial arts fighting stance, one paw raised ready to strike, intense focused expression, iconic yellow and black jumpsuit pants, dramatic lighting, Enter the Dragon style, 8k, highly detailed"
-    },
-    {
-      "id": "usain-bolt-lightning",
-      "name": "Usain Bolt Lightning Pose",
-      "description": "Usain Bolt's signature lightning bolt celebration",
-      "category": "Sports",
-      "templateUrl": "https://i.imgur.com/yRhWxLP.jpg",
-      "thumbnailUrl": "https://i.imgur.com/yRhWxLP.jpg",
-      "prompt": "Recreation of Usain Bolt lightning bolt celebration pose - greyhound dog in Jamaican Olympic track uniform doing the iconic lightning bolt pose with one arm pointing up diagonally, gold medal around neck, Olympic track stadium background, victorious expression, sports photography, 8k, highly detailed"
+      "templateUrl": "https://replicate.delivery/xezq/w7PWeErgnH3bfklwIDFhqJB4vKwCIclWTVU0X63XONRgmolVA/tmpgo08btyv.jpg",
+      "thumbnailUrl": "https://replicate.delivery/xezq/w7PWeErgnH3bfklwIDFhqJB4vKwCIclWTVU0X63XONRgmolVA/tmpgo08btyv.jpg",
+      "prompt": "Recreation of Washington Crossing the Delaware painting - golden retriever dog as General Washington standing heroically in boat crossing icy river, Revolutionary War uniform with cape flowing, soldiers rowing boat, American flag, chunks of ice in water, dramatic historical oil painting style, 8k, highly detailed",
+      "exampleImageUrl": "https://replicate.delivery/xezq/w7PWeErgnH3bfklwIDFhqJB4vKwCIclWTVU0X63XONRgmolVA/tmpgo08btyv.jpg"
     }
   ]
 }

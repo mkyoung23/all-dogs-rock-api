@@ -1,0 +1,39 @@
+{
+  "examples": [
+    {
+      "id": "mona-lisa",
+      "name": "Mona Lisa",
+      "exampleImageUrl": "https://replicate.delivery/xezq/ZS3FLAVG87ZYNF5pez156QeHyuOwLRJUXcYP7XDktW89lolVA/tmpzjbj9txn.jpg"
+    },
+    {
+      "id": "american-gothic",
+      "name": "American Gothic",
+      "exampleImageUrl": "https://replicate.delivery/xezq/FPxTexiw412wLiRGItrWtzGYCIYtEDpogZ0g10RwKpLBT0yKA/tmpqvh0nrql.jpg"
+    },
+    {
+      "id": "abbey-road",
+      "name": "Abbey Road Crossing",
+      "exampleImageUrl": "https://replicate.delivery/xezq/dSZbRcKPvzYKBBqQkKTtke8MK0IA4o3aJfgnYXokMq6LmolVA/tmp6akjx3wi.jpg"
+    },
+    {
+      "id": "creation-of-adam",
+      "name": "Creation of Adam",
+      "exampleImageUrl": "https://replicate.delivery/xezq/y9TfAee1M5N5XogWW7clC2DnwXBxZbAeJb73MwfbDDRCyEtsC/tmpl68lr2d_.jpg"
+    },
+    {
+      "id": "girl-pearl-earring",
+      "name": "Girl with a Pearl Earring",
+      "exampleImageUrl": "https://replicate.delivery/xezq/GZBFRAmuhtpRBdNVeoubWc89xFu0fhihncu9aVSfLiRoMRLrA/tmp_svwi3yn.jpg"
+    },
+    {
+      "id": "the-scream",
+      "name": "The Scream",
+      "exampleImageUrl": "https://replicate.delivery/xezq/GYXzFdxbfy38Y6cZxODkjrxv4lXeaLT82exrlC2AtxO3MRLrA/tmpe8y2apzt.jpg"
+    },
+    {
+      "id": "washington-crossing",
+      "name": "Washington Crossing the Delaware",
+      "exampleImageUrl": "https://replicate.delivery/xezq/w7PWeErgnH3bfklwIDFhqJB4vKwCIclWTVU0X63XONRgmolVA/tmpgo08btyv.jpg"
+    }
+  ]
+}
