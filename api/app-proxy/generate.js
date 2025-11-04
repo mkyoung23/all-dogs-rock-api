@@ -1,5 +1,6 @@
-// COMPLETELY NEW APPROACH: Use customer's dog photo to generate iconic pose
-// Instead of face swap, use image-to-image generation with dog photo as reference
+// COMPLETE FIX: Use customer's dog photo to generate iconic pose OR custom prompts
+// Supports BOTH iconic poses AND custom descriptions
+// Works with Shopify Custom Liquid code AND iconic poses gallery
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -29,40 +30,71 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { poseId, dogPhoto } = req.body;
+    // Support multiple parameter formats:
+    // Format 1: { poseId, dogPhoto } - for iconic poses
+    // Format 2: { prompt, image } - for custom prompts (Shopify Custom Liquid)
+    const {
+      poseId,
+      dogPhoto,
+      image,
+      prompt: customPrompt,
+      premium = false
+    } = req.body;
 
-    if (!poseId) {
-      return res.status(400).json({ error: 'Pose ID is required' });
-    }
+    // Determine which photo parameter was provided
+    const photoData = dogPhoto || image;
 
-    if (!dogPhoto) {
+    // Determine mode: iconic pose or custom prompt
+    const isCustomMode = !!customPrompt;
+    const isIconicMode = !!poseId;
+
+    if (!isCustomMode && !isIconicMode) {
       return res.status(400).json({
-        error: 'Dog photo is required',
-        message: 'Please upload a photo of your dog'
+        error: 'Either poseId (for iconic poses) or prompt (for custom) is required'
       });
     }
 
-    const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
-    if (!selectedPose) {
-      return res.status(400).json({ error: `Invalid pose ID: ${poseId}` });
+    if (!photoData) {
+      return res.status(400).json({
+        error: 'Dog photo is required',
+        message: 'Please upload a photo of your dog using either "dogPhoto" or "image" parameter'
+      });
     }
 
     if (!process.env.REPLICATE_API_TOKEN) {
       return res.status(500).json({ error: 'Replicate API token not configured' });
     }
 
-    console.log('🎨 Generating iconic dog for:', selectedPose.name);
-    console.log('📸 Using customer dog photo');
+    let enhancedPrompt;
+    let responseName;
 
-    // NEW APPROACH: Use customer's dog photo as the IMAGE INPUT
-    // Tell AI to recreate the iconic pose using THIS SPECIFIC DOG
-    const enhancedPrompt = `${selectedPose.prompt}. Use the exact dog from the reference image. Match the dog's breed, fur color, face, and all characteristics exactly. Keep the dog's appearance identical to the reference photo while placing it in this iconic scene.`;
+    // Mode 1: Iconic Pose
+    if (isIconicMode) {
+      const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
+      if (!selectedPose) {
+        return res.status(400).json({ error: `Invalid pose ID: ${poseId}` });
+      }
+
+      console.log('🎨 Generating ICONIC POSE:', selectedPose.name);
+      console.log('📸 Using customer dog photo (img2img)');
+
+      enhancedPrompt = `${selectedPose.prompt}. Use the exact dog from the reference image. Match the dog's breed, fur color, face, and all characteristics exactly. Keep the dog's appearance identical to the reference photo while placing it in this iconic scene.`;
+      responseName = selectedPose.name;
+    }
+    // Mode 2: Custom Prompt
+    else {
+      console.log('🎨 Generating CUSTOM PROMPT:', customPrompt.substring(0, 50) + '...');
+      console.log('📸 Using customer dog photo (img2img)');
+
+      enhancedPrompt = `${customPrompt}. Use the exact dog/pet from the reference image. Match all characteristics exactly - breed, fur color, face, markings. Keep the appearance identical to the reference photo.`;
+      responseName = 'Custom Generation';
+    }
 
     const request = {
       version: FLUX_IMG2IMG_VERSION,
       input: {
         prompt: enhancedPrompt,
-        image: dogPhoto,  // Customer's dog photo as reference
+        image: photoData,  // Customer's dog photo as reference (from dogPhoto or image param)
         prompt_strength: 0.8,  // Strong adherence to prompt (pose)
         guidance: 3.5,
         num_inference_steps: 28,
@@ -99,12 +131,23 @@ export default async function handler(req, res) {
     const imageUrl = await pollPrediction(prediction.urls.get, 'Image generation');
     console.log('🎉 SUCCESS! Image with customer\'s dog:', imageUrl);
 
-    return res.status(200).json({
+    // Return response based on mode
+    const responseData = {
       success: true,
       imageUrl: imageUrl,
-      poseName: selectedPose.name,
-      poseId: selectedPose.id,
-    });
+      name: responseName,
+    };
+
+    // Add mode-specific fields
+    if (isIconicMode) {
+      responseData.poseName = responseName;
+      responseData.poseId = poseId;
+    } else {
+      // For Shopify Custom Liquid compatibility, return as array
+      responseData.images = [imageUrl];
+    }
+
+    return res.status(200).json(responseData);
 
   } catch (error) {
     console.error('❌ Error:', error);
