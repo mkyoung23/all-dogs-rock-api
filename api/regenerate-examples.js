@@ -1,4 +1,7 @@
-// Regenerate all example dog images
+// Regenerate all example dog images and upload to Imgur for permanent storage
+import { readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -6,45 +9,13 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Missing REPLICATE_API_TOKEN' });
   }
 
-  const FLUX_VERSION = '80a09d66baa990429c2f5ae8a4306bf778a1b3775afd01cc2cc8bdbe9033769c';
+  // Read poses from iconic-poses.json to use CORRECT prompts (without breed forcing)
+  const iconicPosesData = JSON.parse(
+    readFileSync(join(process.cwd(), 'iconic-poses.json'), 'utf-8')
+  );
 
-  const poses = [
-    {
-      id: "mona-lisa",
-      name: "Mona Lisa",
-      prompt: "Recreation of the Mona Lisa painting by Leonardo da Vinci - elegant golden retriever dog in the exact pose and composition, sitting with paws folded, subtle smile, dark Renaissance clothing, misty landscape background with winding paths and bridge, museum quality Renaissance oil painting style, warm earth tones, highly detailed, masterpiece quality"
-    },
-    {
-      id: "american-gothic",
-      name: "American Gothic",
-      prompt: "Recreation of the American Gothic painting by Grant Wood - two dogs (beagle and retriever) standing in front of white farmhouse with Gothic window, one holding a pitchfork, wearing 1930s farm clothing, stern expressions, Midwest American Gothic architectural background, oil painting style, museum quality, highly detailed"
-    },
-    {
-      id: "abbey-road",
-      name: "Abbey Road Crossing",
-      prompt: "Recreation of the iconic Beatles Abbey Road album cover - golden retriever dog walking across the white striped crosswalk on Abbey Road, trees lining the street, vintage 1960s London street scene, sunny day, professional album cover photography, exact composition of the original, 8k, highly detailed"
-    },
-    {
-      id: "creation-of-adam",
-      name: "Creation of Adam",
-      prompt: "Recreation of Michelangelo's Creation of Adam from Sistine Chapel - golden retriever dog as Adam reaching out paw to touch finger of God, reclining on green earth, flowing robes, Renaissance fresco painting style, divine light, classical art composition, museum masterpiece quality, highly detailed"
-    },
-    {
-      id: "girl-pearl-earring",
-      name: "Girl with a Pearl Earring",
-      prompt: "Recreation of Girl with a Pearl Earring by Vermeer - elegant spaniel dog looking over shoulder, wearing exotic turban and large pearl earring, dark background, soft lighting from left side, Dutch Golden Age oil painting style, museum quality, exquisite detail, 8k"
-    },
-    {
-      id: "the-scream",
-      name: "The Scream",
-      prompt: "Recreation of The Scream by Edvard Munch - husky dog with paws on face in anguished expression on wooden bridge, swirling orange and red sky background, two figures in distance, expressionist painting style, dramatic emotional scene, bold brushstrokes, museum masterpiece quality, 8k"
-    },
-    {
-      id: "washington-crossing",
-      name: "Washington Crossing the Delaware",
-      prompt: "Recreation of Washington Crossing the Delaware painting - golden retriever dog as General Washington standing heroically in boat crossing icy river, Revolutionary War uniform with cape flowing, soldiers rowing boat, American flag, chunks of ice in water, dramatic historical oil painting style, 8k, highly detailed"
-    }
-  ];
+  const FLUX_VERSION = '80a09d66baa990429c2f5ae8a4306bf778a1b3775afd01cc2cc8bdbe9033769c';
+  const poses = iconicPosesData.poses;
 
   const results = [];
 
@@ -101,14 +72,52 @@ export default async function handler(req, res) {
         throw new Error('Timeout waiting for image');
       }
 
+      // Upload to Imgur for permanent storage
+      console.log(`📤 Uploading ${pose.name} to Imgur...`);
+      let permanentUrl = imageUrl; // Fallback to Replicate URL
+
+      try {
+        // Download image from Replicate
+        const imageResponse = await fetch(imageUrl);
+        const imageBuffer = await imageResponse.arrayBuffer();
+        const base64Image = Buffer.from(imageBuffer).toString('base64');
+
+        // Upload to Imgur (anonymous upload, free, permanent)
+        const imgurResponse = await fetch('https://api.imgur.com/3/image', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Client-ID 546c25a59c58ad7', // Public client ID for anonymous uploads
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            image: base64Image,
+            type: 'base64',
+            name: `${pose.id}.jpg`,
+            title: pose.name
+          })
+        });
+
+        const imgurData = await imgurResponse.json();
+
+        if (imgurData.success && imgurData.data && imgurData.data.link) {
+          permanentUrl = imgurData.data.link;
+          console.log(`✅ Uploaded to Imgur: ${permanentUrl}`);
+        } else {
+          console.error(`⚠️ Imgur upload failed, using Replicate URL`);
+        }
+      } catch (uploadError) {
+        console.error(`⚠️ Imgur upload error: ${uploadError.message}`);
+      }
+
       results.push({
         id: pose.id,
         name: pose.name,
-        url: imageUrl,
+        url: permanentUrl,
+        replicateUrl: imageUrl,
         status: 'success'
       });
 
-      console.log(`✅ ${pose.name}: ${imageUrl}`);
+      console.log(`✅ ${pose.name}: ${permanentUrl}`);
 
     } catch (error) {
       results.push({
@@ -121,5 +130,39 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ results });
+  // Update iconic-poses.json with permanent URLs
+  try {
+    const successfulResults = results.filter(r => r.status === 'success');
+
+    if (successfulResults.length > 0) {
+      console.log(`\n📝 Updating iconic-poses.json with ${successfulResults.length} permanent URLs...`);
+
+      // Update poses with new URLs
+      for (const result of successfulResults) {
+        const poseIndex = iconicPosesData.poses.findIndex(p => p.id === result.id);
+        if (poseIndex !== -1) {
+          iconicPosesData.poses[poseIndex].exampleImageUrl = result.url;
+          iconicPosesData.poses[poseIndex].templateUrl = result.url;
+          iconicPosesData.poses[poseIndex].thumbnailUrl = result.url;
+        }
+      }
+
+      // Write updated file
+      writeFileSync(
+        join(process.cwd(), 'iconic-poses.json'),
+        JSON.stringify(iconicPosesData, null, 2),
+        'utf-8'
+      );
+
+      console.log(`✅ iconic-poses.json updated with permanent Imgur URLs!`);
+    }
+  } catch (updateError) {
+    console.error(`⚠️ Failed to update iconic-poses.json: ${updateError.message}`);
+  }
+
+  return res.status(200).json({
+    results,
+    message: `Generated ${results.filter(r => r.status === 'success').length}/${results.length} images`,
+    updatedFile: results.filter(r => r.status === 'success').length > 0
+  });
 }
