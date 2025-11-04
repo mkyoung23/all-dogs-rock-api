@@ -5,70 +5,70 @@
       "name": "Mona Lisa",
       "description": "The famous Leonardo da Vinci painting with a dog",
       "category": "Art",
-      "templateUrl": "https://replicate.delivery/xezq/ZS3FLAVG87ZYNF5pez156QeHyuOwLRJUXcYP7XDktW89lolVA/tmpzjbj9txn.jpg",
-      "thumbnailUrl": "https://replicate.delivery/xezq/ZS3FLAVG87ZYNF5pez156QeHyuOwLRJUXcYP7XDktW89lolVA/tmpzjbj9txn.jpg",
+      "templateUrl": "/examples/mona-lisa.jpg",
+      "thumbnailUrl": "/examples/mona-lisa.jpg",
       "prompt": "Recreation of the Mona Lisa painting by Leonardo da Vinci - dog in the exact pose and composition, sitting with paws folded, subtle smile, dark Renaissance clothing, misty landscape background with winding paths and bridge, museum quality Renaissance oil painting style, warm earth tones, highly detailed, masterpiece quality",
-      "exampleImageUrl": "https://replicate.delivery/xezq/ZS3FLAVG87ZYNF5pez156QeHyuOwLRJUXcYP7XDktW89lolVA/tmpzjbj9txn.jpg"
+      "exampleImageUrl": "/examples/mona-lisa.jpg"
     },
     {
       "id": "american-gothic",
       "name": "American Gothic",
       "description": "The famous Grant Wood painting",
       "category": "Art",
-      "templateUrl": "https://replicate.delivery/xezq/FPxTexiw412wLiRGItrWtzGYCIYtEDpogZ0g10RwKpLBT0yKA/tmpqvh0nrql.jpg",
-      "thumbnailUrl": "https://replicate.delivery/xezq/FPxTexiw412wLiRGItrWtzGYCIYtEDpogZ0g10RwKpLBT0yKA/tmpqvh0nrql.jpg",
+      "templateUrl": "/examples/american-gothic.jpg",
+      "thumbnailUrl": "/examples/american-gothic.jpg",
       "prompt": "Recreation of the American Gothic painting by Grant Wood - two dogs standing in front of white farmhouse with Gothic window, one holding a pitchfork, wearing 1930s farm clothing, stern expressions, Midwest American Gothic architectural background, oil painting style, museum quality, highly detailed",
-      "exampleImageUrl": "https://replicate.delivery/xezq/FPxTexiw412wLiRGItrWtzGYCIYtEDpogZ0g10RwKpLBT0yKA/tmpqvh0nrql.jpg"
+      "exampleImageUrl": "/examples/american-gothic.jpg"
     },
     {
       "id": "abbey-road",
       "name": "Abbey Road Crossing",
       "description": "The Beatles Abbey Road album cover crosswalk",
       "category": "Music",
-      "templateUrl": "https://replicate.delivery/xezq/dSZbRcKPvzYKBBqQkKTtke8MK0IA4o3aJfgnYXokMq6LmolVA/tmp6akjx3wi.jpg",
-      "thumbnailUrl": "https://replicate.delivery/xezq/dSZbRcKPvzYKBBqQkKTtke8MK0IA4o3aJfgnYXokMq6LmolVA/tmp6akjx3wi.jpg",
+      "templateUrl": "/examples/abbey-road.jpg",
+      "thumbnailUrl": "/examples/abbey-road.jpg",
       "prompt": "Recreation of the iconic Beatles Abbey Road album cover - dog walking across the white striped crosswalk on Abbey Road, trees lining the street, vintage 1960s London street scene, sunny day, professional album cover photography, exact composition of the original, 8k, highly detailed",
-      "exampleImageUrl": "https://replicate.delivery/xezq/dSZbRcKPvzYKBBqQkKTtke8MK0IA4o3aJfgnYXokMq6LmolVA/tmp6akjx3wi.jpg"
+      "exampleImageUrl": "/examples/abbey-road.jpg"
     },
     {
       "id": "creation-of-adam",
       "name": "Creation of Adam",
       "description": "Michelangelo's Sistine Chapel ceiling masterpiece",
       "category": "Art",
-      "templateUrl": "https://replicate.delivery/xezq/y9TfAee1M5N5XogWW7clC2DnwXBxZbAeJb73MwfbDDRCyEtsC/tmpl68lr2d_.jpg",
-      "thumbnailUrl": "https://replicate.delivery/xezq/y9TfAee1M5N5XogWW7clC2DnwXBxZbAeJb73MwfbDDRCyEtsC/tmpl68lr2d_.jpg",
+      "templateUrl": "/examples/creation-of-adam.jpg",
+      "thumbnailUrl": "/examples/creation-of-adam.jpg",
       "prompt": "Recreation of Michelangelo's Creation of Adam from Sistine Chapel - dog as Adam reaching out paw to touch finger of God, reclining on green earth, flowing robes, Renaissance fresco painting style, divine light, classical art composition, museum masterpiece quality, highly detailed",
-      "exampleImageUrl": "https://replicate.delivery/xezq/y9TfAee1M5N5XogWW7clC2DnwXBxZbAeJb73MwfbDDRCyEtsC/tmpl68lr2d_.jpg"
+      "exampleImageUrl": "/examples/creation-of-adam.jpg"
     },
     {
       "id": "girl-pearl-earring",
       "name": "Girl with a Pearl Earring",
       "description": "Johannes Vermeer's masterpiece portrait",
       "category": "Art",
-      "templateUrl": "https://replicate.delivery/xezq/GZBFRAmuhtpRBdNVeoubWc89xFu0fhihncu9aVSfLiRoMRLrA/tmp_svwi3yn.jpg",
-      "thumbnailUrl": "https://replicate.delivery/xezq/GZBFRAmuhtpRBdNVeoubWc89xFu0fhihncu9aVSfLiRoMRLrA/tmp_svwi3yn.jpg",
+      "templateUrl": "/examples/girl-pearl-earring.jpg",
+      "thumbnailUrl": "/examples/girl-pearl-earring.jpg",
       "prompt": "Recreation of Girl with a Pearl Earring by Vermeer - dog looking over shoulder, wearing exotic turban and large pearl earring, dark background, soft lighting from left side, Dutch Golden Age oil painting style, museum quality, exquisite detail, 8k",
-      "exampleImageUrl": "https://replicate.delivery/xezq/GZBFRAmuhtpRBdNVeoubWc89xFu0fhihncu9aVSfLiRoMRLrA/tmp_svwi3yn.jpg"
+      "exampleImageUrl": "/examples/girl-pearl-earring.jpg"
     },
     {
       "id": "the-scream",
       "name": "The Scream",
       "description": "Edvard Munch's iconic expressionist painting",
       "category": "Art",
-      "templateUrl": "https://replicate.delivery/xezq/GYXzFdxbfy38Y6cZxODkjrxv4lXeaLT82exrlC2AtxO3MRLrA/tmpe8y2apzt.jpg",
-      "thumbnailUrl": "https://replicate.delivery/xezq/GYXzFdxbfy38Y6cZxODkjrxv4lXeaLT82exrlC2AtxO3MRLrA/tmpe8y2apzt.jpg",
+      "templateUrl": "/examples/the-scream.jpg",
+      "thumbnailUrl": "/examples/the-scream.jpg",
       "prompt": "Recreation of The Scream by Edvard Munch - dog with paws on face in anguished expression on wooden bridge, swirling orange and red sky background, two figures in distance, expressionist painting style, dramatic emotional scene, bold brushstrokes, museum masterpiece quality, 8k",
-      "exampleImageUrl": "https://replicate.delivery/xezq/GYXzFdxbfy38Y6cZxODkjrxv4lXeaLT82exrlC2AtxO3MRLrA/tmpe8y2apzt.jpg"
+      "exampleImageUrl": "/examples/the-scream.jpg"
     },
     {
       "id": "washington-crossing",
       "name": "Washington Crossing the Delaware",
       "description": "The famous Revolutionary War painting",
       "category": "History",
-      "templateUrl": "https://replicate.delivery/xezq/w7PWeErgnH3bfklwIDFhqJB4vKwCIclWTVU0X63XONRgmolVA/tmpgo08btyv.jpg",
-      "thumbnailUrl": "https://replicate.delivery/xezq/w7PWeErgnH3bfklwIDFhqJB4vKwCIclWTVU0X63XONRgmolVA/tmpgo08btyv.jpg",
+      "templateUrl": "/examples/washington-crossing.jpg",
+      "thumbnailUrl": "/examples/washington-crossing.jpg",
       "prompt": "Recreation of Washington Crossing the Delaware painting - dog as General Washington standing heroically in boat crossing icy river, Revolutionary War uniform with cape flowing, soldiers rowing boat, American flag, chunks of ice in water, dramatic historical oil painting style, 8k, highly detailed",
-      "exampleImageUrl": "https://replicate.delivery/xezq/w7PWeErgnH3bfklwIDFhqJB4vKwCIclWTVU0X63XONRgmolVA/tmpgo08btyv.jpg"
+      "exampleImageUrl": "/examples/washington-crossing.jpg"
     }
   ]
 }
