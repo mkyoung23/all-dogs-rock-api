@@ -1,0 +1,495 @@
+<!-- COPY THIS ENTIRE FILE INTO A NEW SHOPIFY PAGE -->
+<!-- Go to: Shopify Admin > Online Store > Pages > Add page -->
+<!-- Paste this into the HTML editor (click "Show HTML" button) -->
+
+<div class="iconic-dogs-container">
+
+<!-- Hero Section -->
+<div class="hero-section">
+  <h1>🎨 Create Your Iconic Dog</h1>
+  <p>Transform your dog into legendary moments! Upload your dog's photo and swap it into iconic poses!</p>
+</div>
+
+<!-- Photo Upload Section -->
+<div class="upload-section">
+  <h2>📸 Upload Your Dog's Photo</h2>
+  <p style="color: #666; margin-bottom: 20px;">We'll swap your dog's face into the iconic pose you choose!</p>
+  <input type="file" id="dogPhoto" accept="image/*" style="display: none;">
+  <button class="upload-btn" onclick="document.getElementById('dogPhoto').click()">
+    Choose Photo
+  </button>
+  <div id="previewSection" style="display: none;">
+    <img id="preview" alt="Your dog" style="max-width: 300px; border-radius: 15px; margin-top: 20px;">
+    <p class="success-text">✅ Photo uploaded! Now choose a pose below.</p>
+  </div>
+  <p id="uploadPrompt" style="margin-top: 15px; color: #999; font-size: 0.9em;">No photo selected</p>
+
+  <!-- Dog Name Input -->
+  <div style="margin-top: 30px;">
+    <label for="dogName" style="display: block; font-size: 1.2em; font-weight: 600; color: #333; margin-bottom: 10px;">
+      🐾 Your Dog's Name (Optional)
+    </label>
+    <input type="text" id="dogName" placeholder="Enter your dog's name"
+      style="font-size: 1.1em; padding: 12px 20px; border: 3px solid #667eea; border-radius: 50px; width: 300px; max-width: 100%; text-align: center;">
+    <p style="color: #999; font-size: 0.9em; margin-top: 10px;">This will appear on your product!</p>
+  </div>
+</div>
+
+<!-- Poses Grid -->
+<div id="posesGrid" class="poses-grid">
+  <p style="text-align: center; color: #999;">Loading poses...</p>
+</div>
+
+<!-- Modal for generation -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <div id="modalBody">
+      <div class="loading-spinner"></div>
+      <h2 style="margin-top: 20px;">🎨 Creating Your Iconic Dog...</h2>
+      <p>This usually takes 10-15 seconds</p>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .iconic-dogs-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  .hero-section {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+  }
+
+  .hero-section h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    font-weight: 800;
+  }
+
+  .hero-section p {
+    font-size: 1.3em;
+    opacity: 0.95;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .upload-section {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .upload-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .upload-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    font-size: 1.3em;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  }
+
+  .success-text {
+    color: #10b981;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-top: 15px;
+  }
+
+  .poses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .pose-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .pose-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  .pose-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+
+  .pose-card-body {
+    padding: 20px;
+  }
+
+  .pose-card h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .pose-card p {
+    color: #666;
+    font-size: 0.95em;
+    margin-bottom: 15px;
+  }
+
+  .category-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    background: #667eea;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+
+  .generate-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 15px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  }
+
+  .generate-btn:hover {
+    transform: scale(1.02);
+  }
+
+  .generate-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    text-align: center;
+  }
+
+  .loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    animation: progress 15s ease-out forwards;
+  }
+
+  @keyframes progress {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+
+  .result-section {
+    margin-top: 30px;
+  }
+
+  .result-section img {
+    max-width: 600px;
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    margin: 20px 0;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+
+  .preview-products-btn, .download-btn, .close-btn {
+    padding: 15px 35px;
+    font-size: 1.1em;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .preview-products-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .download-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  }
+
+  .close-btn {
+    background: #6b7280;
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    .hero-section h1 {
+      font-size: 2.5em;
+    }
+
+    .poses-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // API Configuration
+  const API_BASE = 'https://all-dogs-rock-api.vercel.app';
+
+  let dogPhotoBase64 = null;
+  let currentImageUrl = null;
+  let currentPoseName = null;
+
+  // Load poses on page load
+  async function loadPoses() {
+    try {
+      const response = await fetch(API_BASE + '/api/poses/list');
+      const data = await response.json();
+
+      if (data.success && data.poses) {
+        displayPoses(data.poses);
+      } else {
+        document.getElementById('posesGrid').innerHTML = '<p style="text-align: center; color: red;">Failed to load poses</p>';
+      }
+    } catch (error) {
+      console.error('Error loading poses:', error);
+      document.getElementById('posesGrid').innerHTML = '<p style="text-align: center; color: red;">Error loading poses</p>';
+    }
+  }
+
+  // Display poses in grid
+  function displayPoses(poses) {
+    const grid = document.getElementById('posesGrid');
+    grid.innerHTML = '';
+
+    poses.forEach(pose => {
+      const card = document.createElement('div');
+      card.className = 'pose-card';
+      card.innerHTML = `
+        <img src="${pose.exampleImageUrl}" alt="${pose.name}" onerror="this.src='https://via.placeholder.com/300x250?text=Example+Coming+Soon'">
+        <div class="pose-card-body">
+          <h3>${pose.name}</h3>
+          <p>${pose.description}</p>
+          <span class="category-badge">${pose.category}</span>
+          <button class="generate-btn" onclick="generateIconicDog('${pose.id}')" id="btn-${pose.id}">
+            Create My ${pose.name}
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // Handle dog photo upload
+  document.getElementById('dogPhoto').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      document.getElementById('preview').src = event.target.result;
+      document.getElementById('previewSection').style.display = 'block';
+      document.getElementById('uploadPrompt').style.display = 'none';
+      dogPhotoBase64 = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Generate iconic dog
+  async function generateIconicDog(poseId) {
+    if (!dogPhotoBase64) {
+      alert('⚠️ Please upload your dog photo first!');
+      return;
+    }
+
+    // Disable all buttons
+    document.querySelectorAll('.generate-btn').forEach(btn => {
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+    });
+
+    // Show modal
+    const modal = document.getElementById('modal');
+    modal.style.display = 'flex';
+    document.getElementById('modalBody').innerHTML = `
+      <div class="loading-spinner"></div>
+      <h2 style="margin-top: 20px;">🎨 Creating Your Iconic Dog...</h2>
+      <p>This usually takes 10-15 seconds</p>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    `;
+
+    try {
+      const response = await fetch(API_BASE + '/api/app-proxy/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          poseId: poseId,
+          dogPhoto: dogPhotoBase64
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.imageUrl) {
+        currentImageUrl = data.imageUrl;
+        currentPoseName = data.poseName;
+        showResult(data.imageUrl, data.poseName);
+      } else {
+        throw new Error(data.error || 'Generation failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      document.getElementById('modalBody').innerHTML = `
+        <h2 style="color: red;">❌ Generation Failed</h2>
+        <p>${error.message}</p>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+      `;
+    }
+
+    // Re-enable buttons
+    document.querySelectorAll('.generate-btn').forEach(btn => {
+      btn.disabled = false;
+      btn.textContent = btn.textContent.replace('Generating...', 'Create My');
+    });
+  }
+
+  // Show result
+  function showResult(imageUrl, poseName) {
+    document.getElementById('modalBody').innerHTML = `
+      <h2>🎉 Your Iconic Dog is Ready!</h2>
+      <p style="font-size: 1.2em; color: #667eea; font-weight: 600;">${poseName}</p>
+      <div class="result-section">
+        <img src="${imageUrl}" alt="Your iconic dog">
+      </div>
+      <div class="action-buttons">
+        <button class="preview-products-btn" onclick="previewOnProducts()">Preview on Products →</button>
+        <button class="download-btn" onclick="downloadImage()">Download Image</button>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+      </div>
+    `;
+  }
+
+  // Download image
+  function downloadImage() {
+    const link = document.createElement('a');
+    link.href = currentImageUrl;
+    link.download = `iconic-dog-${currentPoseName}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Preview on products
+  function previewOnProducts() {
+    const dogName = document.getElementById('dogName').value || '';
+    window.location.href = '/pages/product-preview?image=' + encodeURIComponent(currentImageUrl) + '&pose=' + encodeURIComponent(currentPoseName) + '&name=' + encodeURIComponent(dogName);
+  }
+
+  // Close modal
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  // Close modal on background click
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
+
+  // Load poses when page loads
+  loadPoses();
+</script>
+
+</div>
+
+<!-- END OF SHOPIFY PAGE CODE -->
