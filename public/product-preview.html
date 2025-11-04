@@ -361,13 +361,15 @@
     await generateMockup(product);
   }
 
-  // Generate realistic product mockup using Canvas
+  // Generate realistic product mockup using Printify API
   async function generateMockup(product) {
     document.getElementById('loadingMockup').style.display = 'block';
     document.getElementById('mockupPreview').style.display = 'none';
 
     try {
-      // Wait for dog image to load
+      console.log('🎨 Generating REAL Printify mockup for:', product.type);
+
+      // Wait for dog image to load first
       await new Promise((resolve, reject) => {
         if (dogImage.complete) {
           resolve();
@@ -377,17 +379,124 @@
         }
       });
 
-      // Draw mockup
+      // FIRST: Create composite image with dog + text using canvas
+      const compositeImageUrl = await createCompositeImage();
+
+      // SECOND: Call Printify API to generate realistic product mockup
+      const response = await fetch(API_BASE + '/api/printify-mockup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageUrl: compositeImageUrl,
+          productType: product.type
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.mockupUrl) {
+        console.log('✅ Real Printify mockup generated:', data.mockupUrl);
+
+        // Display the REAL Printify mockup
+        await displayPrintifyMockup(data.mockupUrl);
+
+        document.getElementById('loadingMockup').style.display = 'none';
+        document.getElementById('mockupPreview').style.display = 'block';
+      } else {
+        throw new Error(data.error || 'Failed to generate mockup');
+      }
+
+    } catch (error) {
+      console.error('Error generating mockup:', error);
+      console.log('⚠️ Falling back to canvas mockup');
+
+      // Fallback to canvas if Printify fails
       await updateMockup();
 
       document.getElementById('loadingMockup').style.display = 'none';
       document.getElementById('mockupPreview').style.display = 'block';
-
-    } catch (error) {
-      console.error('Error generating mockup:', error);
-      alert('Error generating mockup. Please try again.');
-      document.getElementById('loadingMockup').style.display = 'none';
     }
+  }
+
+  // Create composite image with dog + custom text
+  async function createCompositeImage() {
+    const size = parseInt(document.getElementById('sizeInput').value) / 100;
+    const customText = document.getElementById('customText').value;
+
+    // Use a temporary canvas to create composite
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = 800;
+    tempCanvas.height = 800;
+    const tempCtx = tempCanvas.getContext('2d');
+
+    // Clear canvas
+    tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    // Calculate image dimensions
+    const maxWidth = tempCanvas.width * size;
+    const maxHeight = tempCanvas.height * size;
+
+    let drawWidth, drawHeight;
+    const imgAspect = dogImage.width / dogImage.height;
+
+    if (imgAspect > 1) {
+      drawWidth = maxWidth;
+      drawHeight = maxWidth / imgAspect;
+    } else {
+      drawHeight = maxHeight;
+      drawWidth = maxHeight * imgAspect;
+    }
+
+    // Center the image
+    const x = (tempCanvas.width - drawWidth) / 2;
+    const y = (tempCanvas.height - drawHeight) / 2;
+
+    // Draw the dog image
+    tempCtx.drawImage(dogImage, x, y, drawWidth, drawHeight);
+
+    // Add custom text below image (dog name)
+    if (customText) {
+      const textY = y + drawHeight + 60;
+
+      // Add background for text
+      tempCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      tempCtx.fillRect(0, textY - 50, tempCanvas.width, 80);
+
+      // Draw text
+      tempCtx.fillStyle = '#333';
+      tempCtx.font = 'bold 48px Arial';
+      tempCtx.textAlign = 'center';
+      tempCtx.fillText(customText, tempCanvas.width / 2, textY);
+    }
+
+    // Return as data URL
+    return tempCanvas.toDataURL('image/jpeg', 0.9);
+  }
+
+  // Display the real Printify mockup image
+  async function displayPrintifyMockup(mockupUrl) {
+    return new Promise((resolve, reject) => {
+      const mockupImage = new Image();
+      mockupImage.crossOrigin = 'anonymous';
+
+      mockupImage.onload = () => {
+        // Clear canvas and draw the real mockup
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw mockup to fit canvas
+        const scale = Math.min(canvas.width / mockupImage.width, canvas.height / mockupImage.height);
+        const drawWidth = mockupImage.width * scale;
+        const drawHeight = mockupImage.height * scale;
+        const x = (canvas.width - drawWidth) / 2;
+        const y = (canvas.height - drawHeight) / 2;
+
+        ctx.drawImage(mockupImage, x, y, drawWidth, drawHeight);
+        resolve();
+      };
+
+      mockupImage.onerror = reject;
+      mockupImage.src = mockupUrl;
+    });
   }
 
   // Update mockup based on size

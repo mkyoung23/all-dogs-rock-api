@@ -64,16 +64,33 @@ export default async function handler(req, res) {
     // Step 1: Upload image to Printify
     console.log('Step 1: Uploading image to Printify...');
 
+    let uploadBody;
+
+    // Check if imageUrl is a base64 data URL
+    if (imageUrl.startsWith('data:')) {
+      // Extract base64 data
+      const base64Data = imageUrl.split(',')[1];
+      const mimeType = imageUrl.match(/data:([^;]+);/)?.[1] || 'image/jpeg';
+
+      uploadBody = {
+        file_name: 'iconic-dog.jpg',
+        contents: base64Data // Printify accepts base64 in 'contents' field
+      };
+    } else {
+      // Regular URL
+      uploadBody = {
+        file_name: 'iconic-dog.jpg',
+        url: imageUrl
+      };
+    }
+
     const uploadResponse = await fetch('https://api.printify.com/v1/uploads/images.json', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.PRINTIFY_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        file_name: 'iconic-dog.jpg',
-        url: imageUrl
-      })
+      body: JSON.stringify(uploadBody)
     });
 
     if (!uploadResponse.ok) {
