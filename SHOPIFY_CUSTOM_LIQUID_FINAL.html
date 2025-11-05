@@ -1,0 +1,101 @@
+<div id="aiApp"></div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+(function(){
+const API='https://all-dogs-rock-api-v2.vercel.app/api/app-proxy/generate';
+let img=null,gen=null;
+const app=document.getElementById('aiApp');
+
+app.innerHTML=`
+<div style="max-width:800px;margin:50px auto;padding:40px;background:white;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.2)">
+<h1 style="text-align:center;font-size:36px;margin-bottom:10px">🐕 Create Your Iconic Dog</h1>
+<h2 style="text-align:center;color:#666;font-size:20px;margin-bottom:30px">Transform Your Dog with AI Magic!</h2>
+<div id="upload" style="border:3px dashed #ccc;border-radius:15px;padding:60px;text-align:center;cursor:pointer;background:#fafafa">
+<span style="font-size:64px">📷</span>
+<h3>Click to Upload Your Dog's Photo</h3>
+<input type="file" id="file" accept="image/*" style="display:none">
+</div>
+<div id="preview" style="display:none;margin:20px 0;text-align:center"></div>
+<input id="prompt" placeholder="Describe your vision (e.g., my dog as a superhero)" style="width:100%;padding:15px;margin:20px 0;border:2px solid #ddd;border-radius:10px;font-size:16px;display:none">
+<button id="gen" style="width:100%;padding:18px;background:#667eea;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;display:none">Generate AI Image ✨</button>
+<div id="loading" style="display:none;text-align:center;margin:30px 0">
+<div style="width:60px;height:60px;border:6px solid #f3f3f3;border-top:6px solid #667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto"></div>
+<p style="margin-top:20px;font-size:18px;color:#333">Creating your custom artwork... (60-90 seconds)</p>
+</div>
+<div id="results" style="display:none">
+<h3 style="text-align:center;margin:30px 0">✅ Your AI-Generated Image!</h3>
+<div id="grid" style="text-align:center;margin:20px 0"></div>
+</div>
+</div>
+<style>
+@keyframes spin{to{transform:rotate(360deg)}}
+.img-opt{cursor:pointer;border:4px solid transparent;border-radius:15px;transition:all 0.3s}
+.img-opt img{width:100%;border-radius:11px;max-width:600px}
+.img-opt:hover{border-color:#667eea;transform:scale(1.02)}
+</style>
+`;
+
+const upZone=document.getElementById('upload');
+const fileIn=document.getElementById('file');
+const prevDiv=document.getElementById('preview');
+const promptIn=document.getElementById('prompt');
+const genBtn=document.getElementById('gen');
+const loadDiv=document.getElementById('loading');
+const resDiv=document.getElementById('results');
+const gridDiv=document.getElementById('grid');
+
+upZone.onclick=()=>fileIn.click();
+
+fileIn.onchange=e=>{
+const f=e.target.files[0];
+if(!f)return;
+const r=new FileReader();
+r.onload=ev=>{
+const i=new Image();
+i.onload=()=>{
+const MAX=1024;
+let w=i.width,h=i.height;
+if(w>h&&w>MAX){h=(h*MAX)/w;w=MAX}
+else if(h>MAX){w=(w*MAX)/h;h=MAX}
+const c=document.createElement('canvas');
+c.width=w;c.height=h;
+const ctx=c.getContext('2d');
+ctx.drawImage(i,0,0,w,h);
+img=c.toDataURL('image/jpeg',0.8);
+prevDiv.innerHTML=`<img src="${img}" style="max-width:100%;border-radius:15px;max-height:300px">`;
+prevDiv.style.display='block';
+promptIn.style.display='block';
+genBtn.style.display='block';
+upZone.style.display='none';
+};
+i.src=ev.target.result;
+};
+r.readAsDataURL(f);
+};
+
+promptIn.oninput=()=>{
+genBtn.disabled=promptIn.value.trim().length<5;
+};
+
+genBtn.onclick=async()=>{
+if(!img||!promptIn.value.trim()){alert('Please upload photo and enter prompt');return}
+loadDiv.style.display='block';
+genBtn.style.display='none';
+try{
+const res=await axios.post(API,{prompt:promptIn.value,image:img,premium:false});
+if(res.data.success&&(res.data.imageUrl||res.data.images)){
+const url=res.data.imageUrl||res.data.images[0];
+gridDiv.innerHTML=`<img src="${url}" style="max-width:100%;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.3)">`;
+loadDiv.style.display='none';
+resDiv.style.display='block';
+}else{
+throw new Error(res.data.error||'Generation failed');
+}
+}catch(err){
+alert('Error: '+err.message);
+loadDiv.style.display='none';
+genBtn.style.display='block';
+}
+};
+})();
+</script>
