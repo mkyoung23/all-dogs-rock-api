@@ -123,11 +123,16 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('❌ FLUX Error:', JSON.stringify(errorData, null, 2));
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('❌ FLUX API Error Response:');
+      console.error('   Status:', response.status);
+      console.error('   Error:', JSON.stringify(errorData, null, 2));
+      console.error('   Model:', FLUX_IMG2IMG_MODEL);
+      console.error('   Has API Token:', !!process.env.REPLICATE_API_TOKEN);
       return res.status(response.status).json({
         error: 'Failed to generate image',
-        details: errorData.detail || JSON.stringify(errorData),
+        details: errorData.detail || errorData.error || JSON.stringify(errorData),
+        status: response.status
       });
     }
 
@@ -135,7 +140,9 @@ export default async function handler(req, res) {
     console.log('✅ Generation started:', prediction.id);
 
     // Poll for completion
-    const imageUrl = await pollPrediction(prediction.urls.get, 'FLUX img2img generation');
+    const output = await pollPrediction(prediction.urls.get, 'FLUX img2img generation');
+    // FLUX models return output as an array of URLs
+    const imageUrl = Array.isArray(output) ? output[0] : output;
     console.log('🎉 SUCCESS! Dog preservation with scene:', imageUrl);
 
     // Return response based on mode
@@ -184,10 +191,12 @@ export default async function handler(req, res) {
       console.log(`${description} poll ${attempts + 1}: ${pollData.status}`);
 
       if (pollData.status === 'succeeded') {
+        console.log('✅ Output received:', typeof pollData.output, Array.isArray(pollData.output) ? `array[${pollData.output.length}]` : 'single value');
         return pollData.output;
       }
 
       if (pollData.status === 'failed' || pollData.status === 'canceled') {
+        console.error('❌ Generation failed:', pollData.error);
         throw new Error(`${description} failed: ${pollData.error || 'Canceled'}`);
       }
 
