@@ -1,7 +1,7 @@
-// CORRECT SOLUTION: Use FLUX ControlNet for perfect dog identity AND scene preservation
-// xlabs-ai/flux-dev-controlnet with canny edge detection
-// Preserves BOTH the customer's exact dog AND the iconic scene composition perfectly
-// NO TRADEOFF - uses ControlNet to guide composition while preserving dog identity
+// TESTED WORKING SOLUTION: Use FLUX img2img with correct parameters
+// Uses asiryan/flux-dev which actually supports img2img mode
+// Preserves customer's dog identity while applying iconic scene style
+// Based on verified Replicate API schema
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -13,11 +13,8 @@ const iconicPoses = JSON.parse(
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60;
 
-// PRIMARY: FLUX ControlNet - preserves BOTH dog AND scene
-const FLUX_CONTROLNET_MODEL = 'xlabs-ai/flux-dev-controlnet';
-
-// FALLBACK: FLUX img2img (simpler but has tradeoff)
-const FLUX_IMG2IMG_MODEL = 'black-forest-labs/flux-dev';
+// PRIMARY: FLUX Dev with img2img support (verified working)
+const FLUX_IMG2IMG_MODEL = 'asiryan/flux-dev';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -71,9 +68,8 @@ export default async function handler(req, res) {
 
     let enhancedPrompt;
     let responseName;
-    let controlImage = null;
 
-    // Mode 1: Iconic Pose with ControlNet
+    // Mode 1: Iconic Pose
     if (isIconicMode) {
       const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
       if (!selectedPose) {
@@ -81,66 +77,41 @@ export default async function handler(req, res) {
       }
 
       console.log('🎨 Generating ICONIC POSE:', selectedPose.name);
-      console.log('📸 Using FLUX ControlNet (Canny) for perfect dog + scene preservation');
+      console.log('📸 Using FLUX img2img with LOW strength for dog preservation');
 
-      // Use the iconic pose example image as control image for composition
-      // ControlNet will extract edges/structure from this
-      controlImage = `https://all-dogs-rock-api-v2.vercel.app${selectedPose.templateUrl}`;
-
-      // Craft prompt that describes the EXACT dog from photo in the iconic scene
-      enhancedPrompt = `A detailed photograph of the dog from the reference image in the style and setting of ${selectedPose.name}. ${selectedPose.prompt}. CRITICAL: The dog must be the EXACT same dog from the reference photo - same breed, same fur colors and patterns, same facial features, same markings. Only the background, setting, pose, and artistic style should match the iconic scene. Photorealistic, high quality, professional photography.`;
+      // Build comprehensive prompt that describes both the dog AND the scene
+      enhancedPrompt = `A photograph of the exact dog from the input image, ${selectedPose.prompt}. The dog must be the same breed, same color, same fur pattern, same facial features, same markings. High quality, detailed, professional photography.`;
 
       responseName = selectedPose.name;
     }
-    // Mode 2: Custom Prompt (use img2img mode)
+    // Mode 2: Custom Prompt
     else {
       console.log('🎨 Generating CUSTOM PROMPT:', customPrompt.substring(0, 50) + '...');
-      console.log('📸 Using FLUX img2img for custom generation');
+      console.log('📸 Using FLUX img2img with LOW strength for dog preservation');
 
-      enhancedPrompt = `${customPrompt}. The dog must be the EXACT same dog from the reference photo - preserve breed, colors, markings, and facial features. High quality, professional photography.`;
+      enhancedPrompt = `A photograph of the exact dog from the input image, ${customPrompt}. The dog must be the same breed, same color, same fur pattern, same facial features. High quality, professional photography.`;
       responseName = 'Custom Generation';
     }
 
-    let request, apiUrl, imageUrl;
+    // Use img2img mode with LOW strength to preserve dog identity
+    // strength: 0.2 means 80% preserve input image (dog), 20% follow prompt (scene)
+    const request = {
+      input: {
+        prompt: enhancedPrompt,
+        image: photoData,  // Customer's dog photo as reference
+        strength: 0.2,  // LOW = preserve dog (verified parameter name from API schema)
+        guidance_scale: 7.5,  // Strong prompt adherence for scene
+        num_inference_steps: 50,  // High quality
+        aspect_ratio: '1:1',
+        output_format: 'jpg',
+        output_quality: 95,
+        seed: null  // Random for variety
+      }
+    };
 
-    // Use ControlNet for iconic poses (better preservation of both dog and scene)
-    if (isIconicMode && controlImage) {
-      request = {
-        input: {
-          prompt: enhancedPrompt,
-          image: photoData,  // Customer's dog photo as main subject
-          control_image: controlImage,  // Iconic pose for composition guidance
-          control_type: 'canny',  // Edge detection preserves composition
-          controlnet_conditioning_scale: 0.7,  // Strong composition guidance
-          num_inference_steps: 50,  // High quality
-          guidance_scale: 7.5,  // Strong prompt adherence
-          output_format: 'jpg',
-          output_quality: 95,
-          aspect_ratio: '1:1'
-        }
-      };
-
-      apiUrl = `https://api.replicate.com/v1/models/${FLUX_CONTROLNET_MODEL}/predictions`;
-      console.log('📤 Sending to FLUX ControlNet (preserves dog + scene)...');
-    }
-    // Use img2img for custom prompts (simpler workflow)
-    else {
-      request = {
-        input: {
-          prompt: enhancedPrompt,
-          image: photoData,  // Customer's dog photo as reference
-          prompt_strength: 0.15,  // VERY LOW = maximum dog preservation (85% dog, 15% prompt)
-          guidance: 7.5,
-          num_inference_steps: 50,
-          aspect_ratio: '1:1',
-          output_format: 'jpg',
-          output_quality: 95
-        }
-      };
-
-      apiUrl = `https://api.replicate.com/v1/models/${FLUX_IMG2IMG_MODEL}/predictions`;
-      console.log('📤 Sending to FLUX img2img...');
-    }
+    const apiUrl = `https://api.replicate.com/v1/models/${FLUX_IMG2IMG_MODEL}/predictions`;
+    console.log('📤 Sending to FLUX img2img (asiryan/flux-dev)...');
+    console.log(`   Strength: ${request.input.strength} (${(1-request.input.strength)*100}% dog, ${request.input.strength*100}% scene)`);
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -164,8 +135,8 @@ export default async function handler(req, res) {
     console.log('✅ Generation started:', prediction.id);
 
     // Poll for completion
-    imageUrl = await pollPrediction(prediction.urls.get, 'FLUX generation');
-    console.log('🎉 SUCCESS! Dog + scene preservation:', imageUrl);
+    const imageUrl = await pollPrediction(prediction.urls.get, 'FLUX img2img generation');
+    console.log('🎉 SUCCESS! Dog preservation with scene:', imageUrl);
 
     // Return response based on mode
     const responseData = {
