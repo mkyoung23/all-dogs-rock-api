@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'Build complete - Vercel Serverless Functions'",
     "test": "echo 'No tests yet'"
   },
   "keywords": [
