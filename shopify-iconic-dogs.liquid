@@ -300,6 +300,8 @@
   const API_BASE = 'https://all-dogs-rock-api-v2.vercel.app';
   let currentImageUrl = '';
   let currentPoseName = '';
+  let currentPoseId = '';
+  let currentDogBreed = '';
 
   // Fetch and display poses
   async function loadPoses() {
@@ -355,6 +357,7 @@
   async function generateImage(poseId, poseName) {
     const breed = document.getElementById('dogBreed').value.trim() || 'golden retriever';
     currentPoseName = poseName;
+    currentPoseId = poseId;
 
     // Show modal
     const modal = document.getElementById('modal');
@@ -364,14 +367,17 @@
     document.getElementById('modalTitle').textContent = `Creating Your ${breed} as ${poseName}...`;
 
     try {
-      const response = await fetch(`${API_BASE}/api/app-proxy/generate`, {
+      // Use the complete unified endpoint
+      const response = await fetch(`${API_BASE}/api/complete/generate-and-create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           poseId: poseId,
-          dogBreed: breed
+          dogBreed: breed,
+          productType: 'poster', // Default to poster
+          createProduct: false // Set to true to auto-create Printify product
         })
       });
 
@@ -379,7 +385,8 @@
 
       if (data.success) {
         currentImageUrl = data.imageUrl;
-        showResult(data.imageUrl, poseName);
+        currentDogBreed = breed;
+        showResult(data.imageUrl, poseName, breed);
       } else {
         alert('Error generating image: ' + (data.error || 'Unknown error'));
         closeModal();
@@ -392,11 +399,11 @@
   }
 
   // Show result
-  function showResult(imageUrl, poseName) {
+  function showResult(imageUrl, poseName, breed) {
     document.getElementById('loadingSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
     document.getElementById('resultImage').src = imageUrl;
-    document.getElementById('modalTitle').textContent = `Your ${poseName} is Ready! 🎉`;
+    document.getElementById('modalTitle').textContent = `Your ${breed} as ${poseName} is Ready! 🎉`;
   }
 
   // Close modal
@@ -404,27 +411,51 @@
     document.getElementById('modal').classList.remove('active');
   }
 
-  // Add to cart (customize based on your Shopify setup)
-  function addToCart() {
-    // This is a placeholder - customize based on your product setup
-    // You'll need to create products in Shopify and handle variants
+  // Create product and add to cart
+  async function addToCart() {
+    const productType = document.getElementById('productType')?.value || 'poster';
 
-    // Option 1: Open product page with image URL in query param
-    window.location.href = `/products/custom-iconic-dog?image=${encodeURIComponent(currentImageUrl)}&pose=${encodeURIComponent(currentPoseName)}`;
+    // Show loading state
+    const addBtn = document.querySelector('.add-to-cart-btn');
+    const originalText = addBtn.textContent;
+    addBtn.textContent = 'Creating Product...';
+    addBtn.disabled = true;
 
-    // Option 2: Direct add to cart with product variant
-    // fetch('/cart/add.js', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     id: YOUR_PRODUCT_VARIANT_ID,
-    //     quantity: 1,
-    //     properties: {
-    //       'Custom Image': currentImageUrl,
-    //       'Pose': currentPoseName
-    //     }
-    //   })
-    // }).then(() => window.location.href = '/cart');
+    try {
+      // Create product via API
+      const response = await fetch(`${API_BASE}/api/complete/generate-and-create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          poseId: currentPoseId,
+          dogBreed: currentDogBreed,
+          productType: productType,
+          createProduct: true // This tells it to create the Printify product
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.productCreated) {
+        // Product was created in Printify and published to Shopify
+        alert('Product created! Redirecting to your custom product...');
+
+        // Redirect to Shopify products page
+        window.location.href = '/admin/products';
+      } else {
+        // Just add image data to cart with a generic product
+        window.location.href = `/products/custom-iconic-dog?image=${encodeURIComponent(currentImageUrl)}&pose=${encodeURIComponent(currentPoseName)}&breed=${encodeURIComponent(currentDogBreed)}`;
+      }
+    } catch (error) {
+      console.error('Error creating product:', error);
+      // Fallback: just pass image data via URL
+      window.location.href = `/products/custom-iconic-dog?image=${encodeURIComponent(currentImageUrl)}&pose=${encodeURIComponent(currentPoseName)}&breed=${encodeURIComponent(currentDogBreed)}`;
+    } finally {
+      addBtn.textContent = originalText;
+      addBtn.disabled = false;
+    }
   }
 
   // Load poses on page load
