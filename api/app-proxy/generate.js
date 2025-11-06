@@ -1,7 +1,8 @@
-// API route for generating iconic dog images using FLUX 1.1 Pro
-// Customer provides dog breed, we generate their dog in iconic poses
-// Deployed: 2025-11-02
+// Image-to-Image Generation with Dog Photo in Iconic Pose
+// Route: /api/proxy/generate
+// Takes customer's dog photo + pose → generates dog in that pose
 
+import { requireShopifyProxy } from '../../lib/shopify-auth.js';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -9,14 +10,11 @@ const iconicPoses = JSON.parse(
   readFileSync(join(process.cwd(), 'iconic-poses.json'), 'utf-8')
 );
 
-const POLL_INTERVAL_MS = 2000;
-const MAX_POLL_ATTEMPTS = 60;
-
-export default async function handler(req, res) {
+async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -28,7 +26,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { poseId, dogBreed = 'golden retriever', premium = false } = req.body;
+    const { dogPhoto, poseId, imageUrl } = req.body;
+
+    if (!dogPhoto && !imageUrl) {
+      return res.status(400).json({
+        error: 'Dog photo is required',
+        message: 'Please provide dogPhoto or imageUrl parameter'
+      });
+    }
 
     if (!poseId) {
       return res.status(400).json({ error: 'Pose ID is required' });
@@ -43,24 +48,26 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Replicate API token not configured' });
     }
 
-    console.log('🎨 Generating:', selectedPose.name, 'with', dogBreed);
+    console.log('🎨 Generating:', selectedPose.name, 'for shop:', req.shop);
 
-    // Use FLUX 1.1 Pro to generate the image
-    const prompt = selectedPose.prompt.replace(/golden retriever|german shepherd|husky|beagle|corgi|rottweiler|boxer|french bulldog|labrador retriever|poodle|dalmatian|australian shepherd|border collie|doberman|shiba inu|jack russell terrier|saint bernard|cavalier king charles spaniel|pug|samoyed|spaniel|bulldog|poodle|greyhound/gi, dogBreed);
+    const photoUrl = dogPhoto || imageUrl;
 
+    // Use FLUX with image-to-image (img2img) capability
+    // This takes the customer's dog photo and transforms it into the iconic pose
     const requestBody = {
-      model: 'black-forest-labs/flux-1.1-pro',
+      version: 'black-forest-labs/flux-1.1-pro',
       input: {
-        prompt: prompt,
+        prompt: selectedPose.prompt + ' - Transform this dog to match the exact pose, composition, and style described. Keep the dog's breed and appearance but change the pose and setting to match the iconic scene.',
+        image: photoUrl, // Customer's dog photo
+        prompt_strength: 0.8, // How much to transform (0.8 = strong transformation but keeps dog recognizable)
         aspect_ratio: '1:1',
         output_format: 'jpg',
         output_quality: 90,
         safety_tolerance: 2,
-        prompt_upsampling: true
       }
     };
 
-    console.log('📤 Sending request to FLUX 1.1 Pro...');
+    console.log('📤 Sending to FLUX (img2img)...');
 
     const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
       method: 'POST',
@@ -73,22 +80,23 @@ export default async function handler(req, res) {
 
     if (!createResponse.ok) {
       const errorData = await createResponse.json();
-      console.error('❌ Error:', JSON.stringify(errorData, null, 2));
+      console.error('❌ Replicate error:', errorData);
       return res.status(createResponse.status).json({
         error: 'Failed to start generation',
-        details: errorData.detail || JSON.stringify(errorData),
+        details: errorData,
       });
     }
 
     const prediction = await createResponse.json();
-    console.log('✅ Prediction created:', prediction.id);
+    console.log('✅ Started:', prediction.id);
 
     // Poll for completion
     const pollUrl = prediction.urls.get;
     let attempts = 0;
+    const maxAttempts = 60;
 
-    while (attempts < MAX_POLL_ATTEMPTS) {
-      await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL_MS));
+    while (attempts < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       const pollResponse = await fetch(pollUrl, {
         headers: {
@@ -101,41 +109,36 @@ export default async function handler(req, res) {
       }
 
       const pollData = await pollResponse.json();
-      console.log(`Poll ${attempts + 1}: ${pollData.status}`);
 
       if (pollData.status === 'succeeded') {
-        const imageUrl = pollData.output;
-        console.log('🎉 Success! Image:', imageUrl);
+        const resultImageUrl = pollData.output;
+        console.log('🎉 Success!', resultImageUrl);
 
         return res.status(200).json({
           success: true,
-          imageUrl: imageUrl,
+          imageUrl: resultImageUrl,
           poseName: selectedPose.name,
           poseId: selectedPose.id,
+          shop: req.shop,
         });
       }
 
       if (pollData.status === 'failed' || pollData.status === 'canceled') {
-        console.error('❌ Failed:', pollData.error);
-        return res.status(500).json({
-          error: 'Generation failed',
-          details: pollData.error || 'Canceled',
-        });
+        throw new Error(`Generation failed: ${pollData.error || 'Canceled'}`);
       }
 
       attempts++;
     }
 
-    return res.status(504).json({
-      error: 'Generation timeout',
-      details: 'Took too long',
-    });
+    return res.status(504).json({ error: 'Generation timeout' });
 
   } catch (error) {
     console.error('❌ Error:', error);
     return res.status(500).json({
-      error: 'Failed to generate',
+      error: 'Generation failed',
       details: error.message,
     });
   }
 }
+
+export default requireShopifyProxy(handler);
