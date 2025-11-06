@@ -13,7 +13,8 @@ const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60;
 
 // Use FLUX img2img to recreate pose with customer's actual dog
-const FLUX_IMG2IMG_VERSION = '61d59b0fc94f31638c17fa4c4dc45ea864f87dd00e39f86e0f464e97fd4d5c3e';
+// Updated to latest stable version - FLUX.1-dev supports img2img
+const FLUX_IMG2IMG_VERSION = 'black-forest-labs/flux-dev';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -91,7 +92,6 @@ export default async function handler(req, res) {
     }
 
     const request = {
-      version: FLUX_IMG2IMG_VERSION,
       input: {
         prompt: enhancedPrompt,
         image: photoData,  // Customer's dog photo as reference (from dogPhoto or image param)
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
 
     console.log('📤 Sending to FLUX img2img...');
 
-    const response = await fetch('https://api.replicate.com/v1/predictions', {
+    const response = await fetch('https://api.replicate.com/v1/models/black-forest-labs/flux-dev/predictions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
