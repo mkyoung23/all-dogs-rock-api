@@ -65,15 +65,11 @@ export default async function handler(req, res) {
     const accessToken = tokenData.access_token;
 
     console.log('✅ Access token obtained for shop:', shop);
-
-    // TODO: Store token in database (Vercel KV, Postgres, etc.)
-    // For now, we'll just log it (NOT PRODUCTION READY)
     console.log('🔑 Token:', accessToken.substring(0, 20) + '...');
 
-    // In production, you'd:
-    // 1. Store token in database keyed by shop domain
-    // 2. Set up webhook subscriptions
-    // 3. Create any required resources
+    // Store token temporarily - in production use a database
+    // For now, we'll display it to the user to add to Vercel
+    const tokenDisplay = accessToken;
 
     // Redirect to success page or app installation page
     const redirectUrl = `https://${shop}/admin/apps/${apiKey}`;
@@ -83,18 +79,87 @@ export default async function handler(req, res) {
         <head>
           <title>App Installed!</title>
           <style>
-            body { font-family: sans-serif; text-align: center; padding: 50px; }
+            body { font-family: sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
             .success { color: green; font-size: 24px; margin-bottom: 20px; }
+            .token-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0; }
+            .token { font-family: monospace; word-break: break-all; font-size: 12px; }
+            .instructions { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+            button { background: #008060; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 10px 5px; }
+            button:hover { background: #006d52; }
+            .copy-btn { background: #5c6ac4; }
           </style>
         </head>
         <body>
           <div class="success">✅ All Dogs Rock App Installed Successfully!</div>
-          <p>Shop: ${shop}</p>
-          <p>Redirecting to Shopify admin...</p>
+          <p><strong>Shop:</strong> ${shop}</p>
+
+          <div class="instructions">
+            <h3>📝 Next Steps:</h3>
+            <ol>
+              <li>Copy your access token below</li>
+              <li>Add it to Vercel as environment variable: <code>SHOPIFY_ACCESS_TOKEN</code></li>
+              <li>Click "Deploy Gallery Page" button or visit: <code>/api/admin/deploy-gallery</code></li>
+            </ol>
+          </div>
+
+          <div class="token-box">
+            <strong>Access Token:</strong><br>
+            <div class="token" id="token">${tokenDisplay}</div>
+            <button class="copy-btn" onclick="copyToken()">📋 Copy Token</button>
+          </div>
+
+          <button onclick="window.open('${redirectUrl}', '_blank')">Open Shopify Admin</button>
+          <button onclick="deployGallery()">🚀 Deploy Gallery Page</button>
+
+          <div id="status" style="margin-top: 20px;"></div>
+
           <script>
-            setTimeout(() => {
-              window.top.location.href = "${redirectUrl}";
-            }, 2000);
+            function copyToken() {
+              const token = document.getElementById('token').textContent;
+              navigator.clipboard.writeText(token);
+              alert('Token copied to clipboard!');
+            }
+
+            async function deployGallery() {
+              const statusDiv = document.getElementById('status');
+              statusDiv.innerHTML = '<p>🔄 Deploying gallery page...</p>';
+
+              try {
+                const response = await fetch('/api/admin/deploy-gallery', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    accessToken: '${tokenDisplay}',
+                    shop: '${shop}'
+                  })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                  statusDiv.innerHTML = \`
+                    <div style="background: #d4edda; padding: 15px; border-radius: 5px; color: #155724;">
+                      <h3>✅ \${data.message}</h3>
+                      <p><strong>Page URL:</strong> <a href="\${data.pageUrl}" target="_blank">\${data.pageUrl}</a></p>
+                    </div>
+                  \`;
+                } else {
+                  statusDiv.innerHTML = \`
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 5px; color: #721c24;">
+                      <h3>❌ Deployment Error</h3>
+                      <pre>\${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                  \`;
+                }
+              } catch (error) {
+                statusDiv.innerHTML = \`
+                  <div style="background: #f8d7da; padding: 15px; border-radius: 5px; color: #721c24;">
+                    <h3>❌ Error</h3>
+                    <p>\${error.message}</p>
+                  </div>
+                \`;
+              }
+            }
           </script>
         </body>
       </html>
