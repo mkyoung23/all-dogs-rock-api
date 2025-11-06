@@ -79,7 +79,7 @@ export default async function handler(req, res) {
       console.log('🎨 Generating ICONIC POSE:', selectedPose.name);
       console.log('📸 Using customer dog photo (img2img)');
 
-      enhancedPrompt = `${selectedPose.prompt}. Use the exact dog from the reference image. Match the dog's breed, fur color, face, and all characteristics exactly. Keep the dog's appearance identical to the reference photo while placing it in this iconic scene.`;
+      enhancedPrompt = `${selectedPose.prompt}. CRITICAL: Use the EXACT same dog from the reference image - same breed, same fur color, same face, same markings, same everything. The dog MUST look identical to the reference photo. Only change the background/scene to match the iconic pose. Preserve the dog's unique appearance completely.`;
       responseName = selectedPose.name;
     }
     // Mode 2: Custom Prompt
@@ -87,7 +87,7 @@ export default async function handler(req, res) {
       console.log('🎨 Generating CUSTOM PROMPT:', customPrompt.substring(0, 50) + '...');
       console.log('📸 Using customer dog photo (img2img)');
 
-      enhancedPrompt = `${customPrompt}. Use the exact dog/pet from the reference image. Match all characteristics exactly - breed, fur color, face, markings. Keep the appearance identical to the reference photo.`;
+      enhancedPrompt = `${customPrompt}. CRITICAL: Use the EXACT same dog/pet from the reference image - same breed, same fur color, same face, same markings, same everything. The dog MUST look identical to the reference photo. Only change the background/scene. Preserve the dog's unique appearance completely.`;
       responseName = 'Custom Generation';
     }
 
@@ -95,12 +95,12 @@ export default async function handler(req, res) {
       input: {
         prompt: enhancedPrompt,
         image: photoData,  // Customer's dog photo as reference (from dogPhoto or image param)
-        prompt_strength: 0.8,  // Strong adherence to prompt (pose)
-        guidance: 3.5,
-        num_inference_steps: 28,
+        prompt_strength: 0.25,  // LOW = more weight on dog image (75% dog, 25% pose) - preserves customer's dog!
+        guidance: 7.5,  // Higher guidance for better quality
+        num_inference_steps: 50,  // More steps for better results
         aspect_ratio: '1:1',
         output_format: 'jpg',
-        output_quality: 90
+        output_quality: 95
       }
     };
 
