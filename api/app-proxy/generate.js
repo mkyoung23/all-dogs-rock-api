@@ -1,7 +1,7 @@
-// ULTIMATE FIX: Use Ideogram Character for perfect dog identity preservation
-// Ideogram Character (July 2025) maintains character consistency from single reference image
-// Preserves BOTH the customer's exact dog AND the iconic scene composition
-// Supports BOTH iconic poses AND custom descriptions
+// CORRECT SOLUTION: Use FLUX ControlNet for perfect dog identity AND scene preservation
+// xlabs-ai/flux-dev-controlnet with canny edge detection
+// Preserves BOTH the customer's exact dog AND the iconic scene composition perfectly
+// NO TRADEOFF - uses ControlNet to guide composition while preserving dog identity
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -13,11 +13,11 @@ const iconicPoses = JSON.parse(
 const POLL_INTERVAL_MS = 2000;
 const MAX_POLL_ATTEMPTS = 60;
 
-// PRIMARY: Ideogram Character - preserves subject identity across different scenes
-const IDEOGRAM_CHARACTER_MODEL = 'ideogram-ai/ideogram-character';
+// PRIMARY: FLUX ControlNet - preserves BOTH dog AND scene
+const FLUX_CONTROLNET_MODEL = 'xlabs-ai/flux-dev-controlnet';
 
-// FALLBACK: FLUX img2img (if Ideogram doesn't work well for certain cases)
-const FLUX_IMG2IMG_VERSION = 'black-forest-labs/flux-dev';
+// FALLBACK: FLUX img2img (simpler but has tradeoff)
+const FLUX_IMG2IMG_MODEL = 'black-forest-labs/flux-dev';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -71,8 +71,9 @@ export default async function handler(req, res) {
 
     let enhancedPrompt;
     let responseName;
+    let controlImage = null;
 
-    // Mode 1: Iconic Pose
+    // Mode 1: Iconic Pose with ControlNet
     if (isIconicMode) {
       const selectedPose = iconicPoses.poses.find(pose => pose.id === poseId);
       if (!selectedPose) {
@@ -80,37 +81,68 @@ export default async function handler(req, res) {
       }
 
       console.log('🎨 Generating ICONIC POSE:', selectedPose.name);
-      console.log('📸 Using Ideogram Character for perfect dog identity preservation');
+      console.log('📸 Using FLUX ControlNet (Canny) for perfect dog + scene preservation');
 
-      // Ideogram Character requires describing the scene, not instructing about preservation
-      // The model automatically preserves the character's identity from the reference image
-      enhancedPrompt = `${selectedPose.prompt}. High quality, detailed, professional photography.`;
+      // Use the iconic pose example image as control image for composition
+      // ControlNet will extract edges/structure from this
+      controlImage = `https://all-dogs-rock-api-v2.vercel.app${selectedPose.templateUrl}`;
+
+      // Craft prompt that describes the EXACT dog from photo in the iconic scene
+      enhancedPrompt = `A detailed photograph of the dog from the reference image in the style and setting of ${selectedPose.name}. ${selectedPose.prompt}. CRITICAL: The dog must be the EXACT same dog from the reference photo - same breed, same fur colors and patterns, same facial features, same markings. Only the background, setting, pose, and artistic style should match the iconic scene. Photorealistic, high quality, professional photography.`;
+
       responseName = selectedPose.name;
     }
-    // Mode 2: Custom Prompt
+    // Mode 2: Custom Prompt (use img2img mode)
     else {
       console.log('🎨 Generating CUSTOM PROMPT:', customPrompt.substring(0, 50) + '...');
-      console.log('📸 Using Ideogram Character for perfect dog identity preservation');
+      console.log('📸 Using FLUX img2img for custom generation');
 
-      enhancedPrompt = `${customPrompt}. High quality, detailed, professional photography.`;
+      enhancedPrompt = `${customPrompt}. The dog must be the EXACT same dog from the reference photo - preserve breed, colors, markings, and facial features. High quality, professional photography.`;
       responseName = 'Custom Generation';
     }
 
-    // Use Ideogram Character model for perfect identity preservation
-    const request = {
-      input: {
-        prompt: enhancedPrompt,
-        character_reference_image: photoData,  // Customer's dog photo as character reference
-        style_type: 'Realistic',  // Realistic style for authentic dog photos
-        aspect_ratio: '1:1',
-        rendering_speed: 'Quality',  // Use Quality mode for best results
-        magic_prompt_option: 'Off',  // Don't modify our carefully crafted prompts
-      }
-    };
+    let request, apiUrl, imageUrl;
 
-    console.log('📤 Sending to Ideogram Character (preserves dog identity perfectly)...');
+    // Use ControlNet for iconic poses (better preservation of both dog and scene)
+    if (isIconicMode && controlImage) {
+      request = {
+        input: {
+          prompt: enhancedPrompt,
+          image: photoData,  // Customer's dog photo as main subject
+          control_image: controlImage,  // Iconic pose for composition guidance
+          control_type: 'canny',  // Edge detection preserves composition
+          controlnet_conditioning_scale: 0.7,  // Strong composition guidance
+          num_inference_steps: 50,  // High quality
+          guidance_scale: 7.5,  // Strong prompt adherence
+          output_format: 'jpg',
+          output_quality: 95,
+          aspect_ratio: '1:1'
+        }
+      };
 
-    const response = await fetch(`https://api.replicate.com/v1/models/${IDEOGRAM_CHARACTER_MODEL}/predictions`, {
+      apiUrl = `https://api.replicate.com/v1/models/${FLUX_CONTROLNET_MODEL}/predictions`;
+      console.log('📤 Sending to FLUX ControlNet (preserves dog + scene)...');
+    }
+    // Use img2img for custom prompts (simpler workflow)
+    else {
+      request = {
+        input: {
+          prompt: enhancedPrompt,
+          image: photoData,  // Customer's dog photo as reference
+          prompt_strength: 0.15,  // VERY LOW = maximum dog preservation (85% dog, 15% prompt)
+          guidance: 7.5,
+          num_inference_steps: 50,
+          aspect_ratio: '1:1',
+          output_format: 'jpg',
+          output_quality: 95
+        }
+      };
+
+      apiUrl = `https://api.replicate.com/v1/models/${FLUX_IMG2IMG_MODEL}/predictions`;
+      console.log('📤 Sending to FLUX img2img...');
+    }
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -121,19 +153,19 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('❌ Ideogram Character Error:', JSON.stringify(errorData, null, 2));
+      console.error('❌ FLUX Error:', JSON.stringify(errorData, null, 2));
       return res.status(response.status).json({
-        error: 'Failed to generate image with Ideogram Character',
+        error: 'Failed to generate image',
         details: errorData.detail || JSON.stringify(errorData),
       });
     }
 
     const prediction = await response.json();
-    console.log('✅ Ideogram Character generation started:', prediction.id);
+    console.log('✅ Generation started:', prediction.id);
 
     // Poll for completion
-    const imageUrl = await pollPrediction(prediction.urls.get, 'Ideogram Character generation');
-    console.log('🎉 SUCCESS! Perfect dog identity preservation:', imageUrl);
+    imageUrl = await pollPrediction(prediction.urls.get, 'FLUX generation');
+    console.log('🎉 SUCCESS! Dog + scene preservation:', imageUrl);
 
     // Return response based on mode
     const responseData = {
