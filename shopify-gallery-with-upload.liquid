@@ -1,17 +1,19 @@
 {% comment %}
-  ICONIC DOG GENERATOR - SHOPIFY GALLERY PAGE
+  ICONIC DOG GENERATOR WITH PHOTO UPLOAD - PRODUCTION VERSION
+
+  Customer Flow:
+  1. Upload photo of their dog
+  2. Select an iconic pose
+  3. AI transforms their dog into that pose
+  4. Preview result
+  5. Add to cart
 
   Installation:
-  1. Go to Shopify Admin → Online Store → Pages
+  1. Shopify Admin → Online Store → Pages
   2. Create new page: "Create Your Iconic Dog"
   3. Click "</> Show HTML"
   4. Paste this entire file
   5. Save and publish
-
-  Or add to theme:
-  1. Go to Shopify Admin → Online Store → Themes → Customize
-  2. Add new section
-  3. Paste this code
 {% endcomment %}
 
 <style>
@@ -44,7 +46,8 @@
     margin: 0 auto;
   }
 
-  .breed-input-section {
+  /* Photo Upload Section */
+  .upload-section {
     background: white;
     padding: 40px;
     border-radius: 15px;
@@ -53,34 +56,84 @@
     text-align: center;
   }
 
-  .breed-input-section h2 {
+  .upload-section h2 {
     font-size: 2em;
     margin-bottom: 20px;
     color: #333;
   }
 
-  .breed-input {
-    font-size: 1.2em;
-    padding: 15px 25px;
-    border: 3px solid #667eea;
+  .upload-area {
+    border: 3px dashed #667eea;
+    border-radius: 15px;
+    padding: 60px 20px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #f8f9ff;
+  }
+
+  .upload-area:hover {
+    border-color: #764ba2;
+    background: #f0f2ff;
+  }
+
+  .upload-area.has-image {
+    border-style: solid;
+    border-color: #28a745;
+  }
+
+  .upload-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+  }
+
+  .upload-preview {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 15px;
+    margin: 20px auto;
+    display: none;
+  }
+
+  .upload-preview.visible {
+    display: block;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .upload-btn {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
     border-radius: 50px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
     transition: all 0.3s;
   }
 
-  .breed-input:focus {
-    outline: none;
-    border-color: #764ba2;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  .upload-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
   }
 
+  /* Poses Grid */
   .poses-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
     margin-bottom: 40px;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: all 0.3s;
+  }
+
+  .poses-grid.enabled {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .pose-card {
@@ -162,6 +215,7 @@
     transform: none;
   }
 
+  /* Modal */
   .modal {
     display: none;
     position: fixed;
@@ -258,22 +312,33 @@
   <!-- Hero Section -->
   <div class="hero-section">
     <h1>🐕 Create Your Iconic Dog 🎨</h1>
-    <p>Transform your dog into legendary moments! Choose from 20 instantly recognizable iconic poses - from Michael Jordan's legendary dunk to the Mona Lisa!</p>
+    <p>Upload a photo of YOUR dog and transform it into legendary moments! We'll place your pup in 20 instantly recognizable iconic poses - from Michael Jordan's legendary dunk to the Mona Lisa!</p>
   </div>
 
-  <!-- Breed Input -->
-  <div class="breed-input-section">
-    <h2>What breed is your dog?</h2>
+  <!-- Photo Upload Section -->
+  <div class="upload-section">
+    <h2>1. Upload Your Dog's Photo</h2>
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📷</div>
+      <p style="font-size: 1.2em; margin-bottom: 10px;">Click to upload or drag & drop</p>
+      <p style="color: #666;">Accepted: JPG, PNG (max 10MB)</p>
+      <img id="uploadPreview" class="upload-preview" />
+    </div>
     <input
-      type="text"
-      id="dogBreed"
-      class="breed-input"
-      placeholder="e.g., Golden Retriever, Husky, Beagle..."
-      value="Golden Retriever"
+      type="file"
+      id="fileInput"
+      class="file-input"
+      accept="image/jpeg,image/png,image/jpg"
+      onchange="handleFileUpload(event)"
     />
   </div>
 
   <!-- Poses Grid -->
+  <div class="upload-section">
+    <h2>2. Choose an Iconic Pose</h2>
+    <p style="color: #666; margin-bottom: 20px;">Select a pose and we'll transform your dog into it!</p>
+  </div>
+
   <div id="posesGrid" class="poses-grid">
     <!-- Will be populated by JavaScript -->
   </div>
@@ -282,7 +347,7 @@
 <!-- Generation Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
-    <h2 id="modalTitle">Generating Your Iconic Dog...</h2>
+    <h2 id="modalTitle">Transforming Your Dog...</h2>
     <div id="loadingSection">
       <div class="spinner"></div>
       <p class="loading">This takes 6-8 seconds. Creating your masterpiece! 🎨</p>
@@ -290,7 +355,7 @@
     <div id="resultSection" style="display: none;">
       <img id="resultImage" class="result-image" alt="Your iconic dog" />
       <br/>
-      <button class="add-to-cart-btn" onclick="addToCart()">Add to Cart & Customize Product</button>
+      <button class="add-to-cart-btn" onclick="addToCart()">Add to Cart & Buy Product</button>
       <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
   </div>
@@ -298,10 +363,36 @@
 
 <script>
   const API_BASE = 'https://all-dogs-rock-api-v2.vercel.app';
+  let uploadedDogPhoto = null;
   let currentImageUrl = '';
   let currentPoseName = '';
   let currentPoseId = '';
-  let currentDogBreed = '';
+
+  // Handle file upload
+  async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    console.log('📷 File selected:', file.name);
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('uploadPreview');
+      preview.src = e.target.result;
+      preview.classList.add('visible');
+
+      const uploadArea = document.getElementById('uploadArea');
+      uploadArea.classList.add('has-image');
+
+      // Store base64 data
+      uploadedDogPhoto = e.target.result;
+
+      // Enable poses grid
+      document.getElementById('posesGrid').classList.add('enabled');
+    };
+    reader.readAsDataURL(file);
+  }
 
   // Fetch and display poses
   async function loadPoses() {
@@ -332,7 +423,7 @@
           <div class="pose-description">${pose.description}</div>
           <div class="pose-category">${pose.category}</div>
           <button class="generate-btn" onclick="generateImage('${pose.id}', '${pose.name}')">
-            Create My ${pose.name}
+            Transform My Dog!
           </button>
         </div>
       `;
@@ -355,7 +446,11 @@
 
   // Generate iconic dog image
   async function generateImage(poseId, poseName) {
-    const breed = document.getElementById('dogBreed').value.trim() || 'golden retriever';
+    if (!uploadedDogPhoto) {
+      alert('Please upload a photo of your dog first!');
+      return;
+    }
+
     currentPoseName = poseName;
     currentPoseId = poseId;
 
@@ -364,20 +459,18 @@
     modal.classList.add('active');
     document.getElementById('loadingSection').style.display = 'block';
     document.getElementById('resultSection').style.display = 'none';
-    document.getElementById('modalTitle').textContent = `Creating Your ${breed} as ${poseName}...`;
+    document.getElementById('modalTitle').textContent = `Transforming Your Dog into ${poseName}...`;
 
     try {
-      // Use the complete unified endpoint
-      const response = await fetch(`${API_BASE}/api/complete/generate-and-create`, {
+      // Use the App Proxy route (goes through Shopify for security)
+      const response = await fetch(`${API_BASE}/api/proxy/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          poseId: poseId,
-          dogBreed: breed,
-          productType: 'poster', // Default to poster
-          createProduct: false // Set to true to auto-create Printify product
+          dogPhoto: uploadedDogPhoto,
+          poseId: poseId
         })
       });
 
@@ -385,8 +478,7 @@
 
       if (data.success) {
         currentImageUrl = data.imageUrl;
-        currentDogBreed = breed;
-        showResult(data.imageUrl, poseName, breed);
+        showResult(data.imageUrl, poseName);
       } else {
         alert('Error generating image: ' + (data.error || 'Unknown error'));
         closeModal();
@@ -399,11 +491,11 @@
   }
 
   // Show result
-  function showResult(imageUrl, poseName, breed) {
+  function showResult(imageUrl, poseName) {
     document.getElementById('loadingSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
     document.getElementById('resultImage').src = imageUrl;
-    document.getElementById('modalTitle').textContent = `Your ${breed} as ${poseName} is Ready! 🎉`;
+    document.getElementById('modalTitle').textContent = `Your ${poseName} is Ready! 🎉`;
   }
 
   // Close modal
@@ -411,60 +503,37 @@
     document.getElementById('modal').classList.remove('active');
   }
 
-  // Create product and add to cart
-  async function addToCart() {
-    const productType = document.getElementById('productType')?.value || 'poster';
-
-    // Show loading state
-    const addBtn = document.querySelector('.add-to-cart-btn');
-    const originalText = addBtn.textContent;
-    addBtn.textContent = 'Creating Product...';
-    addBtn.disabled = true;
-
-    try {
-      // Create product via API
-      const response = await fetch(`${API_BASE}/api/complete/generate-and-create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          poseId: currentPoseId,
-          dogBreed: currentDogBreed,
-          productType: productType,
-          createProduct: true // This tells it to create the Printify product
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success && data.productCreated) {
-        // Product was created in Printify and published to Shopify
-        alert('Product created! Redirecting to your custom product...');
-
-        // Redirect to Shopify products page
-        window.location.href = '/admin/products';
-      } else {
-        // Just add image data to cart with a generic product
-        window.location.href = `/products/custom-iconic-dog?image=${encodeURIComponent(currentImageUrl)}&pose=${encodeURIComponent(currentPoseName)}&breed=${encodeURIComponent(currentDogBreed)}`;
-      }
-    } catch (error) {
-      console.error('Error creating product:', error);
-      // Fallback: just pass image data via URL
-      window.location.href = `/products/custom-iconic-dog?image=${encodeURIComponent(currentImageUrl)}&pose=${encodeURIComponent(currentPoseName)}&breed=${encodeURIComponent(currentDogBreed)}`;
-    } finally {
-      addBtn.textContent = originalText;
-      addBtn.disabled = false;
-    }
+  // Add to cart
+  function addToCart() {
+    window.location.href = `/products/custom-iconic-dog?image=${encodeURIComponent(currentImageUrl)}&pose=${encodeURIComponent(currentPoseName)}`;
   }
 
   // Load poses on page load
   loadPoses();
 
-  // Allow Enter key in breed input
-  document.getElementById('dogBreed').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
+  // Drag & drop support
+  const uploadArea = document.getElementById('uploadArea');
+
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#764ba2';
+    uploadArea.style.background = '#f0f2ff';
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.style.borderColor = '#667eea';
+    uploadArea.style.background = '#f8f9ff';
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#667eea';
+    uploadArea.style.background = '#f8f9ff';
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      document.getElementById('fileInput').files = e.dataTransfer.files;
+      handleFileUpload({ target: { files: [file] } });
     }
   });
 
