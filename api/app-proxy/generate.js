@@ -1,8 +1,7 @@
 // Image-to-Image Generation with Dog Photo in Iconic Pose
-// Route: /api/proxy/generate
+// Route: /api/app-proxy/generate
 // Takes customer's dog photo + pose → generates dog in that pose
 
-import { requireShopifyProxy } from '../../lib/shopify-auth.js';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -48,7 +47,7 @@ async function handler(req, res) {
       return res.status(500).json({ error: 'Replicate API token not configured' });
     }
 
-    console.log('🎨 Generating:', selectedPose.name, 'for shop:', req.shop);
+    console.log('🎨 Generating:', selectedPose.name);
 
     const photoUrl = dogPhoto || imageUrl;
 
@@ -123,7 +122,6 @@ async function handler(req, res) {
           imageUrl: resultImageUrl,
           poseName: selectedPose.name,
           poseId: selectedPose.id,
-          shop: req.shop,
         });
       }
 
@@ -145,4 +143,4 @@ async function handler(req, res) {
   }
 }
 
-export default requireShopifyProxy(handler);
+export default handler;
