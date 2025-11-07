@@ -127,7 +127,8 @@ export default async function handler(req, res) {
     let printifyProductId = null;
     let shopifyProductId = null;
 
-    if (createProduct && process.env.PRINTIFY_SECRET_KEY) {
+    const printifyApiKey = process.env.PRINTIFY_API_KEY || process.env.PRINTIFY_SECRET_KEY;
+    if (createProduct && printifyApiKey) {
       console.log('Step 2: Creating Printify product...');
 
       try {
@@ -139,7 +140,7 @@ export default async function handler(req, res) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.PRINTIFY_SECRET_KEY}`,
+            'Authorization': `Bearer ${printifyApiKey}`,
           },
           body: JSON.stringify({
             file_name: `${selectedPose.id}_${dogBreed}_${Date.now()}.jpg`,
@@ -152,7 +153,8 @@ export default async function handler(req, res) {
           console.log('✅ Uploaded to Printify:', uploadData.id);
 
           // Create product
-          const shopId = process.env.PRINTIFY_SHOP_ID || '15007872';
+          // Shop ID: 24946062 (All Dogs Rock Shop - connected to Shopify)
+          const shopId = process.env.PRINTIFY_SHOP_ID || '24946062';
 
           const blueprintMap = {
             poster: { blueprint_id: 3, print_provider_id: 1, variant_ids: [17388] },
@@ -169,7 +171,7 @@ export default async function handler(req, res) {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.PRINTIFY_SECRET_KEY}`,
+                'Authorization': `Bearer ${printifyApiKey}`,
               },
               body: JSON.stringify({
                 title: productTitle,
@@ -217,7 +219,7 @@ export default async function handler(req, res) {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.PRINTIFY_SECRET_KEY}`,
+                    'Authorization': `Bearer ${printifyApiKey}`,
                   },
                   body: JSON.stringify({
                     title: true,
