@@ -52,18 +52,22 @@ async function handler(req, res) {
 
     const photoUrl = dogPhoto || imageUrl;
 
-    // Use FLUX with image-to-image (img2img) capability
-    // This takes the customer's dog photo and transforms it into the iconic pose
+    // Enhanced prompt to keep customer's dog recognizable while placing in iconic scene
+    const enhancedPrompt = `Photo-realistic image: Take the EXACT dog from the reference image (same breed, same fur color, same facial features, same size) and place it in this scene: ${selectedPose.prompt}. The dog must look IDENTICAL to the uploaded photo - same markings, same coat, same everything. Only change the background/environment and the dog's pose to match the iconic scene. Keep the dog's unique appearance 100% accurate.`;
+
+    // Use FLUX 1.1 Pro with image-to-image capability
+    // This keeps the customer's dog looking exactly like their dog
     const requestBody = {
-      version: 'black-forest-labs/flux-1.1-pro',
+      version: 'bf2f2c84d4f87c00cab1da85ac63a06b124949255fa7bf81328b482d0fac30b1', // FLUX 1.1 Pro
       input: {
-        prompt: selectedPose.prompt + ' - Transform this dog to match the exact pose, composition, and style described. Keep the dog's breed and appearance but change the pose and setting to match the iconic scene.',
-        image: photoUrl, // Customer's dog photo
-        prompt_strength: 0.8, // How much to transform (0.8 = strong transformation but keeps dog recognizable)
+        prompt: enhancedPrompt,
+        image: photoUrl, // Customer's dog photo (base64 or URL)
+        prompt_strength: 0.75, // Balance: keep dog recognizable but transform scene
         aspect_ratio: '1:1',
         output_format: 'jpg',
-        output_quality: 90,
+        output_quality: 95,
         safety_tolerance: 2,
+        seed: Math.floor(Math.random() * 1000000), // Random seed for variety
       }
     };
 
