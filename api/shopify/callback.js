@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     }
 
     const apiKey = process.env.SHOPIFY_API_KEY;
-    const apiSecret = process.env.SHOPIFY_API_SECRET || process.env.SHOPIFY_SECRET_KEY;
+    const apiSecret = process.env.SHOPIFY_API_SECRET || process.env.SHOPIFY_SECRET_KEY || process.env.SHOPIFY_API_SECRET_KEY;
 
     if (!apiKey || !apiSecret) {
       return res.status(500).json({ error: 'Shopify credentials not configured' });
