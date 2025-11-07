@@ -57,7 +57,7 @@ async function handler(req, res) {
     // Use FLUX 1.1 Pro with image-to-image capability
     // This keeps the customer's dog looking exactly like their dog
     const requestBody = {
-      version: 'bf2f2c84d4f87c00cab1da85ac63a06b124949255fa7bf81328b482d0fac30b1', // FLUX 1.1 Pro
+      model: 'black-forest-labs/flux-1.1-pro',
       input: {
         prompt: enhancedPrompt,
         image: photoUrl, // Customer's dog photo (base64 or URL)

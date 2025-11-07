@@ -416,8 +416,14 @@
     poses.forEach(pose => {
       const card = document.createElement('div');
       card.className = 'pose-card';
+
+      // Use actual example image if available, otherwise fall back to emoji
+      const imageContent = pose.thumbnailUrl || pose.templateUrl
+        ? `<img src="${pose.thumbnailUrl || pose.templateUrl}" alt="${pose.name} example" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='${getCategoryEmoji(pose.category)}';" />`
+        : `${getCategoryEmoji(pose.category)}`;
+
       card.innerHTML = `
-        <div class="pose-image">${getCategoryEmoji(pose.category)}</div>
+        <div class="pose-image">${imageContent}</div>
         <div class="pose-info">
           <div class="pose-name">${pose.name}</div>
           <div class="pose-description">${pose.description}</div>
