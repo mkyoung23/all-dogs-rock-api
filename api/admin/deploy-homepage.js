@@ -81,7 +81,6 @@ export default async function handler(req, res) {
       title: 'Welcome to All Dogs Rock',
       handle: 'home',
       body: homepageTemplate,
-      published: true,
     };
 
     // Call Shopify GraphQL API

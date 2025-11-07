@@ -63,8 +63,7 @@ export default async function handler(req, res) {
           input: {
             title: 'Welcome to All Dogs Rock',
             handle: 'home',
-            body: homepageHtml,
-            published: true
+            body: homepageHtml
           }
         }
       }),

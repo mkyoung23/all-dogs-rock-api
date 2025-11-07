@@ -81,7 +81,6 @@ export default async function handler(req, res) {
       title: 'Create Iconic Dog',
       handle: 'create-iconic-dog',
       body: liquidTemplate,
-      published: true,
     };
 
     // Call Shopify GraphQL API
@@ -247,8 +246,7 @@ export default async function handler(req, res) {
             input: {
               title: 'Welcome to All Dogs Rock',
               handle: 'home',
-              body: homepageTemplate,
-              published: true
+              body: homepageTemplate
             }
           }
         }),
