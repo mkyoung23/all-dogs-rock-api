@@ -51,19 +51,18 @@ async function handler(req, res) {
 
     const photoUrl = dogPhoto || imageUrl;
 
-    // Enhanced prompt to keep customer's dog IDENTICAL while placing in recognizable iconic scene
-    // The prompt combines: 1) dog preservation instructions, 2) scene description
-    const enhancedPrompt = `${selectedPose.prompt} IMPORTANT: The dog in this image must be the EXACT same dog from the reference photo - preserve the dog's breed, fur color, facial features, markings, eye color, and body size perfectly. Only change: the background environment and the dog's pose/position to match the iconic scene. The dog's appearance must remain 100% identical to the uploaded photo.`;
+    // CRITICAL: Must preserve the EXACT dog while transforming scene
+    // Strategy: Lower strength + stronger preservation prompts
+    const enhancedPrompt = `Professional photo composite: Take the EXACT dog from the reference image (preserve every detail: breed, fur color, facial features, eye color, markings, body size) and place it into this scene: ${selectedPose.prompt}. The dog must be 100% identical to the reference photo. Only change the background and environment to match the iconic scene.`;
 
-    // Use a reliable image-to-image model
-    // Using SDXL img2img with optimized parameters for dog preservation + scene transformation
+    // Use SDXL img2img with LOWER strength to preserve dog identity
     const requestBody = {
       version: "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", // SDXL img2img working version
       input: {
         image: photoUrl, // Customer's dog photo (base64 or URL)
         prompt: enhancedPrompt,
-        negative_prompt: "different dog, wrong breed, different fur color, different markings, blurry, low quality, distorted, bad anatomy, mutated features, extra limbs",
-        strength: 0.65, // Optimized: 0.65 preserves dog better while still transforming scene
+        negative_prompt: "different dog, wrong dog, human, person, multiple dogs, wrong breed, different fur color, different markings, blurry, low quality, distorted, bad anatomy, mutated features, extra limbs, changed appearance",
+        strength: 0.35, // CRITICAL: Lower strength preserves dog identity better (was 0.65)
         num_inference_steps: 50,
         guidance_scale: 7.5,
         seed: Math.floor(Math.random() * 1000000),
