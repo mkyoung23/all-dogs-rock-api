@@ -57,13 +57,15 @@ async function handler(req, res) {
     // Use Stable Diffusion XL with image-to-image for best quality
     // This keeps the customer's dog looking exactly like their dog
     const requestBody = {
-      version: "7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc",
+      version: "39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b", // SDXL img2img
       input: {
         prompt: enhancedPrompt,
         image: photoUrl, // Customer's dog photo (base64 or URL)
         strength: 0.75, // How much to transform (0.75 = keeps dog recognizable)
         num_inference_steps: 50,
         guidance_scale: 7.5,
+        width: 1024,
+        height: 1024,
         scheduler: "DDIM",
         seed: Math.floor(Math.random() * 1000000), // Random seed for variety
       }
