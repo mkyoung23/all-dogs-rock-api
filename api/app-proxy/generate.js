@@ -54,20 +54,18 @@ async function handler(req, res) {
     // Enhanced prompt to keep customer's dog recognizable while placing in iconic scene
     const enhancedPrompt = `Photo-realistic image: Take the EXACT dog from the reference image (same breed, same fur color, same facial features, same size) and place it in this scene: ${selectedPose.prompt}. The dog must look IDENTICAL to the uploaded photo - same markings, same coat, same everything. Only change the background/environment and the dog's pose to match the iconic scene. Keep the dog's unique appearance 100% accurate.`;
 
-    // Use Stable Diffusion XL with image-to-image for best quality
-    // This keeps the customer's dog looking exactly like their dog
+    // Use a reliable image-to-image model
+    // Using the model that transforms images while preserving key features
     const requestBody = {
-      version: "39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b", // SDXL img2img
+      version: "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", // SDXL img2img working version
       input: {
-        prompt: enhancedPrompt,
         image: photoUrl, // Customer's dog photo (base64 or URL)
-        strength: 0.75, // How much to transform (0.75 = keeps dog recognizable)
+        prompt: enhancedPrompt,
+        negative_prompt: "blurry, low quality, distorted, bad anatomy",
+        strength: 0.75, // How much to transform
         num_inference_steps: 50,
         guidance_scale: 7.5,
-        width: 1024,
-        height: 1024,
-        scheduler: "DDIM",
-        seed: Math.floor(Math.random() * 1000000), // Random seed for variety
+        seed: Math.floor(Math.random() * 1000000),
       }
     };
 
