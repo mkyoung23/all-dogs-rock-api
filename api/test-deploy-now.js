@@ -12,7 +12,8 @@ export default async function handler(req, res) {
     );
 
     // Try all possible token names - INCLUDING the custom AllDogsRock one!
-    const accessToken = process.env.AllDogsRock_Gallery_Admin_App_Key ||
+    const accessToken = process.env.ALLDOGSROCK_GALLERY_ADMIN_APP_KEY ||
+                       process.env.AllDogsRock_Gallery_Admin_App_Key ||
                        process.env.SHOPIFY_APP_ADMIN_API_KEY ||
                        process.env.SHOPIFY_ADMIN_API_KEY ||
                        process.env.SHOPIFY_ACCESS_TOKEN ||
@@ -25,11 +26,12 @@ export default async function handler(req, res) {
       return res.json({
         error: 'No token found',
         availableEnvs: allEnvs,
-        message: 'Set one of: AllDogsRock_Gallery_Admin_App_Key, SHOPIFY_ACCESS_TOKEN, etc.'
+        message: 'Set one of: ALLDOGSROCK_GALLERY_ADMIN_APP_KEY, SHOPIFY_ACCESS_TOKEN, etc.'
       });
     }
 
-    const tokenSource = process.env.AllDogsRock_Gallery_Admin_App_Key ? 'AllDogsRock_Gallery_Admin_App_Key' :
+    const tokenSource = process.env.ALLDOGSROCK_GALLERY_ADMIN_APP_KEY ? 'ALLDOGSROCK_GALLERY_ADMIN_APP_KEY' :
+                       process.env.AllDogsRock_Gallery_Admin_App_Key ? 'AllDogsRock_Gallery_Admin_App_Key' :
                        process.env.SHOPIFY_APP_ADMIN_API_KEY ? 'SHOPIFY_APP_ADMIN_API_KEY' :
                        process.env.SHOPIFY_ADMIN_API_KEY ? 'SHOPIFY_ADMIN_API_KEY' :
                        process.env.SHOPIFY_ACCESS_TOKEN ? 'SHOPIFY_ACCESS_TOKEN' :
