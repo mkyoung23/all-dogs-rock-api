@@ -1,0 +1,10 @@
+Look! The homepage code is in this directory:
+
+    /home/user/all-dogs-rock-api/shopify-homepage.liquid
+
+It's RIGHT HERE in the same folder as this file!
+
+Just open it in any text editor and copy all of it!
+
+Then paste it into Shopify at:
+https://admin.shopify.com/store/8k5mna-5e/pages/new

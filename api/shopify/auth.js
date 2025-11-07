@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     }
 
     const apiKey = process.env.SHOPIFY_API_KEY;
-    const scopes = process.env.SHOPIFY_SCOPES || 'read_products,write_products';
+    const scopes = process.env.SHOPIFY_SCOPES || 'read_products,write_products,write_pages,read_pages';
     const redirectUri = `${process.env.APP_URL || 'https://all-dogs-rock-api-v2.vercel.app'}/api/shopify/callback`;
 
     if (!apiKey) {

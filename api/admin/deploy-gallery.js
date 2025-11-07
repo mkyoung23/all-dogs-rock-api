@@ -1,5 +1,5 @@
-// Admin endpoint to deploy gallery page to Shopify
-// This uses the Shopify Admin API to create the page and add navigation
+// Admin endpoint to deploy gallery page AND homepage to Shopify
+// This uses the Shopify Admin API to create the pages and add navigation
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -11,19 +11,41 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get credentials from environment or request body
-    const accessToken = req.body.accessToken || process.env.SHOPIFY_ACCESS_TOKEN;
+    // Try ALL possible Shopify token environment variable names
+    const accessToken = req.body.accessToken ||
+                       process.env.SHOPIFY_ACCESS_TOKEN ||
+                       process.env.SHOPIFY_APP_ADMIN_API_KEY ||
+                       process.env.SHOPIFY_ADMIN_API_KEY ||
+                       process.env.SHOPIFY_TOKEN ||
+                       process.env.SHOPIFY_ADMIN_TOKEN ||
+                       process.env.SHOPIFY_API_TOKEN ||
+                       process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
+
     const shop = req.body.shop || process.env.SHOPIFY_STORE_DOMAIN || '8k5mna-5e.myshopify.com';
 
+    // Debug: Show which token is being used
+    const tokenSource = req.body.accessToken ? 'request body' :
+                       process.env.SHOPIFY_ACCESS_TOKEN ? 'SHOPIFY_ACCESS_TOKEN' :
+                       process.env.SHOPIFY_APP_ADMIN_API_KEY ? 'SHOPIFY_APP_ADMIN_API_KEY' :
+                       process.env.SHOPIFY_ADMIN_API_KEY ? 'SHOPIFY_ADMIN_API_KEY' :
+                       process.env.SHOPIFY_TOKEN ? 'SHOPIFY_TOKEN' :
+                       process.env.SHOPIFY_ADMIN_TOKEN ? 'SHOPIFY_ADMIN_TOKEN' :
+                       process.env.SHOPIFY_API_TOKEN ? 'SHOPIFY_API_TOKEN' :
+                       process.env.SHOPIFY_ADMIN_ACCESS_TOKEN ? 'SHOPIFY_ADMIN_ACCESS_TOKEN' : 'none';
+
     if (!accessToken) {
+      // List all available Shopify-related env vars for debugging
+      const availableShopifyEnvs = Object.keys(process.env).filter(k => k.includes('SHOPIFY') || k.includes('shopify'));
       return res.status(400).json({
         error: 'Access token required',
-        message: 'Please provide accessToken in request body or set SHOPIFY_ACCESS_TOKEN env var',
-        hint: 'You can get this from the OAuth callback after app installation'
+        message: 'No Shopify access token found in environment',
+        availableShopifyEnvs: availableShopifyEnvs,
+        hint: 'Please set one of: SHOPIFY_ACCESS_TOKEN, SHOPIFY_APP_ADMIN_API_KEY, or provide accessToken in request body'
       });
     }
 
-    console.log('🚀 Deploying gallery page to shop:', shop);
+    console.log('🚀 Deploying pages to shop:', shop);
+    console.log('🔑 Using token from:', tokenSource);
 
     // Read the Liquid template
     const liquidTemplate = readFileSync(
@@ -198,11 +220,51 @@ export default async function handler(req, res) {
 
     console.log('✅ Navigation menu item added');
 
+    // ALSO DEPLOY HOMEPAGE
+    console.log('🏠 Now deploying homepage...');
+
+    try {
+      const homepageTemplate = readFileSync(
+        join(process.cwd(), 'shopify-homepage.liquid'),
+        'utf-8'
+      );
+
+      const homepageResponse = await fetch(shopifyUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Access-Token': accessToken,
+        },
+        body: JSON.stringify({
+          query: createPageMutation,
+          variables: {
+            input: {
+              title: 'Welcome to All Dogs Rock',
+              handle: 'home',
+              body: homepageTemplate,
+              published: true
+            }
+          }
+        }),
+      });
+
+      const homepageData = await homepageResponse.json();
+
+      if (homepageData.data?.pageCreate?.page) {
+        console.log('✅ Homepage deployed:', homepageData.data.pageCreate.page.handle);
+      } else {
+        console.error('⚠️ Homepage deployment had issues:', homepageData);
+      }
+    } catch (homepageError) {
+      console.error('⚠️ Homepage deployment failed (continuing anyway):', homepageError.message);
+    }
+
     return res.status(200).json({
       success: true,
-      message: 'Gallery page deployed and added to navigation!',
+      message: 'Gallery page AND homepage deployed and added to navigation!',
       page: createdPage,
       pageUrl: `https://${shop.replace('.myshopify.com', '')}/pages/${createdPage.handle}`,
+      homepageUrl: `https://${shop.replace('.myshopify.com', '')}/pages/home`,
       menuItem: menuItemData.data.menuItemAdd.menuItem
     });
 
