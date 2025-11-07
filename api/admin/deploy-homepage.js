@@ -11,18 +11,41 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get credentials from environment or request body
-    const accessToken = req.body.accessToken || process.env.SHOPIFY_APP_ADMIN_API_KEY || process.env.SHOPIFY_ACCESS_TOKEN;
+    // Try ALL possible Shopify token environment variable names
+    const accessToken = req.body.accessToken ||
+                       process.env.SHOPIFY_ACCESS_TOKEN ||
+                       process.env.SHOPIFY_APP_ADMIN_API_KEY ||
+                       process.env.SHOPIFY_ADMIN_API_KEY ||
+                       process.env.SHOPIFY_TOKEN ||
+                       process.env.SHOPIFY_ADMIN_TOKEN ||
+                       process.env.SHOPIFY_API_TOKEN ||
+                       process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
+
     const shop = req.body.shop || process.env.SHOPIFY_STORE_DOMAIN || '8k5mna-5e.myshopify.com';
 
+    // Debug: Show which token is being used
+    const tokenSource = req.body.accessToken ? 'request body' :
+                       process.env.SHOPIFY_ACCESS_TOKEN ? 'SHOPIFY_ACCESS_TOKEN' :
+                       process.env.SHOPIFY_APP_ADMIN_API_KEY ? 'SHOPIFY_APP_ADMIN_API_KEY' :
+                       process.env.SHOPIFY_ADMIN_API_KEY ? 'SHOPIFY_ADMIN_API_KEY' :
+                       process.env.SHOPIFY_TOKEN ? 'SHOPIFY_TOKEN' :
+                       process.env.SHOPIFY_ADMIN_TOKEN ? 'SHOPIFY_ADMIN_TOKEN' :
+                       process.env.SHOPIFY_API_TOKEN ? 'SHOPIFY_API_TOKEN' :
+                       process.env.SHOPIFY_ADMIN_ACCESS_TOKEN ? 'SHOPIFY_ADMIN_ACCESS_TOKEN' : 'none';
+
     if (!accessToken) {
+      // List all available Shopify-related env vars for debugging
+      const availableShopifyEnvs = Object.keys(process.env).filter(k => k.includes('SHOPIFY') || k.includes('shopify'));
       return res.status(400).json({
         error: 'Access token required',
-        message: 'Please provide accessToken in request body or set SHOPIFY_ACCESS_TOKEN env var'
+        message: 'No Shopify access token found in environment',
+        availableShopifyEnvs: availableShopifyEnvs,
+        hint: 'Please set one of: SHOPIFY_ACCESS_TOKEN, SHOPIFY_APP_ADMIN_API_KEY, or provide accessToken in request body'
       });
     }
 
     console.log('🏠 Deploying homepage to shop:', shop);
+    console.log('🔑 Using token from:', tokenSource);
 
     // Read the homepage Liquid template
     const homepageTemplate = readFileSync(
