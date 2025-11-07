@@ -1,11 +1,11 @@
 {
   "name": "all-dogs-rock-api",
   "version": "2.0.0",
+  "type": "module",
   "description": "Iconic Dog Generator - Shopify App with Printify & Customily Integration",
   "main": "index.js",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'Build complete - Vercel Serverless Functions'",
     "test": "echo 'No tests yet'"
   },
   "keywords": [

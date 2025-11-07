@@ -1,12 +1,6 @@
 {
   "version": 2,
   "name": "all-dogs-rock-api",
-  "rewrites": [
-    {
-      "source": "/app-proxy/:path*",
-      "destination": "/api/app-proxy/:path*"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
