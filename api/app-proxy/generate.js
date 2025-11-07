@@ -62,7 +62,7 @@ async function handler(req, res) {
         image: photoUrl, // Customer's dog photo (base64 or URL)
         prompt: enhancedPrompt,
         negative_prompt: "different dog, wrong dog, human, person, multiple dogs, wrong breed, different fur color, different markings, blurry, low quality, distorted, bad anatomy, mutated features, extra limbs, changed appearance",
-        strength: 0.35, // CRITICAL: Lower strength preserves dog identity better (was 0.65)
+        strength: 0.25, // CRITICAL: Very low strength for maximum dog preservation (was 0.65→0.35→0.25)
         num_inference_steps: 50,
         guidance_scale: 7.5,
         seed: Math.floor(Math.random() * 1000000),
