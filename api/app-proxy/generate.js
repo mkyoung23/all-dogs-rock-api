@@ -114,7 +114,11 @@ async function handler(req, res) {
       const pollData = await pollResponse.json();
 
       if (pollData.status === 'succeeded') {
-        const resultImageUrl = pollData.output;
+        let resultImageUrl = pollData.output;
+        // Replicate sometimes returns array, sometimes string - normalize to string
+        if (Array.isArray(resultImageUrl)) {
+          resultImageUrl = resultImageUrl[0];
+        }
         console.log('🎉 Success!', resultImageUrl);
 
         return res.status(200).json({
