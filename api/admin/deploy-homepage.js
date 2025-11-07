@@ -11,11 +11,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Try ALL possible Shopify token environment variable names
+    // Try ALL possible Shopify token environment variable names - INCLUDING custom AllDogsRock name!
     const accessToken = req.body.accessToken ||
-                       process.env.SHOPIFY_ACCESS_TOKEN ||
+                       process.env.AllDogsRock_Gallery_Admin_App_Key ||
                        process.env.SHOPIFY_APP_ADMIN_API_KEY ||
                        process.env.SHOPIFY_ADMIN_API_KEY ||
+                       process.env.SHOPIFY_ACCESS_TOKEN ||
                        process.env.SHOPIFY_TOKEN ||
                        process.env.SHOPIFY_ADMIN_TOKEN ||
                        process.env.SHOPIFY_API_TOKEN ||
@@ -25,9 +26,10 @@ export default async function handler(req, res) {
 
     // Debug: Show which token is being used
     const tokenSource = req.body.accessToken ? 'request body' :
-                       process.env.SHOPIFY_ACCESS_TOKEN ? 'SHOPIFY_ACCESS_TOKEN' :
+                       process.env.AllDogsRock_Gallery_Admin_App_Key ? 'AllDogsRock_Gallery_Admin_App_Key' :
                        process.env.SHOPIFY_APP_ADMIN_API_KEY ? 'SHOPIFY_APP_ADMIN_API_KEY' :
                        process.env.SHOPIFY_ADMIN_API_KEY ? 'SHOPIFY_ADMIN_API_KEY' :
+                       process.env.SHOPIFY_ACCESS_TOKEN ? 'SHOPIFY_ACCESS_TOKEN' :
                        process.env.SHOPIFY_TOKEN ? 'SHOPIFY_TOKEN' :
                        process.env.SHOPIFY_ADMIN_TOKEN ? 'SHOPIFY_ADMIN_TOKEN' :
                        process.env.SHOPIFY_API_TOKEN ? 'SHOPIFY_API_TOKEN' :
@@ -35,12 +37,14 @@ export default async function handler(req, res) {
 
     if (!accessToken) {
       // List all available Shopify-related env vars for debugging
-      const availableShopifyEnvs = Object.keys(process.env).filter(k => k.includes('SHOPIFY') || k.includes('shopify'));
+      const availableShopifyEnvs = Object.keys(process.env).filter(k =>
+        k.includes('SHOPIFY') || k.includes('shopify') || k.includes('AllDogsRock')
+      );
       return res.status(400).json({
         error: 'Access token required',
         message: 'No Shopify access token found in environment',
         availableShopifyEnvs: availableShopifyEnvs,
-        hint: 'Please set one of: SHOPIFY_ACCESS_TOKEN, SHOPIFY_APP_ADMIN_API_KEY, or provide accessToken in request body'
+        hint: 'Please set one of: AllDogsRock_Gallery_Admin_App_Key, SHOPIFY_ACCESS_TOKEN, SHOPIFY_APP_ADMIN_API_KEY, or provide accessToken in request body'
       });
     }
 
