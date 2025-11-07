@@ -54,18 +54,17 @@ async function handler(req, res) {
     // Enhanced prompt to keep customer's dog recognizable while placing in iconic scene
     const enhancedPrompt = `Photo-realistic image: Take the EXACT dog from the reference image (same breed, same fur color, same facial features, same size) and place it in this scene: ${selectedPose.prompt}. The dog must look IDENTICAL to the uploaded photo - same markings, same coat, same everything. Only change the background/environment and the dog's pose to match the iconic scene. Keep the dog's unique appearance 100% accurate.`;
 
-    // Use FLUX 1.1 Pro with image-to-image capability
+    // Use Stable Diffusion XL with image-to-image for best quality
     // This keeps the customer's dog looking exactly like their dog
     const requestBody = {
-      model: 'black-forest-labs/flux-1.1-pro',
+      version: "7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc",
       input: {
         prompt: enhancedPrompt,
         image: photoUrl, // Customer's dog photo (base64 or URL)
-        prompt_strength: 0.75, // Balance: keep dog recognizable but transform scene
-        aspect_ratio: '1:1',
-        output_format: 'jpg',
-        output_quality: 95,
-        safety_tolerance: 2,
+        strength: 0.75, // How much to transform (0.75 = keeps dog recognizable)
+        num_inference_steps: 50,
+        guidance_scale: 7.5,
+        scheduler: "DDIM",
         seed: Math.floor(Math.random() * 1000000), // Random seed for variety
       }
     };
