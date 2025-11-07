@@ -24,7 +24,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Image URL is required' });
     }
 
-    if (!process.env.PRINTIFY_SECRET_KEY) {
+    const printifyApiKey = process.env.PRINTIFY_API_KEY || process.env.PRINTIFY_SECRET_KEY;
+    if (!printifyApiKey) {
       return res.status(500).json({ error: 'Printify API key not configured' });
     }
 
@@ -35,7 +36,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.PRINTIFY_SECRET_KEY}`,
+        'Authorization': `Bearer ${printifyApiKey}`,
       },
       body: JSON.stringify({
         file_name: `${poseName || 'dog-art'}_${Date.now()}.jpg`,
@@ -57,9 +58,9 @@ export default async function handler(req, res) {
 
     console.log('✅ Image uploaded to Printify:', printifyImageId);
 
-    // Step 2: Get shop ID (or use from env if available)
-    // For now, we'll use a placeholder - you need to get this from Printify dashboard
-    const shopId = process.env.PRINTIFY_SHOP_ID || '15007872';
+    // Step 2: Get shop ID from environment
+    // Shop ID: 24946062 (All Dogs Rock Shop - connected to Shopify)
+    const shopId = process.env.PRINTIFY_SHOP_ID || '24946062';
 
     // Step 3: Get blueprint ID for the product type
     // Poster (matte): blueprint_id = 3
@@ -82,7 +83,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.PRINTIFY_SECRET_KEY}`,
+          'Authorization': `Bearer ${printifyApiKey}`,
         },
         body: JSON.stringify({
           title: title || 'Custom Iconic Dog Art',
