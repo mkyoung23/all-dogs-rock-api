@@ -51,20 +51,20 @@ async function handler(req, res) {
 
     const photoUrl = dogPhoto || imageUrl;
 
-    // CRITICAL: Must preserve the EXACT dog while transforming scene
-    // Strategy: Lower strength + stronger preservation prompts
-    const enhancedPrompt = `Professional photo composite: Take the EXACT dog from the reference image (preserve every detail: breed, fur color, facial features, eye color, markings, body size) and place it into this scene: ${selectedPose.prompt}. The dog must be 100% identical to the reference photo. Only change the background and environment to match the iconic scene.`;
+    // CRITICAL: EXTREME dog preservation - only modify background, keep dog 100% identical
+    // Using minimal strength to barely transform the image - just add background elements
+    const enhancedPrompt = `This exact dog wearing Revolutionary War general uniform, standing heroically in boat crossing icy Delaware River, Revolutionary War scene background, keep the dog's face and body EXACTLY as shown`;
 
-    // Use SDXL img2img with LOWER strength to preserve dog identity
+    // EXTREME preservation mode - strength 0.15 to keep dog nearly untouched
     const requestBody = {
       version: "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", // SDXL img2img working version
       input: {
         image: photoUrl, // Customer's dog photo (base64 or URL)
         prompt: enhancedPrompt,
-        negative_prompt: "different dog, wrong dog, human, person, multiple dogs, wrong breed, different fur color, different markings, blurry, low quality, distorted, bad anatomy, mutated features, extra limbs, changed appearance",
-        strength: 0.25, // CRITICAL: Very low strength for maximum dog preservation (was 0.65→0.35→0.25)
+        negative_prompt: "human, person, man, woman, people, different dog, cat, other animals, changed face, different breed, altered features, wrong dog",
+        strength: 0.15, // EXTREME: 0.15 = 85% original image preserved, 15% modification
         num_inference_steps: 50,
-        guidance_scale: 7.5,
+        guidance_scale: 9.0, // Higher guidance to force prompt adherence
         seed: Math.floor(Math.random() * 1000000),
       }
     };
