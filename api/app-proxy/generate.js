@@ -52,8 +52,17 @@ async function handler(req, res) {
     const photoUrl = dogPhoto || imageUrl;
 
     // CRITICAL: EXTREME dog preservation - only modify background, keep dog 100% identical
-    // Using minimal strength to barely transform the image - just add background elements
-    const enhancedPrompt = `This exact dog wearing Revolutionary War general uniform, standing heroically in boat crossing icy Delaware River, Revolutionary War scene background, keep the dog's face and body EXACTLY as shown`;
+    // Dynamic prompt based on selected pose
+    let enhancedPrompt;
+
+    if (poseId === 'mona-lisa') {
+      enhancedPrompt = `This exact dog as the Mona Lisa, sitting with paws folded, subtle smile, Renaissance portrait style, dark clothing, misty landscape background, keep the dog's face and markings EXACTLY as shown`;
+    } else if (poseId === 'washington-crossing') {
+      enhancedPrompt = `This exact dog wearing Revolutionary War general uniform, standing heroically in boat crossing icy Delaware River, keep the dog's face and body EXACTLY as shown`;
+    } else {
+      // Generic fallback for other poses
+      enhancedPrompt = `This exact dog in the style of: ${selectedPose.name}. Keep the dog's face, fur color, and markings EXACTLY as shown`;
+    }
 
     // EXTREME preservation mode - strength 0.15 to keep dog nearly untouched
     const requestBody = {
