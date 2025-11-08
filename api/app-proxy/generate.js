@@ -62,7 +62,7 @@ async function handler(req, res) {
         image: photoUrl, // Customer's dog photo (base64 or URL)
         prompt: enhancedPrompt,
         negative_prompt: "human, person, man, woman, people, different dog, cat, other animals, changed face, different breed, altered features, wrong dog",
-        strength: 0.15, // EXTREME: 0.15 = 85% original image preserved, 15% modification
+        strength: 0.10, // MAXIMUM: 0.10 = 90% original preserved - last attempt before alternative approach
         num_inference_steps: 50,
         guidance_scale: 9.0, // Higher guidance to force prompt adherence
         seed: Math.floor(Math.random() * 1000000),
