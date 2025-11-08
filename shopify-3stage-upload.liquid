@@ -254,13 +254,13 @@
     </div>
 
     <div class="template-card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg/500px-Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg"
-           alt="Washington Crossing Delaware Template"
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg"
+           alt="Mona Lisa Template"
            class="template-image">
-      <h2>Washington Crossing the Delaware</h2>
-      <p>Your dog as General Washington, heroically leading troops across the icy Delaware River in this iconic Revolutionary War scene!</p>
+      <h2>Mona Lisa</h2>
+      <p>Your dog as the iconic Mona Lisa! A Renaissance masterpiece portrait with your pup in Leonardo da Vinci's most famous painting!</p>
       <button class="btn-primary" onclick="goToStage3()">
-        Transform My Dog into Washington! →
+        Transform My Dog into Mona Lisa! →
       </button>
     </div>
 
@@ -297,7 +297,7 @@
 <script>
   const API_BASE = 'https://all-dogs-rock-api-v2.vercel.app';
   let uploadedPhotos = [];
-  let selectedTemplate = 'washington-crossing';
+  let selectedTemplate = 'mona-lisa';
   let finalImageUrl = '';
 
   // Handle file upload
@@ -389,7 +389,7 @@
         },
         body: JSON.stringify({
           dogPhoto: primaryPhoto,
-          poseId: 'washington-crossing'
+          poseId: 'mona-lisa'
         })
       });
 
