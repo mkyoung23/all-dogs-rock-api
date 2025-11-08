@@ -51,21 +51,20 @@ async function handler(req, res) {
 
     const photoUrl = dogPhoto || imageUrl;
 
-    // Enhanced prompt to keep customer's dog IDENTICAL while placing in recognizable iconic scene
-    // The prompt combines: 1) dog preservation instructions, 2) scene description
-    const enhancedPrompt = `${selectedPose.prompt} IMPORTANT: The dog in this image must be the EXACT same dog from the reference photo - preserve the dog's breed, fur color, facial features, markings, eye color, and body size perfectly. Only change: the background environment and the dog's pose/position to match the iconic scene. The dog's appearance must remain 100% identical to the uploaded photo.`;
+    // CRITICAL: EXTREME dog preservation - only modify background, keep dog 100% identical
+    // Using minimal strength to barely transform the image - just add background elements
+    const enhancedPrompt = `This exact dog wearing Revolutionary War general uniform, standing heroically in boat crossing icy Delaware River, Revolutionary War scene background, keep the dog's face and body EXACTLY as shown`;
 
-    // Use a reliable image-to-image model
-    // Using SDXL img2img with optimized parameters for dog preservation + scene transformation
+    // EXTREME preservation mode - strength 0.15 to keep dog nearly untouched
     const requestBody = {
       version: "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", // SDXL img2img working version
       input: {
         image: photoUrl, // Customer's dog photo (base64 or URL)
         prompt: enhancedPrompt,
-        negative_prompt: "different dog, wrong breed, different fur color, different markings, blurry, low quality, distorted, bad anatomy, mutated features, extra limbs",
-        strength: 0.65, // Optimized: 0.65 preserves dog better while still transforming scene
+        negative_prompt: "human, person, man, woman, people, different dog, cat, other animals, changed face, different breed, altered features, wrong dog",
+        strength: 0.10, // MAXIMUM: 0.10 = 90% original preserved - last attempt before alternative approach
         num_inference_steps: 50,
-        guidance_scale: 7.5,
+        guidance_scale: 9.0, // Higher guidance to force prompt adherence
         seed: Math.floor(Math.random() * 1000000),
       }
     };
@@ -114,7 +113,11 @@ async function handler(req, res) {
       const pollData = await pollResponse.json();
 
       if (pollData.status === 'succeeded') {
-        const resultImageUrl = pollData.output;
+        let resultImageUrl = pollData.output;
+        // Replicate sometimes returns array, sometimes string - normalize to string
+        if (Array.isArray(resultImageUrl)) {
+          resultImageUrl = resultImageUrl[0];
+        }
         console.log('🎉 Success!', resultImageUrl);
 
         return res.status(200).json({

@@ -4,13 +4,19 @@ import { join } from 'path';
 
 export default async function handler(req, res) {
   try {
-    // Show what env vars we have
-    const shopifyEnvs = Object.keys(process.env).filter(k => k.toUpperCase().includes('SHOPIFY'));
+    // Show what env vars we have (check ALL env vars that might be Shopify-related)
+    const allEnvs = Object.keys(process.env).filter(k =>
+      k.toUpperCase().includes('SHOPIFY') ||
+      k.toUpperCase().includes('ALLDOGSROCK') ||
+      (k.toUpperCase().includes('ADMIN') && k.toUpperCase().includes('KEY'))
+    );
 
-    // Try all possible token names
-    const accessToken = process.env.SHOPIFY_ACCESS_TOKEN ||
+    // Try all possible token names - INCLUDING the custom AllDogsRock one!
+    const accessToken = process.env.ALLDOGSROCK_GALLERY_ADMIN_APP_KEY ||
+                       process.env.AllDogsRock_Gallery_Admin_App_Key ||
                        process.env.SHOPIFY_APP_ADMIN_API_KEY ||
                        process.env.SHOPIFY_ADMIN_API_KEY ||
+                       process.env.SHOPIFY_ACCESS_TOKEN ||
                        process.env.SHOPIFY_TOKEN ||
                        process.env.SHOPIFY_ADMIN_TOKEN;
 
@@ -19,14 +25,16 @@ export default async function handler(req, res) {
     if (!accessToken) {
       return res.json({
         error: 'No token found',
-        availableShopifyEnvs: shopifyEnvs,
-        message: 'Set one of: SHOPIFY_ACCESS_TOKEN, SHOPIFY_APP_ADMIN_API_KEY, etc.'
+        availableEnvs: allEnvs,
+        message: 'Set one of: ALLDOGSROCK_GALLERY_ADMIN_APP_KEY, SHOPIFY_ACCESS_TOKEN, etc.'
       });
     }
 
-    const tokenSource = process.env.SHOPIFY_ACCESS_TOKEN ? 'SHOPIFY_ACCESS_TOKEN' :
+    const tokenSource = process.env.ALLDOGSROCK_GALLERY_ADMIN_APP_KEY ? 'ALLDOGSROCK_GALLERY_ADMIN_APP_KEY' :
+                       process.env.AllDogsRock_Gallery_Admin_App_Key ? 'AllDogsRock_Gallery_Admin_App_Key' :
                        process.env.SHOPIFY_APP_ADMIN_API_KEY ? 'SHOPIFY_APP_ADMIN_API_KEY' :
                        process.env.SHOPIFY_ADMIN_API_KEY ? 'SHOPIFY_ADMIN_API_KEY' :
+                       process.env.SHOPIFY_ACCESS_TOKEN ? 'SHOPIFY_ACCESS_TOKEN' :
                        process.env.SHOPIFY_TOKEN ? 'SHOPIFY_TOKEN' :
                        process.env.SHOPIFY_ADMIN_TOKEN ? 'SHOPIFY_ADMIN_TOKEN' : 'unknown';
 
@@ -55,8 +63,7 @@ export default async function handler(req, res) {
           input: {
             title: 'Welcome to All Dogs Rock',
             handle: 'home',
-            body: homepageHtml,
-            published: true
+            body: homepageHtml
           }
         }
       }),
@@ -68,7 +75,7 @@ export default async function handler(req, res) {
       status: response.status,
       tokenUsed: tokenSource,
       tokenPrefix: accessToken.substring(0, 10) + '...',
-      availableShopifyEnvs: shopifyEnvs,
+      availableEnvs: allEnvs,
       responseData: data,
       success: data.data?.pageCreate?.page ? true : false,
       pageUrl: data.data?.pageCreate?.page ? `https://www.alldogsrockshop.com/pages/home` : null
