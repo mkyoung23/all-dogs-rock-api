@@ -51,25 +51,30 @@ async function handler(req, res) {
 
     const photoUrl = dogPhoto || imageUrl;
 
-    // CRITICAL: EXTREME dog preservation - only modify background, keep dog 100% identical
-    // Using minimal strength to barely transform the image - just add background elements
-    const enhancedPrompt = `This exact dog wearing Revolutionary War general uniform, standing heroically in boat crossing icy Delaware River, Revolutionary War scene background, keep the dog's face and body EXACTLY as shown`;
+    // ✅ NEW APPROACH: InstantID for EXACT dog preservation
+    // InstantID is designed specifically for identity-preserving generation
+    // It takes the dog's face/features and places them in a new scene while preserving identity
 
-    // EXTREME preservation mode - strength 0.15 to keep dog nearly untouched
+    const enhancedPrompt = `${selectedPose.prompt}, professional photo, highly detailed, 8k quality`;
+
+    // Using InstantID model - specifically designed for subject identity preservation
     const requestBody = {
-      version: "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", // SDXL img2img working version
+      version: "2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789", // zsxkib/instant-id latest
       input: {
-        image: photoUrl, // Customer's dog photo (base64 or URL)
+        image: photoUrl, // Customer's dog photo - THIS FACE/IDENTITY WILL BE PRESERVED
         prompt: enhancedPrompt,
-        negative_prompt: "human, person, man, woman, people, different dog, cat, other animals, changed face, different breed, altered features, wrong dog",
-        strength: 0.10, // MAXIMUM: 0.10 = 90% original preserved - last attempt before alternative approach
-        num_inference_steps: 50,
-        guidance_scale: 9.0, // Higher guidance to force prompt adherence
+        negative_prompt: "human face, person, man, woman, people, blurry, low quality, distorted, wrong animal, cat, different dog breed",
+        num_inference_steps: 30,
+        guidance_scale: 7.5,
+        ip_adapter_scale: 0.8, // High value = strong identity preservation
+        controlnet_conditioning_scale: 0.8, // Helps maintain pose
+        num_outputs: 1,
+        output_format: "png",
         seed: Math.floor(Math.random() * 1000000),
       }
     };
 
-    console.log('📤 Sending to FLUX (img2img)...');
+    console.log('📤 Sending to InstantID (identity-preserving generation)...');
 
     const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
       method: 'POST',
