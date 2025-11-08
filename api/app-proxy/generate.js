@@ -55,6 +55,7 @@ async function handler(req, res) {
     // InstantID is designed specifically for identity-preserving generation
     // It takes the dog's face/features and places them in a new scene while preserving identity
 
+    // Use the full selectedPose.prompt for better scene accuracy
     const enhancedPrompt = `${selectedPose.prompt}, professional photo, highly detailed, 8k quality`;
 
     // Using InstantID model - specifically designed for subject identity preservation
