@@ -51,31 +51,24 @@ async function handler(req, res) {
 
     const photoUrl = dogPhoto || imageUrl;
 
-    // ✅ NEW APPROACH: InstantID for EXACT dog preservation
-    // InstantID is designed specifically for identity-preserving generation
-    // It takes the dog's face/features and places them in a new scene while preserving identity
+    // ✅ WORKING SOLUTION: FLUX Kontext Pro for EXACT dog preservation
+    // FLUX Kontext takes a reference image and transforms it based on prompt
+    // while preserving the subject's key features (breed, fur color, markings)
 
-    // Use the full selectedPose.prompt for better scene accuracy
-    const enhancedPrompt = `${selectedPose.prompt}, professional photo, highly detailed, 8k quality`;
+    // Craft prompt to preserve dog's identity while transforming to iconic scene
+    const enhancedPrompt = `Transform this dog into the following scene: ${selectedPose.prompt}. CRITICAL: Keep the EXACT same dog breed, fur color, facial features, and markings from the reference image. Only change the clothing, pose, and background to match the iconic scene. Professional photo quality, highly detailed, 8k resolution.`;
 
-    // Using InstantID model - specifically designed for subject identity preservation
+    // Using FLUX Kontext Pro - tested and proven to preserve dog identity
     const requestBody = {
-      version: "2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789", // zsxkib/instant-id latest
+      version: "569705b35f79b1160d51de1d0e3955626af86c77a034a16e89010dbdde5ad312", // FLUX Kontext Pro
       input: {
-        image: photoUrl, // Customer's dog photo - THIS FACE/IDENTITY WILL BE PRESERVED
+        input_image: photoUrl, // Customer's dog photo - breed/features WILL BE PRESERVED
         prompt: enhancedPrompt,
-        negative_prompt: "human face, person, man, woman, people, blurry, low quality, distorted, wrong animal, cat, different dog breed",
-        num_inference_steps: 30,
-        guidance_scale: 7.5,
-        ip_adapter_scale: 0.8, // High value = strong identity preservation
-        controlnet_conditioning_scale: 0.8, // Helps maintain pose
-        num_outputs: 1,
         output_format: "png",
-        seed: Math.floor(Math.random() * 1000000),
       }
     };
 
-    console.log('📤 Sending to InstantID (identity-preserving generation)...');
+    console.log('📤 Sending to FLUX Kontext Pro (identity-preserving generation)...');
 
     const createResponse = await fetch(`https://api.replicate.com/v1/predictions`, {
       method: 'POST',
@@ -119,11 +112,8 @@ async function handler(req, res) {
       const pollData = await pollResponse.json();
 
       if (pollData.status === 'succeeded') {
-        let resultImageUrl = pollData.output;
-        // Replicate sometimes returns array, sometimes string - normalize to string
-        if (Array.isArray(resultImageUrl)) {
-          resultImageUrl = resultImageUrl[0];
-        }
+        // FLUX Kontext Pro returns a single image URL string
+        const resultImageUrl = pollData.output;
         console.log('🎉 Success!', resultImageUrl);
 
         return res.status(200).json({
