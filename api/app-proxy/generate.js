@@ -25,7 +25,7 @@ async function handler(req, res) {
   }
 
   try {
-    const { dogPhoto, poseId, imageUrl } = req.body;
+    const { dogPhoto, poseId, imageUrl, customFields } = req.body;
 
     if (!dogPhoto && !imageUrl) {
       return res.status(400).json({
@@ -55,8 +55,17 @@ async function handler(req, res) {
     // FLUX Kontext takes a reference image and transforms it based on prompt
     // while preserving the subject's key features (breed, fur color, markings)
 
+    // Handle customizable prompts (e.g., NFL team photo with custom team/number)
+    let finalPrompt = selectedPose.prompt;
+    if (selectedPose.customizable && customFields) {
+      // Replace {TEAM} and {NUMBER} placeholders
+      finalPrompt = finalPrompt
+        .replace(/{TEAM}/g, customFields.team || 'Kansas City Chiefs')
+        .replace(/{NUMBER}/g, customFields.jerseyNumber || '15');
+    }
+
     // Craft prompt to preserve dog's identity while transforming to iconic scene
-    const enhancedPrompt = `Transform this dog into the following scene: ${selectedPose.prompt}. CRITICAL: Keep the EXACT same dog breed, fur color, facial features, and markings from the reference image. Only change the clothing, pose, and background to match the iconic scene. Professional photo quality, highly detailed, 8k resolution.`;
+    const enhancedPrompt = `Transform this dog into the following scene: ${finalPrompt}. CRITICAL: Keep the EXACT same dog breed, fur color, facial features, and markings from the reference image. Only change the clothing, pose, and background to match the iconic scene. Professional photo quality, highly detailed, 8k resolution.`;
 
     // Using FLUX Kontext Pro - tested and proven to preserve dog identity
     const requestBody = {

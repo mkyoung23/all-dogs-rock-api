@@ -26,6 +26,50 @@
       "templateUrl": "https://replicate.delivery/yhqm/TrQgZT3CYkLXHh3pTFjEiNURqAYp6YzKeGJ9U5HquuegsymVA/out-0.png",
       "thumbnailUrl": "https://replicate.delivery/yhqm/TrQgZT3CYkLXHh3pTFjEiNURqAYp6YzKeGJ9U5HquuegsymVA/out-0.png",
       "prompt": "Recreation of Babe Ruth called shot moment - this exact dog in Yankees pinstripe uniform pointing dramatically to outfield with bat in other paw, 1930s baseball stadium background, vintage black and white photography style, legendary baseball moment, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image."
+    },
+    {
+      "id": "nfl-team-photo",
+      "name": "NFL Team Photo",
+      "description": "Your dog as an NFL player in official team photo - pick your team and jersey number!",
+      "category": "Sports",
+      "customizable": true,
+      "customFields": {
+        "team": {
+          "label": "NFL Team",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Kansas City Chiefs",
+            "Philadelphia Eagles",
+            "Dallas Cowboys",
+            "San Francisco 49ers",
+            "Buffalo Bills",
+            "Cincinnati Bengals",
+            "Green Bay Packers",
+            "New England Patriots",
+            "Pittsburgh Steelers",
+            "Seattle Seahawks",
+            "Miami Dolphins",
+            "Los Angeles Rams",
+            "Baltimore Ravens",
+            "Las Vegas Raiders",
+            "Minnesota Vikings",
+            "Denver Broncos"
+          ],
+          "default": "Kansas City Chiefs"
+        },
+        "jerseyNumber": {
+          "label": "Jersey Number",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 99,
+          "default": 15
+        }
+      },
+      "templateUrl": "https://via.placeholder.com/400x400/013369/FFB612/png?text=NFL+Team+Photo",
+      "thumbnailUrl": "https://via.placeholder.com/400x400/013369/FFB612/png?text=NFL+Team+Photo",
+      "prompt": "Professional NFL team photo - this exact dog's head on football player body wearing {TEAM} uniform and helmet with number {NUMBER} jersey, full football pads and gear, black eye paint under eyes, official team photo background with {TEAM} colors and logo, studio lighting, heroic pose standing with arms crossed or holding football, professional sports photography, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image for the dog's head. Only the body should be human NFL player."
     }
   ]
 }
