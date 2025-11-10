@@ -1,0 +1,595 @@
+{% comment %}
+  CANVAS PRINT PRODUCT PAGE
+  Receives generated dog image via URL parameter
+  Allows customer to position/resize image before purchase
+{% endcomment %}
+
+<style>
+  .product-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .product-header {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 40px;
+  }
+
+  .product-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+
+  .product-header p {
+    font-size: 1.2em;
+    opacity: 0.95;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 968px) {
+    .product-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  .preview-section {
+    background: #f8f9ff;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .preview-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .canvas-container {
+    position: relative;
+    display: inline-block;
+    background: #2c2c2c;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    margin: 20px 0;
+  }
+
+  .canvas-wrap {
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  }
+
+  #previewCanvas {
+    display: block;
+    max-width: 100%;
+    background: white;
+  }
+
+  .canvas-depth {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+    border-radius: 3px;
+    z-index: -1;
+  }
+
+  .controls-section {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .controls-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .control-group {
+    margin-bottom: 30px;
+    padding: 25px;
+    background: #f8f9ff;
+    border-radius: 15px;
+  }
+
+  .control-group h3 {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    color: #667eea;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .control-row label {
+    font-weight: 600;
+    color: #333;
+    min-width: 80px;
+  }
+
+  .control-row input[type="range"] {
+    flex: 1;
+    height: 8px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+  }
+
+  .control-row input[type="range"]::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #667eea;
+    cursor: pointer;
+  }
+
+  .control-row input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #667eea;
+    cursor: pointer;
+  }
+
+  .control-row span {
+    min-width: 50px;
+    font-weight: 600;
+    color: #667eea;
+  }
+
+  .size-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .size-btn {
+    padding: 15px 20px;
+    background: white;
+    border: 3px solid #667eea;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #667eea;
+  }
+
+  .size-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  .size-btn.active {
+    background: #667eea;
+    color: white;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .size-btn .size-label {
+    display: block;
+    font-size: 0.9em;
+    opacity: 0.8;
+    margin-top: 5px;
+  }
+
+  .quick-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    flex: 1;
+    min-width: 150px;
+    padding: 15px 25px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-action:hover {
+    background: #5a6268;
+    transform: scale(1.05);
+  }
+
+  .price-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 15px;
+    color: white;
+    margin-bottom: 30px;
+  }
+
+  .price-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+
+  .price-display {
+    font-size: 3em;
+    font-weight: 900;
+    margin-bottom: 10px;
+  }
+
+  .price-details {
+    font-size: 1em;
+    opacity: 0.9;
+  }
+
+  .btn-add-to-cart {
+    width: 100%;
+    padding: 25px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.5em;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 15px;
+  }
+
+  .btn-add-to-cart:hover {
+    background: #218838;
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  .feature-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .feature-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+  }
+
+  .feature-card h4 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .feature-card p {
+    color: #666;
+    font-size: 0.95em;
+  }
+
+  .alert {
+    padding: 15px 20px;
+    background: #d1ecf1;
+    border: 2px solid #0c5460;
+    border-radius: 10px;
+    color: #0c5460;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+  }
+</style>
+
+<div class="product-container">
+  <div class="product-header">
+    <h1>🎨 Gallery-Wrapped Canvas</h1>
+    <p>Your Iconic Dog • Museum-Quality Canvas • Gallery Look</p>
+  </div>
+
+  <div class="alert">
+    👆 Adjust your image position and size below before adding to cart!
+  </div>
+
+  <div class="product-grid">
+    <!-- Preview Section -->
+    <div class="preview-section">
+      <h2>Live Preview</h2>
+      <div class="canvas-container">
+        <div class="canvas-wrap">
+          <canvas id="previewCanvas" width="500" height="500"></canvas>
+          <div class="canvas-depth"></div>
+        </div>
+      </div>
+      <p style="color: #666; margin-top: 20px;">
+        ⬆️ This is how your canvas print will look!
+      </p>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls-section">
+      <h2>Customize Your Canvas</h2>
+
+      <!-- Size Selection -->
+      <div class="control-group">
+        <h3>📏 Canvas Size</h3>
+        <div class="size-buttons">
+          <button class="size-btn" onclick="selectSize('12x12', 49.99)">
+            <div>12" × 12"</div>
+            <div class="size-label">$49.99</div>
+          </button>
+          <button class="size-btn active" onclick="selectSize('16x16', 59.99)">
+            <div>16" × 16"</div>
+            <div class="size-label">$59.99</div>
+          </button>
+          <button class="size-btn" onclick="selectSize('24x24', 89.99)">
+            <div>24" × 24"</div>
+            <div class="size-label">$89.99</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Image Position -->
+      <div class="control-group">
+        <h3>🎯 Image Position</h3>
+        <div class="control-row">
+          <label>Horizontal:</label>
+          <input type="range" id="posX" min="-100" max="100" value="0" oninput="updateImage()">
+          <span id="posXValue">0</span>
+        </div>
+        <div class="control-row">
+          <label>Vertical:</label>
+          <input type="range" id="posY" min="-100" max="100" value="0" oninput="updateImage()">
+          <span id="posYValue">0</span>
+        </div>
+      </div>
+
+      <!-- Image Size & Rotation -->
+      <div class="control-group">
+        <h3>🔍 Image Size & Rotation</h3>
+        <div class="control-row">
+          <label>Size:</label>
+          <input type="range" id="scale" min="50" max="150" value="100" oninput="updateImage()">
+          <span id="scaleValue">100%</span>
+        </div>
+        <div class="control-row">
+          <label>Rotation:</label>
+          <input type="range" id="rotation" min="-45" max="45" value="0" oninput="updateImage()">
+          <span id="rotationValue">0°</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="control-group">
+        <h3>⚡ Quick Actions</h3>
+        <div class="quick-actions">
+          <button class="btn-action" onclick="resetImage()">↺ Reset</button>
+          <button class="btn-action" onclick="centerImage()">⊕ Center</button>
+          <button class="btn-action" onclick="fitImage()">⛶ Fill Canvas</button>
+        </div>
+      </div>
+
+      <!-- Price & Add to Cart -->
+      <div class="price-section">
+        <h3>Your Order</h3>
+        <div class="price-display" id="priceDisplay">$59.99</div>
+        <div class="price-details">
+          <span id="selectedSize">16" × 16"</span> Gallery-Wrapped Canvas<br>
+          Free Shipping • 1.5" Thick Stretcher Bars
+        </div>
+      </div>
+
+      <button class="btn-add-to-cart" onclick="addToCart()">
+        🛒 Add to Cart
+      </button>
+
+      <button class="btn-action" style="width: 100%;" onclick="goBack()">
+        ← Back to Choose Different Product
+      </button>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h4>Gallery-Wrapped Canvas</h4>
+      <p>Image wraps around 1.5" thick wood bars</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💎</div>
+      <h4>Premium Quality</h4>
+      <p>Fade-resistant inks on archival canvas</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <h4>Free Shipping</h4>
+      <p>Securely packaged and shipped to your door</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔨</div>
+      <h4>Ready to Hang</h4>
+      <p>Arrives ready to display on your wall</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Get image URL from query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const imageUrl = urlParams.get('image');
+  const poseId = urlParams.get('pose');
+
+  // Canvas and image settings
+  const canvas = document.getElementById('previewCanvas');
+  const ctx = canvas.getContext('2d');
+  let dogImage = new Image();
+  dogImage.crossOrigin = "anonymous";
+
+  // Image state
+  let imageState = {
+    x: 0,
+    y: 0,
+    scale: 1.0,
+    rotation: 0,
+    size: '16x16',
+    price: 59.99
+  };
+
+  // Load the generated dog image
+  if (imageUrl) {
+    dogImage.src = imageUrl;
+    dogImage.onload = function() {
+      updateImage();
+    };
+  } else {
+    // Show placeholder if no image
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#666';
+    ctx.font = '20px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No image provided', canvas.width/2, canvas.height/2);
+  }
+
+  function updateImage() {
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (!dogImage.complete) return;
+
+    // Get control values
+    const posX = parseInt(document.getElementById('posX').value);
+    const posY = parseInt(document.getElementById('posY').value);
+    const scale = parseInt(document.getElementById('scale').value) / 100;
+    const rotation = parseInt(document.getElementById('rotation').value);
+
+    // Update display values
+    document.getElementById('posXValue').textContent = posX;
+    document.getElementById('posYValue').textContent = posY;
+    document.getElementById('scaleValue').textContent = scale * 100 + '%';
+    document.getElementById('rotationValue').textContent = rotation + '°';
+
+    // Update state
+    imageState.x = posX;
+    imageState.y = posY;
+    imageState.scale = scale;
+    imageState.rotation = rotation;
+
+    // Save context
+    ctx.save();
+
+    // Move to center
+    ctx.translate(canvas.width/2, canvas.height/2);
+
+    // Apply rotation
+    ctx.rotate(rotation * Math.PI / 180);
+
+    // Apply position offset
+    ctx.translate(posX, posY);
+
+    // Calculate scaled dimensions
+    const imgWidth = dogImage.width * scale;
+    const imgHeight = dogImage.height * scale;
+
+    // Draw image centered
+    ctx.drawImage(dogImage, -imgWidth/2, -imgHeight/2, imgWidth, imgHeight);
+
+    // Restore context
+    ctx.restore();
+  }
+
+  function selectSize(size, price) {
+    imageState.size = size;
+    imageState.price = price;
+
+    // Update UI
+    document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.closest('.size-btn').classList.add('active');
+
+    document.getElementById('priceDisplay').textContent = '$' + price.toFixed(2);
+    document.getElementById('selectedSize').textContent = size.replace('x', '" × ') + '"';
+  }
+
+  function resetImage() {
+    document.getElementById('posX').value = 0;
+    document.getElementById('posY').value = 0;
+    document.getElementById('scale').value = 100;
+    document.getElementById('rotation').value = 0;
+    updateImage();
+  }
+
+  function centerImage() {
+    document.getElementById('posX').value = 0;
+    document.getElementById('posY').value = 0;
+    updateImage();
+  }
+
+  function fitImage() {
+    document.getElementById('scale').value = 100;
+    document.getElementById('rotation').value = 0;
+    centerImage();
+  }
+
+  function addToCart() {
+    // Prepare cart data with image settings
+    const cartData = {
+      imageUrl: imageUrl,
+      poseId: poseId,
+      size: imageState.size,
+      price: imageState.price,
+      position: {
+        x: imageState.x,
+        y: imageState.y,
+        scale: imageState.scale,
+        rotation: imageState.rotation
+      }
+    };
+
+    // Store in session storage for checkout
+    sessionStorage.setItem('iconicDogCanvas', JSON.stringify(cartData));
+
+    // Add to Shopify cart
+    alert('✅ Added to cart! Settings saved:\n\nSize: ' + imageState.size + '\nPrice: $' + imageState.price + '\n\nProceeding to checkout...');
+
+    // Redirect to cart or checkout
+    // window.location.href = '/cart';
+  }
+
+  function goBack() {
+    window.history.back();
+  }
+</script>
