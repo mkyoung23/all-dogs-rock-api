@@ -70,6 +70,15 @@
       "templateUrl": "https://via.placeholder.com/400x400/013369/FFB612/png?text=NFL+Team+Photo",
       "thumbnailUrl": "https://via.placeholder.com/400x400/013369/FFB612/png?text=NFL+Team+Photo",
       "prompt": "Professional NFL team photo - this exact dog's head on football player body wearing {TEAM} uniform and helmet with number {NUMBER} jersey, full football pads and gear, black eye paint under eyes, official team photo background with {TEAM} colors and logo, studio lighting, heroic pose standing with arms crossed or holding football, professional sports photography, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image for the dog's head. Only the body should be human NFL player."
+    },
+    {
+      "id": "presidential-speech",
+      "name": "Presidential Inaugural Speech",
+      "description": "Your dog as the President giving their inaugural speech at the podium with American flags",
+      "category": "History",
+      "templateUrl": "https://via.placeholder.com/400x400/1C3664/FFFFFF/png?text=Presidential+Speech",
+      "thumbnailUrl": "https://via.placeholder.com/400x400/1C3664/FFFFFF/png?text=Presidential+Speech",
+      "prompt": "Recreation of Presidential Inaugural Speech - this exact dog as the President of the United States standing at podium giving inaugural address, wearing formal dark suit and red tie, presidential seal on podium, American flags in background, Capitol Building visible behind, crowd of supporters, official government photography style, inspiring moment, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image."
     }
   ]
 }
