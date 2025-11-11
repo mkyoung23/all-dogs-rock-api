@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SHOPIFY_DOMAIN = '8k5mna-5e.myshopify.com';
+const SHOPIFY_DOMAIN = 'alldogsrockshop.myshopify.com';
 const ACCESS_TOKEN = process.env.SHOPIFY_SECRET_KEY || process.env.SHOPIFY_ACCESS_TOKEN;
 
 async function deployPages() {
