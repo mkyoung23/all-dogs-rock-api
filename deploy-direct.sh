@@ -6,7 +6,7 @@ set -a
 source .env.local 2>/dev/null || true
 set +a
 
-SHOPIFY_DOMAIN="alldogsrockshop.myshopify.com"
+SHOPIFY_DOMAIN="8k5mna-5e.myshopify.com"
 ACCESS_TOKEN="${SHOPIFY_SECRET_KEY:-${SHOPIFY_ACCESS_TOKEN}}"
 
 if [ -z "$ACCESS_TOKEN" ]; then

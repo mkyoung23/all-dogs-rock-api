@@ -8,7 +8,7 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN || 'alldogsrockshop.myshopify.com';
+const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN || '8k5mna-5e.myshopify.com';
 const ACCESS_TOKEN = process.env.SHOPIFY_SECRET_KEY;
 
 /**

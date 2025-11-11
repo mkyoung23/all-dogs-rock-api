@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN || 'alldogsrockshop.myshopify.com';
+  const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN || '8k5mna-5e.myshopify.com';
   const ACCESS_TOKEN = process.env.SHOPIFY_SECRET_KEY
     || process.env.SHOPIFY_ACCESS_TOKEN
     || process.env.ALLDOGSROCK_GALLERY_ADMIN_APP_KEY;
