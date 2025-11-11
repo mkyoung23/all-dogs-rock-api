@@ -15,7 +15,7 @@
  * }
  */
 
-const SHOPIFY_STORE = process.env.SHOPIFY_STORE_DOMAIN || 'alldogsrockshop.myshopify.com';
+const SHOPIFY_STORE = process.env.SHOPIFY_STORE_DOMAIN || '8k5mna-5e.myshopify.com';
 const ACCESS_TOKEN = process.env.SHOPIFY_SECRET_KEY;
 const API_VERSION = '2024-10';
 

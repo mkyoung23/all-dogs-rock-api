@@ -74,7 +74,7 @@ Make sure these are set in **Vercel** → **Project Settings** → **Environment
 ### Required:
 ```
 SHOPIFY_SECRET_KEY=your_shopify_admin_access_token
-SHOPIFY_STORE_DOMAIN=alldogsrockshop.myshopify.com
+SHOPIFY_STORE_DOMAIN=8k5mna-5e.myshopify.com
 REPLICATE_API_TOKEN=your_replicate_api_token
 PRINTIFY_TOKEN=your_printify_bearer_token
 CUSTOMILY_API_KEY=your_customily_api_key

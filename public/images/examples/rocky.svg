@@ -1,0 +1,67 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFB366;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="800" height="800" fill="url(#skyGrad)"/>
+
+  <!-- Philadelphia skyline silhouette -->
+  <rect x="0" y="600" width="800" height="200" fill="#2C3E50" opacity="0.3"/>
+  <rect x="100" y="550" width="80" height="250" fill="#34495E" opacity="0.4"/>
+  <rect x="250" y="580" width="60" height="220" fill="#34495E" opacity="0.4"/>
+  <rect x="400" y="560" width="90" height="240" fill="#34495E" opacity="0.4"/>
+  <rect x="600" y="590" width="70" height="210" fill="#34495E" opacity="0.4"/>
+
+  <!-- Museum steps -->
+  <polygon points="200,700 600,700 550,750 250,750" fill="#8B7355"/>
+  <polygon points="250,750 550,750 500,780 300,780" fill="#A0826D"/>
+  <polygon points="300,780 500,780 450,800 350,800" fill="#8B7355"/>
+
+  <!-- Golden Retriever dog body in grey sweatsuit -->
+  <ellipse cx="400" cy="450" rx="80" ry="110" fill="#808080"/>
+
+  <!-- Dog head (golden retriever colors) -->
+  <ellipse cx="400" cy="320" rx="70" ry="75" fill="#D4A76A"/>
+
+  <!-- Ears -->
+  <ellipse cx="350" cy="310" rx="25" ry="45" fill="#C19A6B"/>
+  <ellipse cx="450" cy="310" rx="25" ry="45" fill="#C19A6B"/>
+
+  <!-- Snout -->
+  <ellipse cx="400" cy="345" rx="35" ry="25" fill="#E5C29F"/>
+
+  <!-- Eyes -->
+  <circle cx="380" cy="315" r="8" fill="#2C3E50"/>
+  <circle cx="420" cy="315" r="8" fill="#2C3E50"/>
+  <circle cx="382" cy="313" r="3" fill="white"/>
+  <circle cx="422" cy="313" r="3" fill="white"/>
+
+  <!-- Nose -->
+  <ellipse cx="400" cy="350" rx="8" ry="6" fill="#000000"/>
+
+  <!-- Happy mouth -->
+  <path d="M 385 355 Q 400 365 415 355" stroke="#2C3E50" stroke-width="2" fill="none"/>
+
+  <!-- Grey sweatband -->
+  <rect x="345" y="285" width="110" height="15" fill="#A9A9A9" rx="3"/>
+
+  <!-- Arms raised triumphantly -->
+  <rect x="310" y="380" width="25" height="90" fill="#808080" transform="rotate(-45 322 380)"/>
+  <rect x="465" y="380" width="25" height="90" fill="#808080" transform="rotate(45 478 380)"/>
+
+  <!-- Paws/hands at end of raised arms -->
+  <circle cx="290" cy="310" r="18" fill="#D4A76A"/>
+  <circle cx="510" cy="310" r="18" fill="#D4A76A"/>
+
+  <!-- Legs in sweatpants -->
+  <rect x="370" y="540" width="30" height="80" fill="#696969"/>
+  <rect x="400" y="540" width="30" height="80" fill="#696969"/>
+
+  <!-- Text -->
+  <text x="400" y="120" font-family="Arial Black, sans-serif" font-size="48" font-weight="bold" fill="#FFD700" text-anchor="middle" stroke="#000" stroke-width="2">ROCKY</text>
+  <text x="400" y="165" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" stroke="#000" stroke-width="1">Victory at the Steps</text>
+</svg>

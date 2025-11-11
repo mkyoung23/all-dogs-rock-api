@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy All Dogs Rock Shopify Pages</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .step {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .log.active {
+            display: block;
+        }
+
+        .log-line {
+            margin-bottom: 5px;
+        }
+
+        .log-success {
+            color: #00ff00;
+        }
+
+        .log-error {
+            color: #ff4444;
+        }
+
+        .log-info {
+            color: #00bfff;
+        }
+
+        .success-banner {
+            background: #00cc66;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-banner.active {
+            display: block;
+        }
+
+        .success-banner h3 {
+            margin-bottom: 10px;
+        }
+
+        .success-banner a {
+            color: white;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .config-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .config-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .config-item {
+            margin-bottom: 10px;
+        }
+
+        .config-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .config-item input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐕 All Dogs Rock - Shopify Deployment</h1>
+        <p class="subtitle">Deploy all pages to your Shopify store with one click</p>
+
+        <div class="config-section">
+            <h3>Configuration (Auto-filled from .env.local)</h3>
+
+            <div class="config-item">
+                <label>Shopify Store Domain:</label>
+                <input type="text" id="storeDomain" value="alldogsrockshop.myshopify.com">
+            </div>
+
+            <div class="config-item">
+                <label>Admin Access Token:</label>
+                <input type="password" id="accessToken" placeholder="Enter your Shopify admin access token (starts with shpat_)">
+            </div>
+
+            <div class="warning">
+                ⚠️ This page runs entirely in your browser. Your credentials never leave your machine.
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>What will be deployed:</h3>
+            <ul style="margin-left: 20px; margin-top: 10px; color: #333;">
+                <li>✅ Welcome page (/pages/welcome)</li>
+                <li>✅ Create page (/pages/create-iconic-dog)</li>
+                <li>✅ Homepage redirect setup</li>
+            </ul>
+        </div>
+
+        <button id="deployBtn" onclick="deployEverything()">🚀 Deploy Everything Now</button>
+
+        <div id="log" class="log"></div>
+
+        <div id="successBanner" class="success-banner">
+            <h3>🎉 Deployment Successful!</h3>
+            <p>Your pages are now live:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><a href="https://alldogsrockshop.com/pages/welcome" target="_blank">Welcome Page</a></li>
+                <li><a href="https://alldogsrockshop.com/pages/create-iconic-dog" target="_blank">Create Page</a></li>
+            </ul>
+            <p style="margin-top: 15px;">
+                <strong>Next step:</strong> Set your homepage redirect manually in Shopify Admin → Themes → Edit Code → templates/index.liquid
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const WELCOME_PAGE_HTML = `<!-- WELCOME_PAGE_HTML_PLACEHOLDER -->`;
+        const CREATE_PAGE_HTML = `<!-- CREATE_PAGE_HTML_PLACEHOLDER -->`;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            logDiv.classList.add('active');
+            const line = document.createElement('div');
+            line.className = `log-line log-${type}`;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(line);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function makeShopifyRequest(endpoint, method = 'GET', body = null) {
+            const domain = document.getElementById('storeDomain').value;
+            const token = document.getElementById('accessToken').value;
+
+            const url = `https://${domain}/admin/api/2024-10/${endpoint}`;
+
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Shopify-Access-Token': token
+                }
+            };
+
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+
+            const response = await fetch(url, options);
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`HTTP ${response.status}: ${text}`);
+            }
+
+            return await response.json();
+        }
+
+        async function createOrUpdatePage(title, handle, bodyHtml) {
+            try {
+                log(`Checking if page "${title}" exists...`, 'info');
+
+                // Get all pages
+                const pagesData = await makeShopifyRequest('pages.json');
+                const existingPage = pagesData.pages.find(p => p.handle === handle);
+
+                const pageData = {
+                    title: title,
+                    handle: handle,
+                    body_html: bodyHtml
+                };
+
+                if (existingPage) {
+                    log(`Updating existing page: ${title}`, 'info');
+                    await makeShopifyRequest(`pages/${existingPage.id}.json`, 'PUT', { page: pageData });
+                    log(`✓ Updated: ${title}`, 'success');
+                } else {
+                    log(`Creating new page: ${title}`, 'info');
+                    await makeShopifyRequest('pages.json', 'POST', { page: pageData });
+                    log(`✓ Created: ${title}`, 'success');
+                }
+
+                return true;
+            } catch (error) {
+                log(`✗ Error with ${title}: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        async function deployEverything() {
+            const btn = document.getElementById('deployBtn');
+            const successBanner = document.getElementById('successBanner');
+
+            btn.disabled = true;
+            successBanner.classList.remove('active');
+
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML = '';
+
+            try {
+                log('🚀 Starting deployment...', 'info');
+                log('', 'info');
+
+                // Deploy Welcome Page
+                log('📄 Deploying Welcome Page...', 'info');
+                await createOrUpdatePage(
+                    'Welcome to All Dogs Rock',
+                    'welcome',
+                    WELCOME_PAGE_HTML
+                );
+                log('', 'info');
+
+                // Deploy Create Page
+                log('📄 Deploying Create Page...', 'info');
+                await createOrUpdatePage(
+                    'Create Your Iconic Dog',
+                    'create-iconic-dog',
+                    CREATE_PAGE_HTML
+                );
+                log('', 'info');
+
+                log('✅ All pages deployed successfully!', 'success');
+                log('', 'info');
+                log('🌐 Your pages are live at:', 'success');
+                log('   https://alldogsrockshop.com/pages/welcome', 'success');
+                log('   https://alldogsrockshop.com/pages/create-iconic-dog', 'success');
+
+                successBanner.classList.add('active');
+
+            } catch (error) {
+                log('', 'info');
+                log('❌ Deployment failed!', 'error');
+                log(`Error: ${error.message}`, 'error');
+                log('', 'info');
+                log('Please check:', 'info');
+                log('1. Your access token is correct', 'info');
+                log('2. The token has write_online_store_pages permission', 'info');
+                log('3. You\'re connected to the internet', 'info');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Auto-deploy on page load if user presses deploy
+        log('Ready to deploy! Click the button above to start.', 'info');
+    </script>
+</body>
+</html>

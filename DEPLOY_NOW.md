@@ -69,7 +69,7 @@ With:
 The script needs these Vercel environment variables (I added `SHOPIFY_STORE_DOMAIN`, check if the others exist):
 
 ```
-SHOPIFY_STORE_DOMAIN=alldogsrockshop.myshopify.com
+SHOPIFY_STORE_DOMAIN=8k5mna-5e.myshopify.com
 SHOPIFY_SECRET_KEY=<from your .env.local file>
 SHOPIFY_ACCESS_TOKEN=<from your .env.local file>
 ```
