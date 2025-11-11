@@ -321,12 +321,12 @@
 
 <div class="product-container">
   <div class="product-header">
-    <h1>👕 Custom T-Shirt</h1>
+    <h1>Custom T-Shirt</h1>
     <p>Your Iconic Dog • Premium Cotton • Perfect Gift</p>
   </div>
 
   <div class="alert">
-    👆 Adjust your design position and size below before adding to cart!
+    Adjust your design position and size below before adding to cart!
   </div>
 
   <div class="product-grid">
@@ -348,7 +348,7 @@
         </div>
       </div>
       <p style="color: #666; margin-top: 20px;">
-        ⬆️ This is how your t-shirt will look!
+        This is how your t-shirt will look!
       </p>
     </div>
 
@@ -381,7 +381,7 @@
 
       <!-- Size Selection -->
       <div class="control-group">
-        <h3>📏 T-Shirt Size</h3>
+        <h3>T-Shirt Size</h3>
         <div class="size-buttons">
           <button class="size-btn" onclick="selectSize('S')">S</button>
           <button class="size-btn" onclick="selectSize('M')">M</button>
@@ -393,7 +393,7 @@
 
       <!-- Design Position -->
       <div class="control-group">
-        <h3>🎯 Design Position</h3>
+        <h3>Design Position</h3>
         <div class="control-row">
           <label>Horizontal:</label>
           <input type="range" id="posX" min="-50" max="50" value="0" oninput="updateImage()">
@@ -408,7 +408,7 @@
 
       <!-- Design Size -->
       <div class="control-group">
-        <h3>🔍 Design Size</h3>
+        <h3>Design Size</h3>
         <div class="control-row">
           <label>Size:</label>
           <input type="range" id="scale" min="50" max="120" value="100" oninput="updateImage()">
@@ -418,10 +418,10 @@
 
       <!-- Quick Actions -->
       <div class="control-group">
-        <h3>⚡ Quick Actions</h3>
+        <h3>Quick Actions</h3>
         <div class="quick-actions">
-          <button class="btn-action" onclick="resetImage()">↺ Reset</button>
-          <button class="btn-action" onclick="centerImage()">⊕ Center</button>
+          <button class="btn-action" onclick="resetImage()">Reset</button>
+          <button class="btn-action" onclick="centerImage()">Center</button>
         </div>
       </div>
 
@@ -436,11 +436,11 @@
       </div>
 
       <button class="btn-add-to-cart" onclick="addToCart()">
-        🛒 Add to Cart
+        Add to Cart
       </button>
 
       <button class="btn-action" style="width: 100%;" onclick="goBack()">
-        ← Back to Choose Different Product
+        Back to Choose Different Product
       </button>
     </div>
   </div>
@@ -612,7 +612,7 @@
     sessionStorage.setItem('iconicDogTShirt', JSON.stringify(cartData));
 
     // Add to Shopify cart
-    alert('✅ Added to cart! Settings saved:\n\nSize: ' + imageState.size + '\nColor: ' + imageState.color + '\nPrice: $29.99\n\nProceeding to checkout...');
+    alert('Added to cart! Settings saved:\n\nSize: ' + imageState.size + '\nColor: ' + imageState.color + '\nPrice: $29.99\n\nProceeding to checkout...');
 
     // Redirect to cart or checkout
     // window.location.href = '/cart';

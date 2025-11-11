@@ -286,11 +286,6 @@
     border-color: #667eea;
   }
 
-  .product-icon {
-    font-size: 5em;
-    margin-bottom: 20px;
-  }
-
   .product-card h3 {
     font-size: 1.8em;
     margin-bottom: 15px;
@@ -358,12 +353,11 @@
   <!-- STAGE 1: Upload Dog Photos -->
   <div id="stage1" class="stage active">
     <div class="stage-header">
-      <h1>🐕 Step 1: Upload Your Dog's Photos</h1>
+      <h1>Step 1: Upload Your Dog's Photos</h1>
       <p>Upload 1-3 photos of your dog from different angles so we can capture their features perfectly</p>
     </div>
 
     <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-      <div style="font-size: 4em; margin-bottom: 20px;">📷</div>
       <p style="font-size: 1.3em; margin-bottom: 10px;">Click to upload or drag & drop</p>
       <p style="color: #666;">JPG or PNG • Max 10MB per photo • 1-3 photos recommended</p>
     </div>
@@ -373,15 +367,15 @@
     <div id="photoPreviews" class="photo-previews"></div>
 
     <button class="btn-primary" id="continueBtn1" onclick="goToStage2()" disabled>
-      Continue to Choose Template →
+      Continue to Choose Template
     </button>
   </div>
 
   <!-- STAGE 2: Choose Template -->
   <div id="stage2" class="stage">
     <div class="stage-header">
-      <h1>🎨 Step 2: Choose Your Iconic Pose</h1>
-      <p>Select which famous image you want your dog in</p>
+      <h1>Step 2: Choose Your Iconic Pose</h1>
+      <p>Select which famous image you want your dog in. See real AI-generated examples below!</p>
     </div>
 
     <div class="templates-grid">
@@ -390,8 +384,9 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg/500px-Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg" class="template-image" alt="Washington Crossing Delaware">
         <h2>Washington Crossing the Delaware</h2>
         <p>Your dog as General Washington, heroically leading troops across the icy Delaware River!</p>
+        <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog in this iconic scene</p>
         <button class="btn-primary" onclick="selectPose('washington-crossing')">
-          Transform My Dog! →
+          Transform My Dog
         </button>
       </div>
 
@@ -400,8 +395,9 @@
         <img src="https://replicate.delivery/yhqm/1ut7IpU4wbJfZKEa9D5DLBuoenHtYe2N6QQKIRzHuF0sVlNrA/out-0.png" class="template-image" alt="Rocky">
         <h2>Rocky at the Steps</h2>
         <p>Your dog as Rocky Balboa with arms raised triumphantly at the Philadelphia Museum steps!</p>
+        <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog as Rocky</p>
         <button class="btn-primary" onclick="selectPose('rocky-statue')">
-          Transform My Dog! →
+          Transform My Dog
         </button>
       </div>
 
@@ -410,8 +406,9 @@
         <img src="https://replicate.delivery/yhqm/TrQgZT3CYkLXHh3pTFjEiNURqAYp6YzKeGJ9U5HquuegsymVA/out-0.png" class="template-image" alt="Babe Ruth">
         <h2>Babe Ruth Called Shot</h2>
         <p>Your dog as Babe Ruth pointing to the outfield in the legendary called shot moment!</p>
+        <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog as Babe Ruth</p>
         <button class="btn-primary" onclick="selectPose('babe-ruth-called-shot')">
-          Transform My Dog! →
+          Transform My Dog
         </button>
       </div>
 
@@ -420,8 +417,9 @@
         <img src="https://via.placeholder.com/400x250/1C3664/FFFFFF/png?text=Presidential+Speech" class="template-image" alt="Presidential Speech">
         <h2>Presidential Inaugural Speech</h2>
         <p>Your dog as the President giving their inaugural address at the podium with American flags!</p>
+        <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated presidential dog</p>
         <button class="btn-primary" onclick="selectPose('presidential-speech')">
-          Transform My Dog! →
+          Transform My Dog
         </button>
       </div>
 
@@ -430,6 +428,7 @@
         <img src="https://via.placeholder.com/400x250/013369/FFB612/png?text=NFL+Team+Photo" class="template-image" alt="NFL Team">
         <h2>NFL Team Photo</h2>
         <p>Your dog as an NFL player! Pick your team and jersey number below:</p>
+        <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog in NFL uniform</p>
 
         <div class="custom-options">
           <label for="nflTeam">Select NFL Team:</label>
@@ -457,26 +456,26 @@
         </div>
 
         <button class="btn-primary" onclick="selectNFLPose()">
-          Transform My Dog! →
+          Transform My Dog
         </button>
       </div>
     </div>
 
-    <button class="btn-secondary" onclick="goToStage1()">← Back to Upload Photos</button>
+    <button class="btn-secondary" onclick="goToStage1()">Back to Upload Photos</button>
   </div>
 
   <!-- STAGE 3: Generating & Result -->
   <div id="stage3" class="stage">
     <div class="stage-header">
-      <h1>✨ Step 3: Your Iconic Dog is Ready!</h1>
+      <h1>Step 3: Your Iconic Dog is Ready!</h1>
       <p>Here's your dog transformed into an icon</p>
     </div>
 
     <div class="result-container" id="resultContainer">
       <img id="resultImage" class="result-image" alt="Your iconic dog">
       <div style="margin-top: 30px;">
-        <button class="btn-success" onclick="goToStage4()">Choose Your Product →</button>
-        <button class="btn-secondary" onclick="startOver()">← Start Over</button>
+        <button class="btn-success" onclick="goToStage4()">Choose Your Product</button>
+        <button class="btn-secondary" onclick="startOver()">Start Over</button>
       </div>
     </div>
   </div>
@@ -484,7 +483,7 @@
   <!-- STAGE 4: Choose Product -->
   <div id="stage4" class="stage">
     <div class="stage-header">
-      <h1>🛍️ Step 4: Choose Your Product</h1>
+      <h1>Step 4: Choose Your Product</h1>
       <p>Select how you want your iconic dog delivered</p>
     </div>
 
@@ -496,7 +495,6 @@
     <div class="products-grid">
       <!-- Framed Print -->
       <div class="product-card">
-        <div class="product-icon">🖼️</div>
         <h3>Framed Print</h3>
         <p class="product-description">Museum-quality print in a premium frame, ready to hang</p>
         <div class="product-price">$49.99</div>
@@ -514,7 +512,6 @@
 
       <!-- Canvas Print -->
       <div class="product-card">
-        <div class="product-icon">🎨</div>
         <h3>Canvas Print</h3>
         <p class="product-description">Gallery-wrapped canvas stretched on wood frame</p>
         <div class="product-price">$59.99</div>
@@ -532,7 +529,6 @@
 
       <!-- T-Shirt -->
       <div class="product-card">
-        <div class="product-icon">👕</div>
         <h3>Custom T-Shirt</h3>
         <p class="product-description">Your iconic dog printed on premium quality cotton tee</p>
         <div class="product-price">$29.99</div>
@@ -550,7 +546,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 40px;">
-      <button class="btn-secondary" onclick="goToStage3()">← Back to View Image</button>
+      <button class="btn-secondary" onclick="goToStage3()">Back to View Image</button>
       <button class="btn-secondary" onclick="startOver()">Start Over</button>
     </div>
   </div>
@@ -560,7 +556,7 @@
 <div id="loadingOverlay" class="loading-overlay">
   <div class="loading-content">
     <div class="spinner"></div>
-    <h2 style="margin-bottom: 15px;">🎨 Creating Your Masterpiece...</h2>
+    <h2 style="margin-bottom: 15px;">Creating Your Masterpiece...</h2>
     <p id="loadingText">Analyzing your dog's features...</p>
     <p style="color: #666; margin-top: 10px;">This takes about 10-15 seconds</p>
   </div>
