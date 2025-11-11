@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Your Homepage - All Dogs Rock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2.8em;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.3em;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 5px solid #667eea;
+        }
+
+        .info-box h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+            font-size: 1.5em;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .info-box ul li {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 22px 50px;
+            font-size: 1.4em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+
+        .status h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .test-links {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .test-links a {
+            display: block;
+            margin: 10px 0;
+            color: #0070f3;
+            font-weight: 600;
+            font-size: 1.1em;
+            text-decoration: none;
+        }
+
+        .test-links a:hover {
+            text-decoration: underline;
+        }
+
+        .log {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            border: 2px solid #dee2e6;
+        }
+
+        .log-entry {
+            margin: 8px 0;
+            padding: 8px;
+            line-height: 1.5;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 4px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .subtitle {
+                font-size: 1.1em;
+            }
+
+            button {
+                font-size: 1.2em;
+                padding: 18px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fix Your Homepage</h1>
+        <p class="subtitle">Make your Shopify store show the new welcome page when visitors go to alldogsrockshop.com or your Shopify URL</p>
+
+        <div class="info-box">
+            <h3>What This Will Do:</h3>
+            <ul>
+                <li>Create/update the beautiful welcome page in your Shopify store</li>
+                <li>Redirect your homepage to show this welcome page</li>
+                <li>Work for both alldogsrockshop.com AND 8k5mna-5e.myshopify.com</li>
+                <li>Preserve your original homepage template as a backup</li>
+            </ul>
+        </div>
+
+        <button id="fixBtn" onclick="fixHomepage()">
+            <span id="btnText">Fix My Homepage Now</span>
+            <span id="spinner" class="spinner" style="display: none;"></span>
+        </button>
+
+        <div id="status" class="status"></div>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://all-dogs-rock-api-v2.vercel.app/api/setup-homepage-complete';
+
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.style.display = 'block';
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function showStatus(html, type) {
+            const status = document.getElementById('status');
+            status.innerHTML = html;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        async function fixHomepage() {
+            const btn = document.getElementById('fixBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+
+            btn.disabled = true;
+            btnText.textContent = 'Fixing Your Homepage...';
+            spinner.style.display = 'inline-block';
+            document.getElementById('log').innerHTML = '';
+
+            showStatus('Connecting to API and updating your Shopify store...', 'loading');
+            log('Starting homepage fix...');
+
+            try {
+                log('Calling API endpoint...');
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                log(`Response status: ${response.status}`);
+
+                const data = await response.json();
+
+                // Log all server logs
+                if (data.logs && Array.isArray(data.logs)) {
+                    data.logs.forEach(logMsg => log(logMsg));
+                }
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'API request failed');
+                }
+
+                log('SUCCESS! Homepage fixed!');
+
+                const successHTML = `
+                    <h3>SUCCESS! Your Homepage is Fixed!</h3>
+                    <p>Your Shopify store now shows the beautiful welcome page!</p>
+                    <div class="test-links">
+                        <strong>Test these URLs (they should all show the welcome page now):</strong>
+                        ${data.testUrls.map(url => `<a href="${url}" target="_blank">${url}</a>`).join('')}
+                    </div>
+                    <p style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(0,0,0,0.1);">
+                        <strong>Note:</strong> It may take 1-2 minutes for the changes to appear.
+                        If you still see the old page, try clearing your browser cache or opening in an incognito window.
+                    </p>
+                `;
+
+                showStatus(successHTML, 'success');
+
+            } catch (error) {
+                log(`ERROR: ${error.message}`);
+
+                const errorHTML = `
+                    <h3>Error Occurred</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p style="margin-top: 15px;">Please check the log below for details. If the problem persists, contact support.</p>
+                `;
+
+                showStatus(errorHTML, 'error');
+                console.error('Full error:', error);
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Fix My Homepage Now';
+                spinner.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
