@@ -315,22 +315,22 @@ const WELCOME_PAGE_CONTENT = `
 
     <div class="examples-grid">
       <div class="example-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg/500px-Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg" class="example-image" alt="Washington">
+        <img src="/images/examples/george-washington.svg" class="example-image" alt="Washington">
         <h4>Washington Crossing Delaware</h4>
       </div>
 
       <div class="example-card">
-        <img src="https://replicate.delivery/yhqm/1ut7IpU4wbJfZKEa9D5DLBuoenHtYe2N6QQKIRzHuF0sVlNrA/out-0.png" class="example-image" alt="Rocky">
+        <img src="/images/examples/rocky.svg" class="example-image" alt="Rocky">
         <h4>Rocky at the Steps</h4>
       </div>
 
       <div class="example-card">
-        <img src="https://replicate.delivery/yhqm/TrQgZT3CYkLXHh3pTFjEiNURqAYp6YzKeGJ9U5HquuegsymVA/out-0.png" class="example-image" alt="Babe Ruth">
+        <img src="/images/examples/babe-ruth.svg" class="example-image" alt="Babe Ruth">
         <h4>Babe Ruth Called Shot</h4>
       </div>
 
       <div class="example-card">
-        <img src="https://via.placeholder.com/400x250/1C3664/FFFFFF/png?text=Presidential+Speech" class="example-image" alt="President">
+        <img src="/images/examples/presidential-speech.svg" class="example-image" alt="President">
         <h4>Presidential Speech</h4>
       </div>
     </div>
