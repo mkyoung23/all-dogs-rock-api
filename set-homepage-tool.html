@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Homepage to Welcome Page</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            background: #0070f3;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #0051cc;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+        .log-entry {
+            margin: 5px 0;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Set Homepage to Welcome Page</h1>
+        <p class="subtitle">Click the button below to set alldogsrockshop.com to redirect to the welcome page</p>
+
+        <button id="setHomepageBtn" onclick="setHomepage()">
+            Set Homepage Now
+        </button>
+
+        <div id="status" class="status"></div>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        const SHOPIFY_STORE = 'alldogsrockshop.myshopify.com';
+        const ACCESS_TOKEN = prompt('Enter your Shopify Admin Access Token (shpat_...)');
+        const API_VERSION = '2024-10';
+
+        if (!ACCESS_TOKEN || !ACCESS_TOKEN.startsWith('shpat_')) {
+            alert('Invalid access token provided. Token must start with "shpat_"');
+            document.getElementById('setHomepageBtn').disabled = true;
+        }
+
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.style.display = 'block';
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        async function graphqlQuery(query, variables = {}) {
+            const url = `https://${SHOPIFY_STORE}/admin/api/${API_VERSION}/graphql.json`;
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Shopify-Access-Token': ACCESS_TOKEN
+                },
+                body: JSON.stringify({ query, variables })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.errors) {
+                throw new Error(`GraphQL Errors: ${JSON.stringify(data.errors, null, 2)}`);
+            }
+
+            return data.data;
+        }
+
+        async function setHomepage() {
+            const btn = document.getElementById('setHomepageBtn');
+            btn.disabled = true;
+            document.getElementById('log').innerHTML = '';
+
+            showStatus('Setting homepage...', 'loading');
+            log('Starting homepage setup...');
+
+            try {
+                // Step 1: Get all pages
+                log('Fetching pages from Shopify...');
+                const pagesData = await graphqlQuery(`
+                    query {
+                        pages(first: 50) {
+                            edges {
+                                node {
+                                    id
+                                    title
+                                    handle
+                                }
+                            }
+                        }
+                    }
+                `);
+
+                const pages = pagesData.pages.edges.map(e => e.node);
+                log(`Found ${pages.length} pages`);
+
+                const welcomePage = pages.find(p => p.handle === 'welcome');
+
+                if (!welcomePage) {
+                    throw new Error('Welcome page not found! Please create it first.');
+                }
+
+                log(`✓ Found welcome page: "${welcomePage.title}"`);
+
+                // Step 2: Get active theme
+                log('Fetching active theme...');
+                const themesData = await graphqlQuery(`
+                    query {
+                        themes(first: 10) {
+                            edges {
+                                node {
+                                    id
+                                    name
+                                    role
+                                }
+                            }
+                        }
+                    }
+                `);
+
+                const themes = themesData.themes.edges.map(e => e.node);
+                const activeTheme = themes.find(t => t.role === 'MAIN');
+
+                if (!activeTheme) {
+                    throw new Error('No active theme found!');
+                }
+
+                log(`✓ Found active theme: "${activeTheme.name}"`);
+
+                // Step 3: Get current index.liquid content
+                log('Fetching current homepage template...');
+                const fileData = await graphqlQuery(`
+                    query($themeId: ID!) {
+                        theme(id: $themeId) {
+                            file(filename: "templates/index.liquid") {
+                                ... on OnlineStoreThemeFileBodyText {
+                                    content
+                                }
+                            }
+                        }
+                    }
+                `, { themeId: activeTheme.id });
+
+                if (!fileData.theme || !fileData.theme.file) {
+                    throw new Error('index.liquid template not found in theme!');
+                }
+
+                const currentContent = fileData.theme.file.content;
+                log(`✓ Got current template (${currentContent.length} characters)`);
+
+                // Step 4: Create new content with redirect
+                log('Creating new homepage with redirect...');
+                const timestamp = new Date().toISOString();
+                const newContent = `{%- comment -%}
+AUTO-REDIRECT TO WELCOME PAGE
+Modified by Homepage Setup Tool
+Date: ${timestamp}
+{%- endcomment -%}
+
+<script>
+  // Immediate redirect to welcome page
+  window.location.replace('/pages/welcome');
+</script>
+
+<noscript>
+  <meta http-equiv="refresh" content="0; url=/pages/welcome">
+  <p>Redirecting to <a href="/pages/welcome">Welcome Page</a>...</p>
+</noscript>
+
+{%- comment -%}
+ORIGINAL HOMEPAGE TEMPLATE (PRESERVED BELOW)
+{%- endcomment -%}
+${currentContent}`;
+
+                // Step 5: Update the file
+                log('Updating theme template...');
+                const updateResult = await graphqlQuery(`
+                    mutation($themeId: ID!, $files: [OnlineStoreThemeFilesUpsertFileInput!]!) {
+                        onlineStoreThemeFilesUpsert(themeId: $themeId, files: $files) {
+                            upsertedThemeFiles {
+                                filename
+                            }
+                            userErrors {
+                                field
+                                message
+                            }
+                        }
+                    }
+                `, {
+                    themeId: activeTheme.id,
+                    files: [{
+                        filename: 'templates/index.liquid',
+                        body: {
+                            type: 'TEXT',
+                            value: newContent
+                        }
+                    }]
+                });
+
+                if (updateResult.onlineStoreThemeFilesUpsert.userErrors.length > 0) {
+                    throw new Error(`Update failed: ${JSON.stringify(updateResult.onlineStoreThemeFilesUpsert.userErrors)}`);
+                }
+
+                log('✓ Theme template updated successfully!');
+                log('');
+                log('SUCCESS! Homepage now redirects to welcome page.');
+                log(`Test it: https://alldogsrockshop.com`);
+
+                showStatus(
+                    '✓ SUCCESS! Your homepage now redirects to the welcome page. Visit alldogsrockshop.com to test it!',
+                    'success'
+                );
+
+            } catch (error) {
+                log(`✗ ERROR: ${error.message}`);
+                showStatus(`Error: ${error.message}`, 'error');
+                console.error('Full error:', error);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
