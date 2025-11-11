@@ -5,8 +5,8 @@
       "name": "Washington Crossing the Delaware",
       "description": "Your dog as General Washington crossing the Delaware River in the famous Revolutionary War painting",
       "category": "History",
-      "templateUrl": "https://replicate.delivery/yhqm/PdsGnrFv3Wq1EJ2F6HI7FoT5GaSKFcfOX3NLk2sH0Xj1VZzKA/out-0.png",
-      "thumbnailUrl": "https://replicate.delivery/yhqm/PdsGnrFv3Wq1EJ2F6HI7FoT5GaSKFcfOX3NLk2sH0Xj1VZzKA/out-0.png",
+      "templateUrl": "/images/examples/george-washington.svg",
+      "thumbnailUrl": "/images/examples/george-washington.svg",
       "prompt": "Recreation of Washington Crossing the Delaware painting - this exact dog as General Washington standing heroically in boat crossing icy river, Revolutionary War uniform with cape flowing, soldiers rowing boat, American flag, chunks of ice in water, dramatic historical oil painting style, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image."
     },
     {
@@ -14,8 +14,8 @@
       "name": "Rocky at the Steps",
       "description": "Your dog as Rocky Balboa with arms raised triumphantly at the top of the Philadelphia Museum steps",
       "category": "Movies",
-      "templateUrl": "https://replicate.delivery/yhqm/1ut7IpU4wbJfZKEa9D5DLBuoenHtYe2N6QQKIRzHuF0sVlNrA/out-0.png",
-      "thumbnailUrl": "https://replicate.delivery/yhqm/1ut7IpU4wbJfZKEa9D5DLBuoenHtYe2N6QQKIRzHuF0sVlNrA/out-0.png",
+      "templateUrl": "/images/examples/rocky.svg",
+      "thumbnailUrl": "/images/examples/rocky.svg",
       "prompt": "Recreation of the iconic Rocky Balboa victory pose - this exact dog standing at top of Philadelphia Museum of Art steps with both arms raised triumphantly overhead, wearing grey sweatsuit and sweatband, sunrise lighting, view of Philadelphia city in background, inspiring movie scene, cinematic photography, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image."
     },
     {
@@ -23,8 +23,8 @@
       "name": "Babe Ruth Called Shot",
       "description": "Your dog as Babe Ruth pointing to the outfield in the legendary called shot moment",
       "category": "Sports",
-      "templateUrl": "https://replicate.delivery/yhqm/TrQgZT3CYkLXHh3pTFjEiNURqAYp6YzKeGJ9U5HquuegsymVA/out-0.png",
-      "thumbnailUrl": "https://replicate.delivery/yhqm/TrQgZT3CYkLXHh3pTFjEiNURqAYp6YzKeGJ9U5HquuegsymVA/out-0.png",
+      "templateUrl": "/images/examples/babe-ruth.svg",
+      "thumbnailUrl": "/images/examples/babe-ruth.svg",
       "prompt": "Recreation of Babe Ruth called shot moment - this exact dog in Yankees pinstripe uniform pointing dramatically to outfield with bat in other paw, 1930s baseball stadium background, vintage black and white photography style, legendary baseball moment, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image."
     },
     {
@@ -67,8 +67,8 @@
           "default": 15
         }
       },
-      "templateUrl": "https://via.placeholder.com/400x400/013369/FFB612/png?text=NFL+Team+Photo",
-      "thumbnailUrl": "https://via.placeholder.com/400x400/013369/FFB612/png?text=NFL+Team+Photo",
+      "templateUrl": "/images/examples/nfl-team.svg",
+      "thumbnailUrl": "/images/examples/nfl-team.svg",
       "prompt": "Professional NFL team photo - this exact dog's head on football player body wearing {TEAM} uniform and helmet with number {NUMBER} jersey, full football pads and gear, black eye paint under eyes, official team photo background with {TEAM} colors and logo, studio lighting, heroic pose standing with arms crossed or holding football, professional sports photography, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image for the dog's head. Only the body should be human NFL player."
     },
     {
@@ -76,9 +76,18 @@
       "name": "Presidential Inaugural Speech",
       "description": "Your dog as the President giving their inaugural speech at the podium with American flags",
       "category": "History",
-      "templateUrl": "https://via.placeholder.com/400x400/1C3664/FFFFFF/png?text=Presidential+Speech",
-      "thumbnailUrl": "https://via.placeholder.com/400x400/1C3664/FFFFFF/png?text=Presidential+Speech",
+      "templateUrl": "/images/examples/presidential-speech.svg",
+      "thumbnailUrl": "/images/examples/presidential-speech.svg",
       "prompt": "Recreation of Presidential Inaugural Speech - this exact dog as the President of the United States standing at podium giving inaugural address, wearing formal dark suit and red tie, presidential seal on podium, American flags in background, Capitol Building visible behind, crowd of supporters, official government photography style, inspiring moment, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image."
+    },
+    {
+      "id": "santa-claus",
+      "name": "Santa Paws",
+      "description": "Your dog as Santa Claus spreading holiday cheer with gifts and festive spirit",
+      "category": "Holiday",
+      "templateUrl": "/images/examples/santa-claus.svg",
+      "thumbnailUrl": "/images/examples/santa-claus.svg",
+      "prompt": "Festive Christmas scene - this exact dog as Santa Claus wearing full red Santa suit with white fur trim, black belt with gold buckle, red Santa hat with white pom-pom, sitting with presents and Christmas decorations, snowy winter wonderland background with Christmas tree, twinkling lights, warm holiday atmosphere, joyful expression, professional holiday card photography, 8k, highly detailed. CRITICAL: Preserve the exact breed, fur color, facial features, and markings from the reference image."
     }
   ]
 }

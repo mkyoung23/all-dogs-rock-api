@@ -1,0 +1,117 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="snowGrad">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4682B4;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- Winter sky background -->
+  <rect width="800" height="800" fill="url(#snowGrad)"/>
+
+  <!-- Falling snow -->
+  <circle cx="100" cy="150" r="4" fill="white" opacity="0.8"/>
+  <circle cx="250" cy="80" r="3" fill="white" opacity="0.9"/>
+  <circle cx="400" cy="200" r="5" fill="white" opacity="0.7"/>
+  <circle cx="600" cy="120" r="4" fill="white" opacity="0.8"/>
+  <circle cx="700" cy="180" r="3" fill="white" opacity="0.9"/>
+  <circle cx="150" cy="400" r="3" fill="white" opacity="0.7"/>
+  <circle cx="500" cy="350" r="4" fill="white" opacity="0.8"/>
+  <circle cx="650" cy="420" r="3" fill="white" opacity="0.9"/>
+  <circle cx="300" cy="500" r="4" fill="white" opacity="0.8"/>
+  <circle cx="550" cy="550" r="3" fill="white" opacity="0.7"/>
+  <circle cx="200" cy="650" r="4" fill="white" opacity="0.8"/>
+  <circle cx="720" cy="600" r="3" fill="white" opacity="0.9"/>
+
+  <!-- Snow ground -->
+  <ellipse cx="400" cy="750" rx="450" ry="80" fill="white" opacity="0.9"/>
+
+  <!-- Christmas tree in background -->
+  <polygon points="650,450 700,550 600,550" fill="#2D5016"/>
+  <polygon points="650,500 720,620 580,620" fill="#2D5016"/>
+  <rect x="640" y="620" width="20" height="40" fill="#654321"/>
+  <circle cx="650" cy="460" r="6" fill="#FFD700"/>
+  <circle cx="620" cy="520" r="5" fill="#E31837"/>
+  <circle cx="680" cy="540" r="5" fill="#E31837"/>
+
+  <!-- Santa suit body -->
+  <ellipse cx="400" cy="480" rx="100" ry="130" fill="#E31837"/>
+
+  <!-- Black belt -->
+  <rect x="300" y="490" width="200" height="35" fill="#2C2C2C"/>
+  <rect x="375" y="495" width="50" height="25" fill="#FFD700" rx="3"/>
+  <rect x="390" y="500" width="20" height="15" fill="#2C2C2C"/>
+
+  <!-- White fur trim on coat -->
+  <ellipse cx="400" cy="365" rx="105" ry="20" fill="white"/>
+  <rect x="295" y="365" width="20" height="130" fill="white"/>
+  <rect x="485" y="365" width="20" fill="white"/>
+
+  <!-- Golden Retriever head -->
+  <ellipse cx="400" cy="300" rx="75" ry="80" fill="#D4A76A"/>
+
+  <!-- Ears -->
+  <ellipse cx="345" cy="290" rx="28" ry="50" fill="#C19A6B"/>
+  <ellipse cx="455" cy="290" rx="28" ry="50" fill="#C19A6B"/>
+
+  <!-- Santa hat -->
+  <path d="M 330 230 L 400 180 L 470 230 L 460 280 L 340 280 Z" fill="#E31837"/>
+  <ellipse cx="400" cy="280" rx="75" ry="18" fill="white"/>
+  <circle cx="400" cy="175" r="20" fill="white"/>
+
+  <!-- Snout -->
+  <ellipse cx="400" cy="325" rx="38" ry="28" fill="#E5C29F"/>
+
+  <!-- Happy eyes -->
+  <circle cx="378" cy="300" r="9" fill="#2C3E50"/>
+  <circle cx="422" cy="300" r="9" fill="#2C3E50"/>
+  <circle cx="381" cy="297" r="3.5" fill="white"/>
+  <circle cx="425" cy="297" r="3.5" fill="white"/>
+
+  <!-- Nose -->
+  <ellipse cx="400" cy="333" rx="9" ry="7" fill="#000000"/>
+
+  <!-- Big happy smile -->
+  <path d="M 380 342 Q 400 358 420 342" stroke="#2C3E50" stroke-width="3" fill="none"/>
+
+  <!-- Tongue out playfully -->
+  <ellipse cx="400" cy="355" rx="12" ry="8" fill="#FF6B9D"/>
+
+  <!-- Santa coat arms -->
+  <rect x="280" y="400" width="35" height="120" fill="#E31837" transform="rotate(-15 297 400)"/>
+  <rect x="485" y="400" width="35" height="120" fill="#E31837" transform="rotate(15 502 400)"/>
+
+  <!-- White fur cuffs -->
+  <ellipse cx="270" cy="520" rx="22" ry="15" fill="white" transform="rotate(-15 270 520)"/>
+  <ellipse cx="530" cy="520" rx="22" ry="15" fill="white" transform="rotate(15 530 520)"/>
+
+  <!-- Paws with white mittens -->
+  <ellipse cx="260" cy="540" rx="28" ry="23" fill="white"/>
+  <ellipse cx="540" cy="540" rx="28" ry="23" fill="white"/>
+  <circle cx="258" cy="535" r="6" fill="#E5C29F"/>
+  <circle cx="542" cy="535" r="6" fill="#E5C29F"/>
+
+  <!-- Santa pants -->
+  <rect x="355" y="595" width="45" height="100" fill="#E31837"/>
+  <rect x="400" y="595" width="45" height="100" fill="#E31837"/>
+
+  <!-- Black boots -->
+  <rect x="345" y="685" width="60" height="50" fill="#2C2C2C" rx="8"/>
+  <rect x="395" y="685" width="60" height="50" fill="#2C2C2C" rx="8"/>
+  <rect x="345" y="710" width="60" height="10" fill="#FFD700"/>
+  <rect x="395" y="710" width="60" height="10" fill="#FFD700"/>
+
+  <!-- Gift box in hand -->
+  <rect x="510" y="510" width="50" height="50" fill="#2E7D32"/>
+  <rect x="530" y="510" width="10" height="50" fill="#FFD700"/>
+  <rect x="510" y="530" width="50" height="10" fill="#FFD700"/>
+  <path d="M 535 510 L 525 490 L 545 490 Z" fill="#E31837"/>
+
+  <!-- Jingle bells on belt -->
+  <circle cx="360" cy="507" r="6" fill="#FFD700"/>
+  <circle cx="440" cy="507" r="6" fill="#FFD700"/>
+
+  <!-- Text -->
+  <text x="400" y="90" font-family="Arial Black, sans-serif" font-size="58" font-weight="bold" fill="#E31837" text-anchor="middle" stroke="white" stroke-width="3">SANTA PAWS</text>
+  <text x="400" y="145" font-family="Arial, sans-serif" font-size="32" fill="white" text-anchor="middle" stroke="#2C2C2C" stroke-width="1">Ho Ho Ho!</text>
+</svg>

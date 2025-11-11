@@ -1,0 +1,113 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Vintage sepia background -->
+  <rect width="800" height="800" fill="#E8DCC8"/>
+
+  <!-- Add vintage photo grain effect -->
+  <rect width="800" height="800" fill="#3E3E3E" opacity="0.05"/>
+
+  <!-- Baseball stadium background (1930s style) -->
+  <rect x="0" y="550" width="800" height="250" fill="#5A4A3A"/>
+
+  <!-- Stadium stands -->
+  <rect x="50" y="350" width="200" height="200" fill="#6B5B4A" opacity="0.4"/>
+  <rect x="550" y="350" width="200" height="200" fill="#6B5B4A" opacity="0.4"/>
+
+  <!-- Stadium crowd (simplified) -->
+  <circle cx="100" cy="400" r="8" fill="#2C2C2C" opacity="0.6"/>
+  <circle cx="130" cy="410" r="8" fill="#2C2C2C" opacity="0.6"/>
+  <circle cx="160" cy="405" r="8" fill="#2C2C2C" opacity="0.6"/>
+  <circle cx="190" cy="415" r="8" fill="#2C2C2C" opacity="0.6"/>
+  <circle cx="620" cy="400" r="8" fill="#2C2C2C" opacity="0.6"/>
+  <circle cx="650" cy="410" r="8" fill="#2C2C2C" opacity="0.6"/>
+  <circle cx="680" cy="405" r="8" fill="#2C2C2C" opacity="0.6"/>
+
+  <!-- Outfield wall -->
+  <rect x="0" y="520" width="800" height="30" fill="#4A3A2A"/>
+
+  <!-- Yankee Stadium outfield distance markers -->
+  <text x="150" y="543" font-family="Arial, sans-serif" font-size="18" fill="white" text-anchor="middle">405</text>
+  <text x="650" y="543" font-family="Arial, sans-serif" font-size="18" fill="white" text-anchor="middle">408</text>
+
+  <!-- Yankees pinstripe uniform body -->
+  <ellipse cx="400" cy="460" rx="85" ry="120" fill="white"/>
+
+  <!-- Pinstripes -->
+  <line x1="350" y1="360" x2="350" y2="560" stroke="#1C3F7A" stroke-width="4"/>
+  <line x1="370" y1="360" x2="370" y2="560" stroke="#1C3F7A" stroke-width="4"/>
+  <line x1="390" y1="360" x2="390" y2="560" stroke="#1C3F7A" stroke-width="4"/>
+  <line x1="410" y1="360" x2="410" y2="560" stroke="#1C3F7A" stroke-width="4"/>
+  <line x1="430" y1="360" x2="430" y2="560" stroke="#1C3F7A" stroke-width="4"/>
+  <line x1="450" y1="360" x2="450" y2="560" stroke="#1C3F7A" stroke-width="4"/>
+
+  <!-- Yankees NY logo on chest -->
+  <text x="400" y="470" font-family="Times New Roman, serif" font-size="80" font-weight="bold" fill="#1C3F7A" text-anchor="middle">NY</text>
+
+  <!-- Golden Retriever head -->
+  <ellipse cx="400" cy="290" rx="70" ry="75" fill="#D4A76A"/>
+
+  <!-- Ears -->
+  <ellipse cx="350" cy="280" rx="25" ry="45" fill="#C19A6B"/>
+  <ellipse cx="450" cy="280" rx="25" ry="45" fill="#C19A6B"/>
+
+  <!-- Yankees cap -->
+  <ellipse cx="400" cy="240" rx="75" ry="35" fill="#1C3F7A"/>
+  <rect x="325" y="230" width="150" height="25" fill="#1C3F7A"/>
+  <ellipse cx="400" cy="255" rx="75" ry="15" fill="#0F2347"/>
+
+  <!-- NY on cap -->
+  <text x="400" y="255" font-family="Times New Roman, serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">NY</text>
+
+  <!-- Cap bill -->
+  <ellipse cx="400" cy="265" rx="85" ry="20" fill="#0A1A2F"/>
+
+  <!-- Snout -->
+  <ellipse cx="400" cy="315" rx="35" ry="25" fill="#E5C29F"/>
+
+  <!-- Eyes with determined expression -->
+  <circle cx="380" cy="290" r="8" fill="#2C3E50"/>
+  <circle cx="420" cy="290" r="8" fill="#2C3E50"/>
+  <circle cx="382" cy="288" r="3" fill="white"/>
+  <circle cx="422" cy="288" r="3" fill="white"/>
+
+  <!-- Nose -->
+  <ellipse cx="400" cy="322" rx="8" ry="6" fill="#000000"/>
+
+  <!-- Confident smile -->
+  <path d="M 385 330 Q 400 338 415 330" stroke="#2C3E50" stroke-width="2" fill="none"/>
+
+  <!-- Right arm POINTING to outfield (the famous called shot) -->
+  <rect x="480" y="350" width="28" height="130" fill="#E5C29F" transform="rotate(-35 494 350)"/>
+
+  <!-- Pointing finger/paw extended -->
+  <circle cx="600" cy="240" r="22" fill="#E5C29F"/>
+  <polygon points="605,235 625,220 630,230 610,245" fill="#E5C29F"/>
+
+  <!-- Left arm holding bat -->
+  <rect x="292" y="380" width="28" height="100" fill="#E5C29F" transform="rotate(25 306 380)"/>
+  <circle cx="250" cy="500" r="20" fill="#E5C29F"/>
+
+  <!-- Baseball bat -->
+  <rect x="230" y="480" width="18" height="180" fill="#8B4513" rx="9" transform="rotate(-15 239 480)"/>
+  <rect x="230" y="480" width="18" height="40" fill="#654321" rx="9" transform="rotate(-15 239 480)"/>
+
+  <!-- Pants (pinstripe) -->
+  <rect x="355" y="560" width="45" height="100" fill="white"/>
+  <rect x="400" y="560" width="45" height="100" fill="white"/>
+  <line x1="370" y1="560" x2="370" y2="660" stroke="#1C3F7A" stroke-width="3"/>
+  <line x1="385" y1="560" x2="385" y2="660" stroke="#1C3F7A" stroke-width="3"/>
+  <line x1="415" y1="560" x2="415" y2="660" stroke="#1C3F7A" stroke-width="3"/>
+  <line x1="430" y1="560" x2="430" y2="660" stroke="#1C3F7A" stroke-width="3"/>
+
+  <!-- Cleats -->
+  <rect x="350" y="655" width="50" height="25" fill="#2C2C2C" rx="3"/>
+  <rect x="395" y="655" width="50" height="25" fill="#2C2C2C" rx="3"/>
+
+  <!-- Arrow pointing to outfield -->
+  <line x1="620" y1="230" x2="720" y2="150" stroke="#E31837" stroke-width="6" opacity="0.7"/>
+  <polygon points="720,150 710,160 730,165" fill="#E31837" opacity="0.7"/>
+
+  <!-- Text -->
+  <text x="400" y="90" font-family="Times New Roman, serif" font-size="52" font-weight="bold" fill="#1C3F7A" text-anchor="middle" stroke="#000" stroke-width="2">BABE RUTH</text>
+  <text x="400" y="140" font-family="Times New Roman, serif" font-size="28" font-style="italic" fill="#2C2C2C" text-anchor="middle">The Called Shot - 1932</text>
+  <text x="730" y="130" font-family="Arial, sans-serif" font-size="20" fill="#E31837" text-anchor="middle">HERE</text>
+</svg>

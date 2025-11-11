@@ -1,0 +1,95 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A5568;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2D3748;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Stormy sky -->
+  <rect width="800" height="400" fill="#3E4A59"/>
+
+  <!-- Icy water -->
+  <rect y="400" width="800" height="400" fill="url(#waterGrad)"/>
+
+  <!-- Ice chunks in water -->
+  <polygon points="100,650 150,630 180,660 130,680" fill="#B0C4DE" opacity="0.7"/>
+  <polygon points="600,580 660,570 680,600 620,610" fill="#B0C4DE" opacity="0.7"/>
+  <polygon points="300,720 350,710 370,735 320,745" fill="#B0C4DE" opacity="0.7"/>
+  <polygon points="520,670 570,660 590,685 540,695" fill="#B0C4DE" opacity="0.7"/>
+
+  <!-- Wooden boat -->
+  <path d="M 200 500 L 180 650 L 220 680 L 580 680 L 620 650 L 600 500 Z" fill="#654321" stroke="#3E2723" stroke-width="3"/>
+  <path d="M 200 500 L 600 500 L 590 520 L 210 520 Z" fill="#8B4513"/>
+
+  <!-- Boat interior planks -->
+  <line x1="220" y1="520" x2="220" y2="670" stroke="#3E2723" stroke-width="2"/>
+  <line x1="300" y1="520" x2="280" y2="670" stroke="#3E2723" stroke-width="2"/>
+  <line x1="400" y1="520" x2="380" y2="670" stroke="#3E2723" stroke-width="2"/>
+  <line x1="500" y1="520" x2="480" y2="670" stroke="#3E2723" stroke-width="2"/>
+  <line x1="580" y1="520" x2="580" y2="670" stroke="#3E2723" stroke-width="2"/>
+
+  <!-- American flag -->
+  <rect x="320" y="280" width="90" height="60" fill="#B22234"/>
+  <rect x="320" y="287" width="90" height="8" fill="white"/>
+  <rect x="320" y="303" width="90" height="8" fill="white"/>
+  <rect x="320" y="319" width="90" height="8" fill="white"/>
+  <rect x="320" y="280" width="35" height="33" fill="#3C3B6E"/>
+  <polygon points="330,285 332,292 339,292 333,296 335,303 330,299 325,303 327,296 321,292 328,292" fill="white"/>
+  <polygon points="350,285 352,292 359,292 353,296 355,303 350,299 345,303 347,296 341,292 348,292" fill="white"/>
+  <rect x="315" y="270" width="5" height="180" fill="#654321"/>
+
+  <!-- Golden Retriever as Washington -->
+  <!-- Colonial coat body -->
+  <ellipse cx="400" cy="420" rx="70" ry="90" fill="#1C3F7A"/>
+
+  <!-- Gold epaulettes -->
+  <rect x="340" y="370" width="40" height="15" fill="#FFD700" rx="3"/>
+  <rect x="420" y="370" width="40" height="15" fill="#FFD700" rx="3"/>
+
+  <!-- White collar -->
+  <path d="M 360 380 L 380 410 L 420 410 L 440 380" fill="white"/>
+
+  <!-- Dog head (golden retriever) -->
+  <ellipse cx="400" cy="340" rx="65" ry="70" fill="#D4A76A"/>
+
+  <!-- White powdered wig -->
+  <ellipse cx="400" cy="295" rx="75" ry="45" fill="#F5F5F5"/>
+  <ellipse cx="340" cy="315" rx="30" ry="40" fill="#F5F5F5"/>
+  <ellipse cx="460" cy="315" rx="30" ry="40" fill="#F5F5F5"/>
+
+  <!-- Ears under wig -->
+  <ellipse cx="350" cy="330" rx="20" ry="35" fill="#C19A6B"/>
+  <ellipse cx="450" cy="330" rx="20" ry="35" fill="#C19A6B"/>
+
+  <!-- Snout -->
+  <ellipse cx="400" cy="360" rx="32" ry="23" fill="#E5C29F"/>
+
+  <!-- Eyes -->
+  <circle cx="382" cy="335" r="7" fill="#2C3E50"/>
+  <circle cx="418" cy="335" r="7" fill="#2C3E50"/>
+  <circle cx="384" cy="333" r="2.5" fill="white"/>
+  <circle cx="420" cy="333" r="2.5" fill="white"/>
+
+  <!-- Nose -->
+  <ellipse cx="400" cy="368" rx="7" ry="5" fill="#000000"/>
+
+  <!-- Determined expression -->
+  <path d="M 385 373 L 415 373" stroke="#2C3E50" stroke-width="2" fill="none"/>
+
+  <!-- Cape flowing -->
+  <path d="M 340 380 Q 280 420 260 520 L 270 650" fill="#8B0000" opacity="0.8"/>
+  <path d="M 460 380 Q 320 450 300 650" fill="#8B0000" opacity="0.7"/>
+
+  <!-- Arm pointing forward heroically -->
+  <rect x="450" y="400" width="80" height="22" fill="#1C3F7A" transform="rotate(-15 490 411)"/>
+  <circle cx="525" cy="390" r="16" fill="#E5C29F"/>
+
+  <!-- Other soldiers in background (simplified) -->
+  <ellipse cx="280" cy="550" rx="25" ry="35" fill="#4A5568" opacity="0.6"/>
+  <ellipse cx="520" cy="560" rx="25" ry="35" fill="#4A5568" opacity="0.6"/>
+
+  <!-- Text -->
+  <text x="400" y="100" font-family="Georgia, serif" font-size="44" font-weight="bold" fill="#FFD700" text-anchor="middle" stroke="#000" stroke-width="2">WASHINGTON</text>
+  <text x="400" y="145" font-family="Georgia, serif" font-size="26" fill="white" text-anchor="middle" stroke="#000" stroke-width="1">Crossing the Delaware</text>
+</svg>
