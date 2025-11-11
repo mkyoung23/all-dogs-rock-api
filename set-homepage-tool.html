@@ -101,13 +101,26 @@
 
     <script>
         const SHOPIFY_STORE = 'alldogsrockshop.myshopify.com';
-        const ACCESS_TOKEN = prompt('Enter your Shopify Admin Access Token (shpat_...)');
         const API_VERSION = '2024-10';
 
-        if (!ACCESS_TOKEN || !ACCESS_TOKEN.startsWith('shpat_')) {
-            alert('Invalid access token provided. Token must start with "shpat_"');
-            document.getElementById('setHomepageBtn').disabled = true;
-        }
+        let ACCESS_TOKEN = null;
+
+        // Wait for page to load before prompting
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                ACCESS_TOKEN = prompt('Enter your Shopify Admin Access Token\n\nGet yours at:\nhttps://admin.shopify.com/store/alldogsrockshop/settings/apps/development\n\nToken must start with "shpat_"');
+
+                if (!ACCESS_TOKEN) {
+                    showStatus('No token provided. Please refresh the page and enter your token to continue.', 'error');
+                    document.getElementById('setHomepageBtn').disabled = true;
+                } else if (!ACCESS_TOKEN.startsWith('shpat_')) {
+                    showStatus('Invalid token format. Token must start with "shpat_". Please refresh and try again.', 'error');
+                    document.getElementById('setHomepageBtn').disabled = true;
+                } else {
+                    showStatus('Ready! Click "Set Homepage Now" to redirect your homepage to the welcome page.', 'success');
+                }
+            }, 500);
+        });
 
         function log(message) {
             const logDiv = document.getElementById('log');
