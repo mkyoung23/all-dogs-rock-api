@@ -276,11 +276,6 @@
     text-align: center;
   }
 
-  .feature-icon {
-    font-size: 3em;
-    margin-bottom: 15px;
-  }
-
   .feature-card h4 {
     font-size: 1.2em;
     margin-bottom: 10px;
@@ -306,12 +301,12 @@
 
 <div class="product-container">
   <div class="product-header">
-    <h1>🖼️ Premium Framed Print</h1>
+    <h1>Premium Framed Print</h1>
     <p>Your Iconic Dog • Museum-Quality Frame • Ready to Hang</p>
   </div>
 
   <div class="alert">
-    👆 Adjust your image position and size below before adding to cart!
+    Adjust your image position and size below before adding to cart!
   </div>
 
   <div class="product-grid">
@@ -324,7 +319,7 @@
         </div>
       </div>
       <p style="color: #666; margin-top: 20px;">
-        ⬆️ This is how your framed print will look!
+        This is how your framed print will look!
       </p>
     </div>
 
@@ -334,7 +329,7 @@
 
       <!-- Size Selection -->
       <div class="control-group">
-        <h3>📏 Frame Size</h3>
+        <h3>Frame Size</h3>
         <div class="size-buttons">
           <button class="size-btn" onclick="selectSize('12x12', 39.99)">
             <div>12" × 12"</div>
@@ -353,7 +348,7 @@
 
       <!-- Image Position -->
       <div class="control-group">
-        <h3>🎯 Image Position</h3>
+        <h3>Image Position</h3>
         <div class="control-row">
           <label>Horizontal:</label>
           <input type="range" id="posX" min="-100" max="100" value="0" oninput="updateImage()">
@@ -368,7 +363,7 @@
 
       <!-- Image Size & Rotation -->
       <div class="control-group">
-        <h3>🔍 Image Size & Rotation</h3>
+        <h3>Image Size & Rotation</h3>
         <div class="control-row">
           <label>Size:</label>
           <input type="range" id="scale" min="50" max="150" value="100" oninput="updateImage()">
@@ -383,11 +378,11 @@
 
       <!-- Quick Actions -->
       <div class="control-group">
-        <h3>⚡ Quick Actions</h3>
+        <h3>Quick Actions</h3>
         <div class="quick-actions">
-          <button class="btn-action" onclick="resetImage()">↺ Reset</button>
-          <button class="btn-action" onclick="centerImage()">⊕ Center</button>
-          <button class="btn-action" onclick="fitImage()">⛶ Fit to Frame</button>
+          <button class="btn-action" onclick="resetImage()">Reset</button>
+          <button class="btn-action" onclick="centerImage()">Center</button>
+          <button class="btn-action" onclick="fitImage()">Fit to Frame</button>
         </div>
       </div>
 
@@ -402,11 +397,11 @@
       </div>
 
       <button class="btn-add-to-cart" onclick="addToCart()">
-        🛒 Add to Cart
+        Add to Cart
       </button>
 
       <button class="btn-action" style="width: 100%;" onclick="goBack()">
-        ← Back to Choose Different Product
+        Back to Choose Different Product
       </button>
     </div>
   </div>
@@ -414,22 +409,18 @@
   <!-- Features -->
   <div class="features-grid">
     <div class="feature-card">
-      <div class="feature-icon">🖼️</div>
       <h4>Premium Wooden Frame</h4>
       <p>High-quality wood with protective glass front</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">🎨</div>
       <h4>Museum-Grade Print</h4>
       <p>Archival quality paper, fade-resistant inks</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">📦</div>
       <h4>Free Shipping</h4>
       <p>Carefully packaged and shipped to your door</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">🔨</div>
       <h4>Ready to Hang</h4>
       <p>Includes hanging hardware and instructions</p>
     </div>
@@ -574,7 +565,7 @@
     sessionStorage.setItem('iconicDogFramed', JSON.stringify(cartData));
 
     // Add to Shopify cart (you'll need to configure this with your product variant IDs)
-    alert('✅ Added to cart! Settings saved:\n\nSize: ' + imageState.size + '\nPrice: $' + imageState.price + '\n\nProceeding to checkout...');
+    alert('Added to cart! Settings saved:\n\nSize: ' + imageState.size + '\nPrice: $' + imageState.price + '\n\nProceeding to checkout...');
 
     // Redirect to cart or checkout
     // window.location.href = '/cart';
