@@ -503,54 +503,54 @@
       </div>
 
       <div class="products-grid">
-        <!-- Framed Print -->
+        <!-- Poster Print (Starter Tier) -->
         <div class="product-card">
-          <h3>Framed Print</h3>
-          <p class="product-description">Museum-quality print in a premium frame, ready to hang</p>
-          <div class="product-price">$49.99</div>
+          <h3>12x18" Poster Print</h3>
+          <p class="product-description">Museum-quality matte poster - perfect starter piece!</p>
+          <div class="product-price">$29.99</div>
           <ul class="product-features">
-            <li>Premium wooden frame</li>
-            <li>Museum-grade paper print</li>
-            <li>Multiple sizes available</li>
-            <li>Ready to hang hardware</li>
-            <li>Glass front protection</li>
+            <li>12" x 18" premium poster</li>
+            <li>High-quality matte finish</li>
+            <li>Acid-free archival paper</li>
+            <li>Vibrant, long-lasting colors</li>
+            <li>Ready to frame & display</li>
           </ul>
-          <button class="btn-primary" onclick="addToCartFramed()">
-            Add Framed Print to Cart
+          <button class="btn-primary" onclick="addToCartPoster()">
+            Get Poster Print
           </button>
         </div>
 
-        <!-- Canvas Print -->
+        <!-- T-Shirt (Mid Tier) -->
         <div class="product-card">
-          <h3>Canvas Print</h3>
-          <p class="product-description">Gallery-wrapped canvas stretched on wood frame</p>
-          <div class="product-price">$59.99</div>
+          <h3>Premium T-Shirt</h3>
+          <p class="product-description">Wearable art - show off your iconic dog everywhere!</p>
+          <div class="product-price">$44.99</div>
           <ul class="product-features">
-            <li>Gallery-wrapped canvas</li>
-            <li>1.5" thick wood stretcher bars</li>
-            <li>Fade-resistant inks</li>
+            <li>Unisex sizing (S-2XL)</li>
+            <li>Premium cotton blend</li>
+            <li>Vibrant, durable print</li>
+            <li>Pre-shrunk & soft</li>
+            <li>Conversation starter!</li>
+          </ul>
+          <button class="btn-primary" onclick="addToCartTShirt()">
+            Get T-Shirt
+          </button>
+        </div>
+
+        <!-- Canvas Print (Premium Tier) -->
+        <div class="product-card">
+          <h3>16x20" Canvas Print</h3>
+          <p class="product-description">Gallery-wrapped masterpiece - the ultimate statement piece!</p>
+          <div class="product-price">$79.99</div>
+          <ul class="product-features">
+            <li>16" x 20" stretched canvas</li>
+            <li>Museum-quality cotton blend</li>
+            <li>1.5" deep wood frame</li>
             <li>Ready to hang</li>
             <li>Professional gallery look</li>
           </ul>
           <button class="btn-primary" onclick="addToCartCanvas()">
-            Add Canvas Print to Cart
-          </button>
-        </div>
-
-        <!-- T-Shirt -->
-        <div class="product-card">
-          <h3>Custom T-Shirt</h3>
-          <p class="product-description">Your iconic dog printed on premium quality cotton tee</p>
-          <div class="product-price">$29.99</div>
-          <ul class="product-features">
-            <li>100% premium cotton</li>
-            <li>High-quality direct print</li>
-            <li>Multiple sizes & colors</li>
-            <li>Machine washable</li>
-            <li>Soft & comfortable fit</li>
-          </ul>
-          <button class="btn-primary" onclick="addToCartTShirt()">
-            Add T-Shirt to Cart
+            Get Canvas Print
           </button>
         </div>
       </div>
@@ -743,22 +743,69 @@
     }
 
     // Add to cart functions for each product type
-    function addToCartFramed() {
-      alert('Framed Print product integration coming soon! Your image URL: ' + finalImageUrl);
-      // In production, this would redirect to Shopify product page with the image
-      // window.location.href = `/products/framed-iconic-dog-print?image=${encodeURIComponent(finalImageUrl)}&pose=${encodeURIComponent(selectedPoseId)}`;
+    async function addToCartPoster() {
+      await createProductAndCheckout('poster', 'Poster Print', '$29.99');
     }
 
-    function addToCartCanvas() {
-      alert('Canvas Print product integration coming soon! Your image URL: ' + finalImageUrl);
-      // In production, this would redirect to Shopify product page with the image
-      // window.location.href = `/products/canvas-iconic-dog-print?image=${encodeURIComponent(finalImageUrl)}&pose=${encodeURIComponent(selectedPoseId)}`;
+    async function addToCartTShirt() {
+      await createProductAndCheckout('tshirt', 'Premium T-Shirt', '$44.99');
     }
 
-    function addToCartTShirt() {
-      alert('T-Shirt product integration coming soon! Your image URL: ' + finalImageUrl);
-      // In production, this would redirect to Shopify product page with the image
-      // window.location.href = `/products/iconic-dog-tshirt?image=${encodeURIComponent(finalImageUrl)}&pose=${encodeURIComponent(selectedPoseId)}`;
+    async function addToCartCanvas() {
+      await createProductAndCheckout('canvas', 'Canvas Print', '$79.99');
+    }
+
+    // Main function to create Printify product and redirect to checkout
+    async function createProductAndCheckout(productTier, productName, price) {
+      if (!finalImageUrl) {
+        alert('Error: No image found. Please generate an image first.');
+        return;
+      }
+
+      // Show loading
+      showLoading(true);
+      updateLoadingText(`Creating your custom ${productName}... This may take 30-60 seconds.`);
+
+      try {
+        // Call our create-and-checkout API
+        const response = await fetch('/api/create-and-checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            imageUrl: finalImageUrl,
+            productTier: productTier,
+            poseName: selectedPoseId,
+            dogName: 'Your Dog' // Could capture this from user input if you add a form field
+          })
+        });
+
+        const data = await response.json();
+        showLoading(false);
+
+        if (data.success) {
+          // Success! Redirect to checkout or product page
+          if (data.checkoutUrl) {
+            // Direct to checkout (fastest)
+            updateLoadingText('Redirecting to checkout...');
+            window.location.href = data.checkoutUrl;
+          } else if (data.productUrl) {
+            // Or go to product page first
+            updateLoadingText('Redirecting to product page...');
+            window.location.href = data.productUrl;
+          } else {
+            // Fallback: show success message with product ID
+            alert(`Success! Your ${productName} (${price}) has been created!\n\nPrintify Product ID: ${data.printifyProductId}\n\nPlease check your Shopify store to complete the purchase.`);
+          }
+        } else {
+          alert('Failed to create product: ' + (data.error || 'Unknown error.\n\nPlease try again or contact support.'));
+        }
+      } catch (error) {
+        showLoading(false);
+        console.error('Error creating product:', error);
+        alert('Failed to create product. Please try again or contact support.\n\nError: ' + error.message);
+      }
     }
 
     function startOver() {
