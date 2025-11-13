@@ -356,6 +356,158 @@
       color: #666;
       font-size: 1em;
     }
+
+    /* Product Mockup Editor Styles */
+    .product-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .product-tab {
+      background: white;
+      color: #667eea;
+      border: 3px solid #667eea;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .product-tab:hover {
+      background: #f0f0ff;
+    }
+
+    .product-tab.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #764ba2;
+    }
+
+    .mockup-editor-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin: 40px 0;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 900px) {
+      .mockup-editor-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mockup-preview-area {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    #productMockupCanvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .editor-controls {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .editor-controls h3 {
+      font-size: 1.6em;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .control-group {
+      margin: 25px 0;
+    }
+
+    .control-group label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+
+    .control-group label span:last-child {
+      color: #667eea;
+      font-weight: 700;
+    }
+
+    .control-group input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: #e0e0e0;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .control-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
+    }
+
+    .control-group input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
+    }
+
+    .product-details-section {
+      max-width: 800px;
+      margin: 40px auto;
+    }
+
+    .product-details {
+      display: none;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .product-details.active {
+      display: block;
+    }
+
+    .product-details h3 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .btn-lg {
+      font-size: 1.4em;
+      padding: 20px 60px;
+    }
   </style>
 </head>
 <body>
@@ -391,10 +543,10 @@
       <div class="templates-grid">
         <!-- Washington Crossing Delaware -->
         <div class="template-card">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg/500px-Washington_Crossing_the_Delaware_by_Emanuel_Leutze%2C_MMA-NYC%2C_1851.jpg" class="template-image" alt="Washington Crossing Delaware">
+          <img src="/images/examples/george-washington.svg" class="template-image" alt="Washington Crossing Delaware">
           <h2>Washington Crossing the Delaware</h2>
           <p>Your dog as General Washington, heroically leading troops across the icy Delaware River!</p>
-          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog in this iconic scene</p>
+          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: See what your dog could look like!</p>
           <button class="btn-primary" onclick="selectPose('washington-crossing')">
             Transform My Dog
           </button>
@@ -402,10 +554,10 @@
 
         <!-- Rocky at Steps -->
         <div class="template-card">
-          <img src="https://replicate.delivery/yhqm/1ut7IpU4wbJfZKEa9D5DLBuoenHtYe2N6QQKIRzHuF0sVlNrA/out-0.png" class="template-image" alt="Rocky">
+          <img src="/images/examples/rocky.svg" class="template-image" alt="Rocky">
           <h2>Rocky at the Steps</h2>
           <p>Your dog as Rocky Balboa with arms raised triumphantly at the Philadelphia Museum steps!</p>
-          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog as Rocky</p>
+          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: See what your dog could look like!</p>
           <button class="btn-primary" onclick="selectPose('rocky-statue')">
             Transform My Dog
           </button>
@@ -413,10 +565,10 @@
 
         <!-- Babe Ruth -->
         <div class="template-card">
-          <img src="https://replicate.delivery/yhqm/TrQgZT3CYkLXHh3pTFjEiNURqAYp6YzKeGJ9U5HquuegsymVA/out-0.png" class="template-image" alt="Babe Ruth">
+          <img src="/images/examples/babe-ruth.svg" class="template-image" alt="Babe Ruth">
           <h2>Babe Ruth Called Shot</h2>
           <p>Your dog as Babe Ruth pointing to the outfield in the legendary called shot moment!</p>
-          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog as Babe Ruth</p>
+          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: See what your dog could look like!</p>
           <button class="btn-primary" onclick="selectPose('babe-ruth-called-shot')">
             Transform My Dog
           </button>
@@ -424,10 +576,10 @@
 
         <!-- Presidential Speech -->
         <div class="template-card">
-          <img src="https://via.placeholder.com/400x250/1C3664/FFFFFF/png?text=Presidential+Speech" class="template-image" alt="Presidential Speech">
+          <img src="/images/examples/presidential-speech.svg" class="template-image" alt="Presidential Speech">
           <h2>Presidential Inaugural Speech</h2>
           <p>Your dog as the President giving their inaugural address at the podium with American flags!</p>
-          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated presidential dog</p>
+          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: See what your dog could look like!</p>
           <button class="btn-primary" onclick="selectPose('presidential-speech')">
             Transform My Dog
           </button>
@@ -435,10 +587,10 @@
 
         <!-- NFL Team Photo -->
         <div class="template-card">
-          <img src="https://via.placeholder.com/400x250/013369/FFB612/png?text=NFL+Team+Photo" class="template-image" alt="NFL Team">
+          <img src="/images/examples/nfl-team.svg" class="template-image" alt="NFL Team">
           <h2>NFL Team Photo</h2>
           <p>Your dog as an NFL player! Pick your team and jersey number below:</p>
-          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog in NFL uniform</p>
+          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: See what your dog could look like!</p>
 
           <div class="custom-options">
             <label for="nflTeam">Select NFL Team:</label>
@@ -472,10 +624,10 @@
 
         <!-- Santa Paws -->
         <div class="template-card">
-          <img src="https://via.placeholder.com/400x250/C41E3A/FFFFFF/png?text=Santa+Paws" class="template-image" alt="Santa Paws">
+          <img src="/images/examples/santa-claus.svg" class="template-image" alt="Santa Paws">
           <h2>Santa Paws</h2>
           <p>Your dog as Santa Claus spreading holiday cheer with gifts and festive Christmas decorations!</p>
-          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: AI-generated dog as Santa</p>
+          <p style="font-size: 0.85em; color: #999; font-style: italic; margin-bottom: 15px;">Example: See what your dog could look like!</p>
           <button class="btn-primary" onclick="selectPose('santa-claus')">
             Transform My Dog
           </button>
@@ -501,24 +653,82 @@
       </div>
     </div>
 
-    <!-- STAGE 4: Choose Product -->
+    <!-- STAGE 4: Choose Product with Live Mockup Editor -->
     <div id="stage4" class="stage">
       <div class="stage-header">
-        <h1>Step 4: Choose Your Product</h1>
-        <p>Select how you want your iconic dog delivered</p>
+        <h1>Step 4: Preview & Choose Your Product</h1>
+        <p>See your dog on the product and adjust the fit perfectly!</p>
       </div>
 
-      <div class="generated-preview">
-        <img id="previewImage" alt="Your Generated Dog">
-        <p><strong>Your Generated Image</strong><br>This will be printed on your chosen product!</p>
+      <!-- Product Tabs -->
+      <div class="product-tabs">
+        <button class="product-tab active" onclick="switchProduct('poster')" id="tab-poster">
+          Poster $29.99
+        </button>
+        <button class="product-tab" onclick="switchProduct('tshirt')" id="tab-tshirt">
+          T-Shirt $44.99
+        </button>
+        <button class="product-tab" onclick="switchProduct('canvas')" id="tab-canvas">
+          Canvas $79.99
+        </button>
       </div>
 
-      <div class="products-grid">
-        <!-- Poster Print (Starter Tier) -->
-        <div class="product-card">
-          <h3>12x18" Poster Print</h3>
-          <p class="product-description">Museum-quality matte poster - perfect starter piece!</p>
-          <div class="product-price">$29.99</div>
+      <!-- Live Product Mockup -->
+      <div class="mockup-editor-container">
+        <div class="mockup-preview-area">
+          <canvas id="productMockupCanvas" width="600" height="600"></canvas>
+          <p style="text-align: center; color: #666; margin-top: 15px;">
+            <strong>Live Preview:</strong> Adjust the fit below
+          </p>
+        </div>
+
+        <!-- Image Editor Controls -->
+        <div class="editor-controls">
+          <h3>Adjust Your Image Fit</h3>
+          <p style="color: #666; margin-bottom: 20px;">Fine-tune how your dog appears on the product</p>
+
+          <div class="control-group">
+            <label>
+              <span>Zoom / Scale</span>
+              <span id="scaleValue">100%</span>
+            </label>
+            <input type="range" id="scaleSlider" min="50" max="200" value="100" oninput="updateMockup()">
+          </div>
+
+          <div class="control-group">
+            <label>
+              <span>Position X (Left/Right)</span>
+              <span id="posXValue">Center</span>
+            </label>
+            <input type="range" id="posXSlider" min="-100" max="100" value="0" oninput="updateMockup()">
+          </div>
+
+          <div class="control-group">
+            <label>
+              <span>Position Y (Up/Down)</span>
+              <span id="posYValue">Center</span>
+            </label>
+            <input type="range" id="posYSlider" min="-100" max="100" value="0" oninput="updateMockup()">
+          </div>
+
+          <div class="control-group">
+            <label>
+              <span>Rotation</span>
+              <span id="rotationValue">0°</span>
+            </label>
+            <input type="range" id="rotationSlider" min="-45" max="45" value="0" oninput="updateMockup()">
+          </div>
+
+          <button class="btn-secondary" onclick="resetEditor()" style="width: 100%; margin-top: 15px;">
+            Reset to Default
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="product-details-section">
+        <div id="product-details-poster" class="product-details active">
+          <h3>12x18" Poster Print - $29.99</h3>
           <ul class="product-features">
             <li>12" x 18" premium poster</li>
             <li>High-quality matte finish</li>
@@ -526,16 +736,13 @@
             <li>Vibrant, long-lasting colors</li>
             <li>Ready to frame & display</li>
           </ul>
-          <button class="btn-primary" onclick="addToCartPoster()">
-            Get Poster Print
+          <button class="btn-success btn-lg" onclick="addToCartPoster()">
+            Add Poster to Cart - $29.99
           </button>
         </div>
 
-        <!-- T-Shirt (Mid Tier) -->
-        <div class="product-card">
-          <h3>Premium T-Shirt</h3>
-          <p class="product-description">Wearable art - show off your iconic dog everywhere!</p>
-          <div class="product-price">$44.99</div>
+        <div id="product-details-tshirt" class="product-details">
+          <h3>Premium T-Shirt - $44.99</h3>
           <ul class="product-features">
             <li>Unisex sizing (S-2XL)</li>
             <li>Premium cotton blend</li>
@@ -543,16 +750,13 @@
             <li>Pre-shrunk & soft</li>
             <li>Conversation starter!</li>
           </ul>
-          <button class="btn-primary" onclick="addToCartTShirt()">
-            Get T-Shirt
+          <button class="btn-success btn-lg" onclick="addToCartTShirt()">
+            Add T-Shirt to Cart - $44.99
           </button>
         </div>
 
-        <!-- Canvas Print (Premium Tier) -->
-        <div class="product-card">
-          <h3>16x20" Canvas Print</h3>
-          <p class="product-description">Gallery-wrapped masterpiece - the ultimate statement piece!</p>
-          <div class="product-price">$79.99</div>
+        <div id="product-details-canvas" class="product-details">
+          <h3>16x20" Canvas Print - $79.99</h3>
           <ul class="product-features">
             <li>16" x 20" stretched canvas</li>
             <li>Museum-quality cotton blend</li>
@@ -560,8 +764,8 @@
             <li>Ready to hang</li>
             <li>Professional gallery look</li>
           </ul>
-          <button class="btn-primary" onclick="addToCartCanvas()">
-            Get Canvas Print
+          <button class="btn-success btn-lg" onclick="addToCartCanvas()">
+            Add Canvas to Cart - $79.99
           </button>
         </div>
       </div>
@@ -762,10 +966,201 @@
       showStage('stage3');
     }
 
+    // Product mockup state
+    let currentProduct = 'poster';
+    let mockupImage = null;
+    let imageTransform = {
+      scale: 1.0,
+      posX: 0,
+      posY: 0,
+      rotation: 0
+    };
+
     function goToStage4() {
-      // Update preview image in stage 4
-      document.getElementById('previewImage').src = finalImageUrl;
       showStage('stage4');
+      // Initialize mockup editor
+      initMockupEditor();
+    }
+
+    // Initialize the mockup editor
+    async function initMockupEditor() {
+      // Load the generated image
+      mockupImage = new Image();
+      mockupImage.crossOrigin = 'anonymous';
+      mockupImage.onload = () => {
+        renderMockup();
+      };
+      mockupImage.src = finalImageUrl;
+
+      // Reset to defaults
+      currentProduct = 'poster';
+      resetEditor();
+    }
+
+    // Switch between product types
+    function switchProduct(productType) {
+      currentProduct = productType;
+
+      // Update tab active states
+      document.querySelectorAll('.product-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(`tab-${productType}`).classList.add('active');
+
+      // Update product details visibility
+      document.querySelectorAll('.product-details').forEach(details => {
+        details.classList.remove('active');
+      });
+      document.getElementById(`product-details-${productType}`).classList.add('active');
+
+      // Re-render mockup with new product
+      renderMockup();
+    }
+
+    // Update mockup when controls change
+    function updateMockup() {
+      // Get values from sliders
+      const scale = parseFloat(document.getElementById('scaleSlider').value) / 100;
+      const posX = parseInt(document.getElementById('posXSlider').value);
+      const posY = parseInt(document.getElementById('posYSlider').value);
+      const rotation = parseInt(document.getElementById('rotationSlider').value);
+
+      // Update state
+      imageTransform.scale = scale;
+      imageTransform.posX = posX;
+      imageTransform.posY = posY;
+      imageTransform.rotation = rotation;
+
+      // Update display values
+      document.getElementById('scaleValue').textContent = Math.round(scale * 100) + '%';
+      document.getElementById('posXValue').textContent = posX === 0 ? 'Center' : (posX > 0 ? `Right +${posX}` : `Left ${posX}`);
+      document.getElementById('posYValue').textContent = posY === 0 ? 'Center' : (posY > 0 ? `Down +${posY}` : `Up ${posY}`);
+      document.getElementById('rotationValue').textContent = rotation + '°';
+
+      // Re-render
+      renderMockup();
+    }
+
+    // Reset editor to defaults
+    function resetEditor() {
+      document.getElementById('scaleSlider').value = 100;
+      document.getElementById('posXSlider').value = 0;
+      document.getElementById('posYSlider').value = 0;
+      document.getElementById('rotationSlider').value = 0;
+      imageTransform = { scale: 1.0, posX: 0, posY: 0, rotation: 0 };
+      updateMockup();
+    }
+
+    // Render the product mockup on canvas
+    function renderMockup() {
+      if (!mockupImage) return;
+
+      const canvas = document.getElementById('productMockupCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Define product mockup backgrounds and print areas
+      const mockups = {
+        poster: {
+          bg: '#f5f5f5',
+          frame: '#8B7355',
+          printArea: { x: 150, y: 100, width: 300, height: 400 }
+        },
+        tshirt: {
+          bg: '#e8e8e8',
+          shirtColor: '#ffffff',
+          printArea: { x: 200, y: 180, width: 200, height: 200 }
+        },
+        canvas: {
+          bg: '#f0f0f0',
+          frame: '#654321',
+          printArea: { x: 120, y: 100, width: 360, height: 400 }
+        }
+      };
+
+      const mockup = mockups[currentProduct];
+
+      // Draw background
+      ctx.fillStyle = mockup.bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw product-specific mockup
+      if (currentProduct === 'poster') {
+        // Poster frame
+        ctx.fillStyle = mockup.frame;
+        ctx.fillRect(130, 80, 340, 440);
+        // White inner area
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(150, 100, 300, 400);
+      } else if (currentProduct === 'tshirt') {
+        // T-shirt shape
+        ctx.fillStyle = mockup.shirtColor;
+        // Body
+        ctx.fillRect(180, 150, 240, 350);
+        // Neck
+        ctx.beginPath();
+        ctx.arc(300, 150, 40, 0, Math.PI * 2);
+        ctx.fill();
+        // Sleeves
+        ctx.fillRect(140, 180, 40, 120);
+        ctx.fillRect(420, 180, 40, 120);
+        // Outline
+        ctx.strokeStyle = '#ddd';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(180, 150, 240, 350);
+      } else if (currentProduct === 'canvas') {
+        // Canvas frame (thicker for gallery wrap)
+        ctx.fillStyle = mockup.frame;
+        ctx.fillRect(100, 80, 400, 440);
+        // Canvas surface
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(120, 100, 360, 400);
+      }
+
+      // Draw the dog image with transforms
+      const printArea = mockup.printArea;
+
+      ctx.save();
+      ctx.translate(printArea.x + printArea.width / 2, printArea.y + printArea.height / 2);
+      ctx.translate(imageTransform.posX, imageTransform.posY);
+      ctx.rotate((imageTransform.rotation * Math.PI) / 180);
+      ctx.scale(imageTransform.scale, imageTransform.scale);
+
+      // Calculate aspect-fit dimensions
+      const imgAspect = mockupImage.width / mockupImage.height;
+      const areaAspect = printArea.width / printArea.height;
+      let drawWidth, drawHeight;
+
+      if (imgAspect > areaAspect) {
+        drawWidth = printArea.width;
+        drawHeight = printArea.width / imgAspect;
+      } else {
+        drawHeight = printArea.height;
+        drawWidth = printArea.height * imgAspect;
+      }
+
+      ctx.drawImage(
+        mockupImage,
+        -drawWidth / 2,
+        -drawHeight / 2,
+        drawWidth,
+        drawHeight
+      );
+
+      ctx.restore();
+
+      // Add product label
+      ctx.fillStyle = '#333';
+      ctx.font = 'bold 18px Arial';
+      ctx.textAlign = 'center';
+      const labels = {
+        poster: '12x18" Poster Print',
+        tshirt: 'Premium T-Shirt',
+        canvas: '16x20" Canvas Print'
+      };
+      ctx.fillText(labels[currentProduct], canvas.width / 2, canvas.height - 30);
     }
 
     // Select pose (regular poses)
