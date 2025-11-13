@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleanup Shopify Pages</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #c82333;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #output {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .loading {
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Cleanup Shopify Pages</h1>
+        <p>This tool will delete ALL duplicate "Welcome to All Dogs Rock" pages and recreate the correct pages.</p>
+
+        <div class="warning">
+            <strong>⚠️ Warning:</strong> This will delete any existing "Welcome to All Dogs Rock" and "Create Your Iconic Dog" pages, then recreate them with the latest content.
+        </div>
+
+        <div class="info">
+            <strong>What this does:</strong>
+            <ol>
+                <li>Finds and deletes all duplicate pages</li>
+                <li>Creates fresh "Welcome to All Dogs Rock" page</li>
+                <li>Creates fresh "Create Your Iconic Dog" page with product integration</li>
+            </ol>
+        </div>
+
+        <button id="cleanupBtn" onclick="cleanup()">
+            🚀 Cleanup and Setup Pages
+        </button>
+        <span class="loading" id="loading" style="display:none;">Processing...</span>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        async function cleanup() {
+            const btn = document.getElementById('cleanupBtn');
+            const loading = document.getElementById('loading');
+            const output = document.getElementById('output');
+
+            btn.disabled = true;
+            loading.style.display = 'inline-block';
+            output.style.display = 'block';
+            output.innerHTML = '🔄 Starting cleanup process...\n\n';
+
+            try {
+                const response = await fetch('/api/shopify/cleanup-and-setup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    output.innerHTML += `<span class="success">✅ SUCCESS!</span>\n\n`;
+                    output.innerHTML += `${data.message}\n\n`;
+
+                    if (data.log && data.log.length > 0) {
+                        output.innerHTML += '📋 Detailed Log:\n';
+                        output.innerHTML += '─'.repeat(80) + '\n';
+                        data.log.forEach(line => {
+                            output.innerHTML += line + '\n';
+                        });
+                    }
+
+                    if (data.urls && data.urls.length > 0) {
+                        output.innerHTML += '\n\n🔗 Live Pages:\n';
+                        data.urls.forEach(url => {
+                            output.innerHTML += `  • ${url}\n`;
+                        });
+                    }
+                } else {
+                    output.innerHTML += `<span class="error">❌ ERROR</span>\n\n`;
+                    output.innerHTML += `${data.error || 'Unknown error'}\n`;
+                    if (data.details) {
+                        output.innerHTML += `Details: ${data.details}\n`;
+                    }
+                    if (data.log) {
+                        output.innerHTML += '\n📋 Log:\n';
+                        data.log.forEach(line => output.innerHTML += line + '\n');
+                    }
+                }
+
+            } catch (error) {
+                output.innerHTML += `<span class="error">❌ NETWORK ERROR</span>\n\n`;
+                output.innerHTML += `Failed to connect: ${error.message}\n`;
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
