@@ -119,9 +119,66 @@ export default async function handler(req) {
     const urlsDiv = document.getElementById('urls');
     const urlList = document.getElementById('urlList');
 
+    // Compress image to ensure it works on all devices/networks
+    // Quality kept high (0.92) to maintain AI generation quality
+    async function compressImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          const img = new Image();
+
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            // Resize if too large (keep aspect ratio)
+            // Max 2048px - high enough for excellent AI quality
+            const maxDimension = 2048;
+            if (width > maxDimension || height > maxDimension) {
+              if (width > height) {
+                height = (height / width) * maxDimension;
+                width = maxDimension;
+              } else {
+                width = (width / height) * maxDimension;
+                height = maxDimension;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // High quality JPEG (0.92) to maintain AI generation quality
+            // This balances file size with image quality
+            canvas.toBlob(
+              (blob) => {
+                if (blob) {
+                  resolve(blob);
+                } else {
+                  reject(new Error('Compression failed'));
+                }
+              },
+              'image/jpeg',
+              0.92
+            );
+          };
+
+          img.onerror = () => reject(new Error('Failed to load image'));
+          img.src = e.target.result;
+        };
+
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsDataURL(file);
+      });
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const files = fileInput.files;
       if (files.length === 0 || files.length > 3) {
         alert('Please select 1-3 photos');
@@ -129,21 +186,40 @@ export default async function handler(req) {
       }
 
       uploadBtn.disabled = true;
-      uploadBtn.textContent = 'Uploading...';
+      uploadBtn.textContent = 'Processing photos...';
       urlList.innerHTML = '';
 
       try {
         const urls = [];
-        
+
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
+
+          // Validate file type
+          if (!file.type.startsWith('image/')) {
+            throw new Error(file.name + ' is not an image file');
+          }
+
+          uploadBtn.textContent = 'Processing photo ' + (i + 1) + '...';
+
+          // Compress image for reliable upload on all devices
+          const compressedBlob = await compressImage(file);
+
+          // Convert to base64
           const reader = new FileReader();
-          
           const base64 = await new Promise((resolve, reject) => {
             reader.onload = () => resolve(reader.result);
             reader.onerror = reject;
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(compressedBlob);
           });
+
+          // Check final size (should be under 3MB after compression)
+          const sizeInMB = base64.length / 1024 / 1024;
+          if (sizeInMB > 3.5) {
+            throw new Error(file.name + ' is too large even after compression. Try a different photo.');
+          }
+
+          uploadBtn.textContent = 'Uploading photo ' + (i + 1) + '...';
 
           const response = await fetch('/api/upload', {
             method: 'POST',
@@ -156,11 +232,14 @@ export default async function handler(req) {
             }),
           });
 
-          if (!response.ok) throw new Error('Upload failed');
-          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Upload failed');
+          }
+
           const result = await response.json();
           urls.push(result.url);
-          
+
           const urlItem = document.createElement('div');
           urlItem.className = 'url-item';
           urlItem.innerHTML = '<strong>Photo ' + (i + 1) + ':</strong><br>' +
